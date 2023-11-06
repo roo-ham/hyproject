@@ -3,4 +3,4 @@
 
 class Basement:
     def __init__(self):
-        #variable
+        pass

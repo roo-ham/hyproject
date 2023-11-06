@@ -5,22 +5,14 @@ from ar_track_alvar_msgs.msg import AlvarMarkers
 from basement import Basement
 
 # 클래스 생성
-class Alvar_Marker_Sub:
-    # 클래스 속성 정의
+class Main:
     def __init__(self):
-        # ROS 노드 초기화
-        rospy.init_node("alvar_node", anonymous=True)
-        rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.marker_CB)
-
-    # 클래스의 메서드 정의
-    def marker_CB(self, data):
-        # data 객체의 markers 출력. AlvarMarkers 메시지 객체에서 AR 마커의 정보를 화면에 출력
-        print(data.markers)
+        print("hi")
 
 
 if __name__ == "__main__":
     # 클래스 객체 생성
-    alvar_marker_sub = Alvar_Marker_Sub()
+    Main()
     try:
         # 함수를 호출하여 ROS 노드를 실행하고, 메시지를 수신하는 동안 무한 루프
         rospy.spin()
