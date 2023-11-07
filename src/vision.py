@@ -11,11 +11,11 @@ class VisionImage:
         self.bridge = CvBridge()
         rospy.Subscriber("/camera/rgb/image_raw", Image, self.callback)
         self.img = None
-        cv2.namedWindow("hyproject", cv2.WINDOW_NORMAL)
     def callback(self, data):
         self.img = self.bridge.imgmsg_to_cv2(data, "bgr8")
         self.img = cv2.resize(self.img, (128, 128))
-        cv2.imshow("hyproject", self.image)
+        cv2.namedWindow("hyproject", cv2.WINDOW_NORMAL)
+        cv2.imshow("hyproject", self.img)
         cv2.waitKey(1)
 
 class VisionMarker:

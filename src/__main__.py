@@ -23,11 +23,11 @@ class Main:
 
 if __name__ == "__main__":
     Main()
+    os.system("clear")
+    print("Hello, Hanyang!")
+    print("Ctrl+C to exit.")
     try:
         while not rospy.is_shutdown():
-            os.system("clear")
-            print("Hello, Hanyang!")
-            print("Ctrl+C to exit.")
-            rospy.sleep(0.01)
+            pass
     except rospy.ROSInterruptException:
         pass
