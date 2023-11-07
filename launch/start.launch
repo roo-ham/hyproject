@@ -1,4 +1,6 @@
 <launch>
+    <include file="$(find limo_bringup)/launch/limo_start.launch"/>
+    <include file="/home/wego/wego_ws/src/ros_astra_camera/launch/dabai_u3.launch"/>
     <arg name="marker_size" default="4.4" />
     <arg name="max_new_marker_error" default="0.08" />
     <arg name="max_track_error" default="0.2" />
@@ -18,6 +20,5 @@
 		<remap from="camera_image"  to="$(arg cam_image_topic)" />
 		<remap from="camera_info"   to="$(arg cam_info_topic)" />
 	</node>
-    <include file="$(find limo_bringup)/launch/limo_start.launch"/>
     <node pkg="hyproject" type="__main__.py" name="hyproject_topic" output="screen"></node>
 </launch>

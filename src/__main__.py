@@ -7,7 +7,7 @@ from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
 '''
 
-from vision import *
+from vision import VisionImage, VisionMarker
 from basement import Basement
 
 # 클래스 생성
@@ -19,15 +19,18 @@ class Main:
         #rospy.Subscriber('/scan', LaserScan, self.laser_callback)
         #self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
         #self.drive_data = Twist()
+        self.rate = rospy.Rate(10)
+    def update(self):
+        self.rate.sleep()
 
 
 if __name__ == "__main__":
-    Main()
     os.system("clear")
     print("Hello, Hanyang!")
     print("Ctrl+C to exit.")
+    main_object = Main()
     try:
         while not rospy.is_shutdown():
-            pass
+            main_object.update()
     except rospy.ROSInterruptException:
         pass

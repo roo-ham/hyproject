@@ -8,21 +8,23 @@ from basement import Basement
 
 class VisionImage:
     def __init__(self):
-        self.bridge = CvBridge()
+        self.bridge:CvBridge = CvBridge()
         rospy.Subscriber("/camera/rgb/image_raw", Image, self.callback)
         self.img = None
+        print("I'm VisionImage")
     def callback(self, data):
+        print("VisionImage : I've got callback")
         self.img = self.bridge.imgmsg_to_cv2(data, "bgr8")
         self.img = cv2.resize(self.img, (128, 128))
         cv2.namedWindow("hyproject", cv2.WINDOW_NORMAL)
         cv2.imshow("hyproject", self.img)
-        cv2.waitKey(1)
 
 class VisionMarker:
     def __init__(self):
+        print("I'm VisionMarker")
         rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.callback)
-    def callback(self):
-        pass
+    def callback(self, data):
+        print("VisionMarker : I've got callback")
 
 
 if __name__ == "__main__":
