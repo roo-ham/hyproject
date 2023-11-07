@@ -4,7 +4,7 @@ import numpy, cv2
 from sensor_msgs.msg import Image
 from ar_track_alvar_msgs.msg import AlvarMarkers
 
-from basement import Basementd
+from basement import Basement
 
 class VisionImage:
     def __init__(self):

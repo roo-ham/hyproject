@@ -28,6 +28,6 @@ if __name__ == "__main__":
             os.system("clear")
             print("Hello, Hanyang!")
             print("Ctrl+C to exit.")
-            rospy
+            rospy.sleep(0.01)
     except rospy.ROSInterruptException:
         pass
