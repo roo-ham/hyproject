@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
-os.system("cd ~/1273_ws/src/hyproject")
 os.system("git pull")
 os.system("git add .")
 print("\n"*5)
