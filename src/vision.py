@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 import rospy
 from cv_bridge import CvBridge
-import numpy, cv2
+import numpy as np
+import cv2
 from sensor_msgs.msg import CompressedImage
 from ar_track_alvar_msgs.msg import AlvarMarkers
 
@@ -19,6 +20,7 @@ class VisionImage:
         self.img = cv2.resize(self.img, (128, 128), interpolation=cv2.INTER_NEAREST)
         self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2HSV)
         self.img[:, :, 1:3] = 255
+        self.img[:, :, 0] = np.where(np.abs(self.img[:, :, 0] - 60) > 0, 0, self.img[:, :, 0])
         self.img = cv2.cvtColor(self.img, cv2.COLOR_HSV2BGR)
         cv2.namedWindow("hyproject", cv2.WINDOW_NORMAL)
         cv2.imshow("hyproject", self.img)
