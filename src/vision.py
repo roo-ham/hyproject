@@ -17,10 +17,17 @@ class VisionImage:
         print("I'm VisionImage")
     def callback(self, data):
         self.img = self.bridge.compressed_imgmsg_to_cv2(data, "bgr8")
-        self.img = cv2.resize(self.img, (128, 128), interpolation=cv2.INTER_NEAREST)
+        self.img = cv2.resize(self.img, (256, 256), interpolation=cv2.INTER_NEAREST)
+        self.img = self.img[128:256, :, :]
         self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2HSV)
         self.img[:, :, 1:3] = 255
-        self.img[:, :, 0] = np.where(np.abs(self.img[:, :, 0] - 60) > 0, 0, self.img[:, :, 0])
+        under_yellow = self.img[:, :, 0] < 15
+        over_yellow = self.img[:, :, 0] > 35
+        yellow = over_yellow & under_yellow
+        self.img[:, :, 0] = np.where(under_yellow, 0, self.img[:, :, 0])
+        self.img[:, :, 1] = np.where(under_yellow, 50, 255)
+        self.img[:, :, 0] = np.where(over_yellow, 128, self.img[:, :, 0])
+        self.img[:, :, 2] = np.where(over_yellow, 50, 255)
         self.img = cv2.cvtColor(self.img, cv2.COLOR_HSV2BGR)
         cv2.namedWindow("hyproject", cv2.WINDOW_NORMAL)
         cv2.imshow("hyproject", self.img)

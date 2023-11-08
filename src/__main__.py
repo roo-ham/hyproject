@@ -19,7 +19,7 @@ class Main:
         #rospy.Subscriber('/scan', LaserScan, self.laser_callback)
         #self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
         #self.drive_data = Twist()
-        self.rate = rospy.Rate(10)
+        self.rate = rospy.Rate(60)
     def update(self):
         self.rate.sleep()
 
