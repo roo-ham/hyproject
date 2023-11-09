@@ -3,24 +3,19 @@
 import rospy
 from cv_bridge import CvBridge
 import cv2
-from sensor_msgs.msg import CompressedImage
-from std_msgs.msg import UInt8MultiArray
+from sensor_msgs.msg import Image
+from std_msgs.msg import Int8MultiArray
+from rospy.numpy_msg import numpy_msg
+import numpy as np
 
-rospy.init_node("hyproject_image_loader")
-pub_1 = rospy.Publisher("/hyproject/image_loader/bgr_top", UInt8MultiArray, queue_size=10)
-pub_2 = rospy.Publisher("/hyproject/image_loader/bgr_bottom", UInt8MultiArray, queue_size=10)
-def callback(data):
-    bridge = CvBridge()
-    origin = bridge.compressed_imgmsg_to_cv2(data, "bgr8")
-    origin = cv2.resize(origin, (256, 256), interpolation=cv2.INTER_NEAREST)
-    bgr_top = origin[128:256, :, :]
-    bgr_bottom = origin[0:128, :, :]
-    pub_1.publish(bgr_top)
-    pub_1.publish(bgr_bottom)
-rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, callback)
+pub_1 = rospy.Publisher("/hyproject/image_loader/bgr_top", numpy_msg(Int8MultiArray), queue_size=10)
+pub_2 = rospy.Publisher("/hyproject/image_loader/bgr_bottom", numpy_msg(Int8MultiArray), queue_size=10)
+def callback(_data):
     
-
+    print(list(_data.data)[0])
 if __name__ == "__main__":
+    rospy.init_node("hyproject_image_loader")
+    rospy.Subscriber("/camera/rgb/image_raw", Image, callback)
     try:
         while not rospy.is_shutdown():
             pass
