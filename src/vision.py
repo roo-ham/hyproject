@@ -41,12 +41,3 @@ class VisionMarker:
         print("I'm VisionMarker")
     def callback(self, data):
         pass
-
-if __name__ == "__main__":
-    debug_basement:Basement = Basement("debug")
-    VisionImage(debug_basement)
-    try:
-        while not rospy.is_shutdown():
-            pass
-    except rospy.ROSInterruptException:
-        pass
