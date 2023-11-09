@@ -11,7 +11,7 @@ from sensor_msgs.msg import CompressedImage
 class VisionImage:
     def __init__(self, base:Basement):
         self.basement = base
-        rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, callback)
+        rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
         print("I'm VisionImage")
     def callback(self, data):
         bridge = CvBridge()
