@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import rospy
 import os
@@ -6,29 +6,29 @@ import os
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
 '''
-
 from vision import VisionImage, VisionMarker
 from basement import Basement
 
 # 클래스 생성
 class Main:
-    def __init__(self):
-        rospy.init_node("hyproject_node")
-        self.vision_image = VisionImage()
-        self.vision_marker = VisionMarker()
+    def __init__(self, base:Basement):
+        rospy.init_node("hyproject_main")
+        self.vision_image = VisionImage(base)
+        self.vision_marker = VisionMarker(base)
         #rospy.Subscriber('/scan', LaserScan, self.laser_callback)
         #self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
         #self.drive_data = Twist()
         self.rate = rospy.Rate(60)
     def update(self):
         self.rate.sleep()
+        self.vision_image.get_yellow()
 
 
 if __name__ == "__main__":
     os.system("clear")
     print("Hello, Hanyang!")
     print("Ctrl+C to exit.")
-    main_object = Main()
+    main_object = Main(Basement())
     try:
         while not rospy.is_shutdown():
             main_object.update()
