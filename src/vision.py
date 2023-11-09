@@ -2,29 +2,23 @@
 # -*- coding: utf-8 -*-
 import rospy
 import numpy as np
+from cv_bridge import CvBridge
 import cv2
 from ar_track_alvar_msgs.msg import AlvarMarkers
-from std_msgs.msg import Int8, Int8MultiArray
-from rospy.numpy_msg import numpy_msg
 from basement import Basement
+from sensor_msgs.msg import CompressedImage
 
 class VisionImage:
     def __init__(self, base:Basement):
         self.basement = base
-        rospy.Subscriber("/hyproject/image_loader/bgr_top",\
-            numpy_msg(Int8MultiArray), self.bgr_top_callback)
-        rospy.Subscriber("/hyproject/image_loader/bgr_bottom",\
-            numpy_msg(Int8MultiArray), self.bgr_bottom_callback)
+        rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, callback)
         print("I'm VisionImage")
-    def bgr_top_callback(self, data):
-        pass
-        #self.basement.bgr_top = np.reshape(list(data.data),\
-        #    (128, 256, 3)).astype(np.uint8)
-    def bgr_bottom_callback(self, data):
-        print(data)
-        return
-        #self.basement.bgr_bottom = np.reshape(list(data.data),\
-        #    (128, 256, 3)).astype(np.uint8)
+    def callback(self, data):
+        bridge = CvBridge()
+        origin = bridge.compressed_imgmsg_to_cv2(data, "bgr8")
+        origin = cv2.resize(origin, (256, 256), interpolation=cv2.INTER_NEAREST)
+        self.basement.bgr_top = origin[0:128, :, :]
+        self.basement.bgr_bottom = origin[128:256, :, :]
     def get_yellow(self):
         img = cv2.cvtColor(self.basement.bgr_bottom, cv2.COLOR_BGR2HSV)
         under_yellow = img[:, :, 0] < 15
