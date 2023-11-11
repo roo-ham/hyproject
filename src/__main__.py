@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*-
 import rospy
 import os
+from math import sin
 '''
 from sensor_msgs.msg import LaserScan
-from geometry_msgs.msg import Twist
+
 '''
+from geometry_msgs.msg import Twist
 from vision import VisionImage, VisionMarker
 from basement import Basement
 
@@ -16,11 +18,14 @@ class Main:
         self.vision_image = VisionImage(base)
         self.vision_marker = VisionMarker(base)
         #rospy.Subscriber('/scan', LaserScan, self.laser_callback)
-        #self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
-        #self.drive_data = Twist()
+        self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
+        self.drive_data = Twist()
         self.rate = rospy.Rate(60)
     def update(self):
         self.vision_image.update()
+        self.t += 0.1
+        self.drive_data.linear.x = sin(self.t)
+        self.pub.publish(self.drive_data)
         self.rate.sleep()
 
 
