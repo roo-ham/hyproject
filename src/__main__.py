@@ -10,6 +10,7 @@ from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
 from vision import VisionImage, VisionMarker
 from basement import Basement
+from pathlib import Path
 
 # 클래스 생성
 class Main:
@@ -17,8 +18,8 @@ class Main:
         self.basement = base
         uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
         roslaunch.configure_logging(uuid)
-        print(os.path.abspath(__file__))
-        self.launch = roslaunch.parent.ROSLaunchParent(uuid, ["/home/wego/1273_ws/src/hyproject/camera.launch"])
+        path = Path(os.path.abspath(__file__)).parent.parent.joinpath("camera.launch")
+        self.launch = roslaunch.parent.ROSLaunchParent(uuid, [str(path)])
         self.launch.start()
         self.vision_image = VisionImage(base)
         self.vision_marker = VisionMarker(base)
