@@ -32,7 +32,7 @@ class Main:
         self.drive_data = Twist()
         self.t = 0.0
     def update(self):
-        if self.vision_image.timeout < 0 and self.vision_marker.timeout < 0 :
+        if self.vision_image.timeout < 0 or self.vision_marker.timeout < 0 :
             self.restart()
         self.vision_image.update()
         self.t += 0.1
