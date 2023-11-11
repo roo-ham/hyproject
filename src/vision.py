@@ -32,9 +32,18 @@ class VisionImage(Submodule):
         white = self.get_white()
         black = self.get_black()
         img[:, :, 1] = 0
-        img[:, :, :] = np.where(yellow, (20, 255, 255), img[:, :, :])
-        img[:, :, :] = np.where(white, (128, 255, 255), img[:, :, :])
-        img[:, :, :] = np.where(black, (128, 255, 0), img[:, :, :])
+
+        img[:, :, 0] = np.where(yellow, 20, img[:, :, 0])
+        img[:, :, 1] = np.where(yellow, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(yellow, 255, img[:, :, 2])
+
+        img[:, :, 0] = np.where(white, 128, img[:, :, 0])
+        img[:, :, 1] = np.where(white, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(white, 255, img[:, :, 2])
+
+        img[:, :, 0] = np.where(white, 128, img[:, :, 0])
+        img[:, :, 1] = np.where(black, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(black, 0, img[:, :, 2])
         cv2.namedWindow("hyproject", cv2.WINDOW_NORMAL)
         cv2.imshow("hyproject", img)
         cv2.waitKey(1)
