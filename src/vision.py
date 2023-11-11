@@ -6,6 +6,7 @@ import cv2
 from basement import Basement
 from sensor_msgs.msg import CompressedImage
 from ar_track_alvar_msgs.msg import AlvarMarkers
+from cv_bridge import CvBridge
 
 class VisionImage:
     def __init__(self, base:Basement):
