@@ -18,11 +18,11 @@ class VisionImage(Submodule):
         over_yellow = self.basement.img_h > 35
         return ~(under_yellow | over_yellow)
     def get_white(self):
-        over_sat = self.basement.img_s > 230
+        over_sat = self.basement.img_s < 50
         over_bri = self.basement.img_v > 230
         return (over_sat & over_bri)
     def get_black(self):
-        over_sat = self.basement.img_s > 230
+        over_sat = self.basement.img_s < 50
         over_bri = self.basement.img_v < 50
         return (over_sat & over_bri)
     def update(self):
