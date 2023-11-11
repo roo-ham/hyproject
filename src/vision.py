@@ -30,13 +30,23 @@ class VisionImage:
         over_sat = self.img_s > 230
         over_bri = self.img_v > 230
         return (over_sat & over_bri)
+    def get_black(self):
+        over_sat = self.img_s > 230
+        over_bri = self.img_v < 50
+        return (over_sat & over_bri)
     def update(self):
         img = self.basement.get_bgr_bottom()
         yellow = self.vision_image.get_yellow()
         white = self.vision_image.get_white()
-        img[:, :, 2] = np.where(yellow, 64, img[:, :, 2])
+        black = self.vision_image.get_black()
+        img[:, :, 2] = np.where(yellow, (255//2) + (img[:, :, 2]//2), img[:, :, 2])
         img[:, :, 0] = np.where(yellow, 20, img[:, :, 0])
-        img[:, :, 2] = np.where(white, 255, img[:, :, 2])
+
+        img[:, :, 1] = np.where(white, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(white, (255//2) + (img[:, :, 2]//2), img[:, :, 2])
+
+        img[:, :, 1] = np.where(black, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(black, img[:, :, 2]//2, img[:, :, 2])
         cv2.namedWindow("hyproject", cv2.WINDOW_NORMAL)
         cv2.imshow("hyproject", img)
         cv2.waitKey(1)
