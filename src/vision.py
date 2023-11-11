@@ -6,12 +6,13 @@ from cv_bridge import CvBridge
 import cv2
 from ar_track_alvar_msgs.msg import AlvarMarkers
 from basement import Basement
-from sensor_msgs.msg import CompressedImage
+from sensor_msgs.msg import CompressedImage, CameraInfo
 
 class VisionImage:
     def __init__(self, base:Basement):
         self.basement = base
         rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
+        rospy.Subscriber("/camera/rgb/camera_info", CameraInfo, self.camera_info_callback)
         self.img_h, self.img_s, self.img_v = np.zeros((128,256), np.uint8),\
             np.zeros((128,256), np.uint8),\
                 np.zeros((128,256), np.uint8)
@@ -23,6 +24,8 @@ class VisionImage:
         self.basement.set_bgr(origin, origin[128:256, :, :])
         img_hsv = cv2.cvtColor(origin[128:256, :, :], cv2.COLOR_BGR2HSV)
         self.img_h, self.img_s, self.img_v = img_hsv[:, :, 0], img_hsv[:, :, 1], img_hsv[:, :, 2]
+    def camera_info_callback(self, data):
+        print(data)
     def get_yellow(self):
         under_yellow = self.img_h < 15
         over_yellow = self.img_h > 35
