@@ -14,7 +14,6 @@ from basement import Basement
 # 클래스 생성
 class Main:
     def __init__(self, base:Basement):
-        rospy.init_node("hyproject_main")
         self.vision_image = VisionImage(base)
         self.vision_marker = VisionMarker(base)
         #rospy.Subscriber('/scan', LaserScan, self.laser_callback)
