@@ -6,8 +6,7 @@ from cv_bridge import CvBridge
 import cv2
 from ar_track_alvar_msgs.msg import AlvarMarkers
 from basement import Basement
-from sensor_msgs.msg import CompressedImage, CameraInfo
-from roscpp import GetLoggers
+from sensor_msgs.msg import CompressedImage
 
 class VisionImage:
     def __init__(self, base:Basement):
@@ -21,7 +20,7 @@ class VisionImage:
     def reset_camera(self):
         self.timeout = 60
         if self.sub != None :
-            self.sub.unregister()
+            self.basement.restart()
             self.sub = None
             print("ㅠㅠ")
         self.sub = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback, queue_size=1)

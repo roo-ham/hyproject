@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import rospy
 import numpy as np
 
 class Basement:
@@ -14,3 +15,6 @@ class Basement:
         return self.__bgr_full.copy()
     def get_bgr_bottom(self) -> np.ndarray:
         return self.__bgr_bottom.copy()
+    def restart(self):
+        rospy.signal_shutdown("restarting hyproject...")
+        rospy.init_node("hyproject_main")
