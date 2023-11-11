@@ -23,7 +23,7 @@ class VisionImage:
             self.sub.unregister()
             self.sub = None
             print("ㅠㅠ")
-        self.sub = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
+        self.sub = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback, queue_size=1)
     def callback(self, data):
         self.timeout = 60
         bridge = CvBridge()
