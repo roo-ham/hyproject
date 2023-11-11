@@ -18,7 +18,7 @@ class Main:
         self.basement = base
         uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
         roslaunch.configure_logging(uuid)
-        path = Path(os.path.abspath(__file__)).parent.parent.joinpath("camera.launch")
+        path = Path(os.path.abspath(__file__)).parent.parent.joinpath("launch/camera.launch")
         self.launch = roslaunch.parent.ROSLaunchParent(uuid, [str(path)])
         self.launch.start()
         self.vision_image = VisionImage(base)
