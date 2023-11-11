@@ -30,18 +30,16 @@ class Main:
         self.pub.publish(self.drive_data)
         self.rate.sleep()
 
-
-if __name__ == "__main__":
-    os.system("clear")
-    print("Hello, Hanyang!")
-    print("Ctrl+C to exit.")
-    base = Basement()
-    try:
-        while True:
-            main_object = Main(base)
-            rospy.init_node("hyproject_main")
-            base.start()
-            while not rospy.is_shutdown():
-                main_object.update()
-    except KeyboardInterrupt:
-        exit()
+base = Basement()
+try:
+    while True:
+        rospy.init_node("hyproject_main")
+        os.system("clear")
+        print("Hello, Hanyang!")
+        print("Ctrl+C to exit.")
+        main_object = Main(base)
+        base.start()
+        while not rospy.is_shutdown():
+            main_object.update()
+except KeyboardInterrupt:
+    exit()
