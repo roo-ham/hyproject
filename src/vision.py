@@ -24,10 +24,9 @@ class VisionImage:
         under_yellow = img[:, :, 0] < 15
         over_yellow = img[:, :, 0] > 35
         img[:, :, 0] = np.where(under_yellow, 0, img[:, :, 0])
-        img[:, :, 1] = np.where(under_yellow, 50, 255)
-        img[:, :, 2] = np.where(under_yellow, 50, 255)
+        img[:, :, 2] = np.where(under_yellow, 50, img[:, :, 2])
         img[:, :, 0] = np.where(over_yellow, 128, img[:, :, 0])
-        img[:, :, 2] = np.where(over_yellow, 50, 255)
+        img[:, :, 2] = np.where(over_yellow, 50, img[:, :, 2])
         img = cv2.cvtColor(img, cv2.COLOR_HSV2BGR)
         cv2.namedWindow("hyproject", cv2.WINDOW_NORMAL)
         cv2.imshow("hyproject", img)
