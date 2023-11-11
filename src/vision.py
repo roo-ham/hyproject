@@ -40,8 +40,9 @@ class VisionImage:
         yellow = self.get_yellow()
         white = self.get_white()
         black = self.get_black()
-        img[:, :, 2] = np.where(yellow, 255, img[:, :, 2])
         img[:, :, 0] = np.where(yellow, 20, img[:, :, 0])
+        img[:, :, 1] = np.where(yellow, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(yellow, 255, img[:, :, 2])
 
         img[:, :, 1] = np.where(white, 0, img[:, :, 1])
         img[:, :, 2] = np.where(white, 255, img[:, :, 2])
