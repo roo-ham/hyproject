@@ -19,7 +19,10 @@ class VisionImage:
                 np.zeros((128,256), np.uint8)
         print("I'm VisionImage")
     def reset_camera(self):
-        if self.sub != None : self.sub.unregister()
+        if self.sub != None :
+            self.sub.unregister()
+            self.sub = None
+            print("ㅠㅠ")
         self.sub = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
     def callback(self, data):
         self.timeout = 60
@@ -45,7 +48,7 @@ class VisionImage:
         self.timeout -= 1
         if self.timeout < 0 :
             self.reset_camera()
-            print("ㅠㅠ")
+            return
         img = self.basement.get_bgr_bottom()
         yellow = self.get_yellow()
         white = self.get_white()
