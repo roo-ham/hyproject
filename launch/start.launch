@@ -1,24 +1,4 @@
 <launch>
     <include file="$(find limo_bringup)/launch/limo_start.launch"/>
-    <include file="/home/wego/wego_ws/src/ros_astra_camera/launch/dabai_u3.launch"/>
-    <arg name="marker_size" default="4.4" />
-    <arg name="max_new_marker_error" default="0.08" />
-    <arg name="max_track_error" default="0.2" />
-    <arg name="cam_image_topic" default="/camera/rgb/image_raw" />
-    <arg name="cam_info_topic" default="/camera/rgb/camera_info" />
-    <arg name="output_frame" default="/camera_link" />
-    <arg name="mark_topic" default="/ar_pose_marker" />
-    <node name="ar_track_alvar" pkg="ar_track_alvar" type="individualMarkersNoKinect" respawn="false" output="screen">
-        <param name="marker_size"           type="double" value="$(arg marker_size)" />
-        <param name="max_new_marker_error"  type="double" value="$(arg max_new_marker_error)" />
-        <param name="max_track_error"       type="double" value="$(arg max_track_error)" />
-        <param name="output_frame"          type="string" value="$(arg output_frame)" />
-        <param name="mark_topic"             type="string" value="$(arg mark_topic)" />
-        <param name="cam_image_topic"          type="string" value="$(arg cam_image_topic)" />
-        <param name="cam_info_topic"             type="string" value="$(arg cam_info_topic)" />
-
-        <remap from="camera_image"  to="$(arg cam_image_topic)" />
-        <remap from="camera_info"   to="$(arg cam_info_topic)" />
-    </node>
     <node pkg="hyproject" type="__main__.py" name="hyproject_main" output="screen"/>
 </launch>

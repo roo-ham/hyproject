@@ -4,8 +4,6 @@ import rospy
 import numpy as np
 import cv2
 from cv_bridge import CvBridge
-from sensor_msgs.msg import CompressedImage
-from ar_track_alvar_msgs.msg import AlvarMarkers
 
 class Basement:
     def __init__(self, name0:str = "release"):
@@ -33,8 +31,6 @@ class Basement:
         del self.sub_marker
         rospy.signal_shutdown("restarting hyproject...")
     def start(self):
-        self.sub_image_raw = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.image_raw_callback, queue_size=1)
-        self.sub_marker = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.marker_callback)
         self.timeout = 60
 
     def image_raw_callback(self, data):

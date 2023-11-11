@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import rospy
+import rospy, roslaunch
 import os
 from math import sin
 '''
@@ -15,6 +15,10 @@ from basement import Basement
 class Main:
     def __init__(self, base:Basement):
         self.basement = base
+        uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
+        roslaunch.configure_logging(uuid)
+        self.launch = roslaunch.parent.ROSLaunchParent(uuid, ["../launch/camera.launch"])
+        self.launch.start()
         self.vision_image = VisionImage(base)
         self.vision_marker = VisionMarker(base)
         #rospy.Subscriber('/scan', LaserScan, self.laser_callback)
@@ -29,14 +33,18 @@ class Main:
         self.drive_data.linear.x = sin(self.t)
         self.pub.publish(self.drive_data)
         self.rate.sleep()
+    def end(self):
+        self.launch.shutdown()
 
+base = Basement()
 try:
     rospy.init_node("hyproject_main")
     os.system("clear")
     print("Hello, Hanyang!")
     print("Ctrl+C to exit.")
-    main_object = Main(Basement())
+    main_object = Main(base)
     while not rospy.is_shutdown():
         main_object.update()
+    main_object.end()
 except KeyboardInterrupt:
     pass
