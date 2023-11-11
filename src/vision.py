@@ -7,13 +7,13 @@ import cv2
 from ar_track_alvar_msgs.msg import AlvarMarkers
 from basement import Basement
 from sensor_msgs.msg import CompressedImage
-from bond.msg import Status
+from dynamic_reconfigure.msg import Config
 
 class VisionImage:
     def __init__(self, base:Basement):
         self.basement = base
         rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
-        rospy.Subscriber("/camera/camera_nodelet_manager/bond", Status, self.camera_info_callback)
+        rospy.Subscriber("/camera/dabai_u3/parameter_updates", Config, self.camera_info_callback)
         self.img_h, self.img_s, self.img_v = np.zeros((128,256), np.uint8),\
             np.zeros((128,256), np.uint8),\
                 np.zeros((128,256), np.uint8)
