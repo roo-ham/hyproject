@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import rospy
 import numpy as np
 import cv2
 
@@ -12,8 +11,11 @@ class Basement:
         self.img_h, self.img_s, self.img_v = np.zeros((128,256), np.uint8),\
             np.zeros((128,256), np.uint8),\
                 np.zeros((128,256), np.uint8)
-        self.sub_image_raw = None
-        self.sub_marker = None
+    def set_bgr(self, full, bottom):
+        self.__bgr_full = full
+        self.__bgr_bottom = bottom
+        img_hsv = cv2.cvtColor(bottom, cv2.COLOR_BGR2HSV)
+        self.img_h, self.img_s, self.img_v = img_hsv[:, :, 0], img_hsv[:, :, 1], img_hsv[:, :, 2]
     def get_bgr_full(self) -> np.ndarray:
         return self.__bgr_full.copy()
     def get_bgr_bottom(self) -> np.ndarray:
