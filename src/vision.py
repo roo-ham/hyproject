@@ -18,7 +18,7 @@ class VisionImage(Submodule):
         over_yellow = self.basement.img_h > 35
         return ~(under_yellow | over_yellow)
     def get_white(self):
-        over_sat = self.basement.img_s < 128
+        over_sat = self.basement.img_s < 64
         over_bri = self.basement.img_v > 150
         return (over_sat & over_bri)
     def get_black(self):
@@ -49,7 +49,7 @@ class VisionImage(Submodule):
         super().callback(data)
         bridge = CvBridge()
         origin = bridge.compressed_imgmsg_to_cv2(data, "bgr8")
-        origin = cv2.resize(origin, (256, 256), interpolation=cv2.INTER_NEAREST)
+        origin = cv2.resize(origin, (256, 256))
         self.basement.set_bgr(origin, origin[128:256, :, :])
 
 class VisionMarker(Submodule):
