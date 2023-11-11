@@ -7,6 +7,7 @@ import cv2
 from ar_track_alvar_msgs.msg import AlvarMarkers
 from basement import Basement
 from sensor_msgs.msg import CompressedImage, CameraInfo
+from roscpp import GetLoggers
 
 class VisionImage:
     def __init__(self, base:Basement):
