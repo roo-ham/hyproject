@@ -30,7 +30,7 @@ class Basement:
 
     def restart(self):
         print("ㅠㅠ")
-        rospy.signal_shutdown("restarting hyproject...")
+        #rospy.signal_shutdown("restarting hyproject...")
         self.start()
     def start(self):
         rospy.init_node("hyproject_main")

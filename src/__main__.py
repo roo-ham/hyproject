@@ -37,7 +37,9 @@ if __name__ == "__main__":
     print("Ctrl+C to exit.")
     main_object = Main(Basement())
     try:
-        while not rospy.is_shutdown():
+        while True:
             main_object.update()
     except rospy.ROSInterruptException:
+        pass
+    except KeyboardInterrupt:
         pass
