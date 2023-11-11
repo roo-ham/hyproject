@@ -34,7 +34,6 @@ class Main:
     def update(self):
         if self.vision_image.timeout < 0 and self.vision_marker.timeout < 0 :
             self.restart()
-        self.basement.update()
         self.vision_image.update()
         self.t += 0.1
         self.drive_data.linear.x = sin(self.t)
