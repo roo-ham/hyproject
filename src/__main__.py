@@ -50,11 +50,11 @@ forced_exit = False
 while not forced_exit:
     try:
         rospy.init_node("hyproject_main")
+        os.system("clear")
+        print("Hello, Hanyang!")
+        print("Ctrl+C to exit.")
+        main_object = Main(base)
         while not rospy.is_shutdown():
-            os.system("clear")
-            print("Hello, Hanyang!")
-            print("Ctrl+C to exit.")
-            main_object = Main(base)
             main_object.update()
         main_object.end()
     except KeyboardInterrupt:
