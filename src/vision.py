@@ -45,6 +45,7 @@ class VisionImage:
         self.timeout -= 1
         if self.timeout < 0 :
             self.reset_camera()
+            print("ㅠㅠ")
         img = self.basement.get_bgr_bottom()
         yellow = self.get_yellow()
         white = self.get_white()
