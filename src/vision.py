@@ -10,6 +10,7 @@ from sensor_msgs.msg import CompressedImage
 
 class VisionImage:
     def __init__(self, base:Basement):
+        self.basement = base
         rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
         self.img_h, self.img_s, self.img_v = np.zeros((128,256), np.uint8),\
             np.zeros((128,256), np.uint8),\
