@@ -14,6 +14,7 @@ from basement import Basement
 # 클래스 생성
 class Main:
     def __init__(self, base:Basement):
+        self.basement = base
         self.vision_image = VisionImage(base)
         self.vision_marker = VisionMarker(base)
         #rospy.Subscriber('/scan', LaserScan, self.laser_callback)
@@ -22,6 +23,7 @@ class Main:
         self.rate = rospy.Rate(60)
         self.t = 0.0
     def update(self):
+        self.basement.update()
         self.vision_image.update()
         self.t += 0.1
         self.drive_data.linear.x = sin(self.t)

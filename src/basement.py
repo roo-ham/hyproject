@@ -17,14 +17,17 @@ class Basement:
                 np.zeros((128,256), np.uint8)
         self.sub_image_raw = None
         self.sub_marker = None
+        self.timeout = 60
         self.start()
-    def set_bgr(self, full:np.ndarray, bottom:np.ndarray):
-        self.__bgr_full = full
-        self.__bgr_bottom = bottom
+    def update(self):
+        self.timeout -= 1
+        if self.timeout < 0 :
+            self.restart()
     def get_bgr_full(self) -> np.ndarray:
         return self.__bgr_full.copy()
     def get_bgr_bottom(self) -> np.ndarray:
         return self.__bgr_bottom.copy()
+
     def restart(self):
         print("ㅠㅠ")
         rospy.signal_shutdown("restarting hyproject...")
@@ -33,12 +36,14 @@ class Basement:
         rospy.init_node("hyproject_main")
         self.sub_image_raw = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.image_raw_callback, queue_size=1)
         self.sub_marker = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.marker_callback)
+
     def image_raw_callback(self, data):
         self.timeout = 60
         bridge = CvBridge()
         origin = bridge.compressed_imgmsg_to_cv2(data, "bgr8")
         origin = cv2.resize(origin, (256, 256), interpolation=cv2.INTER_NEAREST)
-        self.set_bgr(origin, origin[128:256, :, :])
+        self.__bgr_full = origin
+        self.__bgr_bottom = origin[128:256, :, :]
         img_hsv = cv2.cvtColor(origin[128:256, :, :], cv2.COLOR_BGR2HSV)
         self.img_h, self.img_s, self.img_v = img_hsv[:, :, 0], img_hsv[:, :, 1], img_hsv[:, :, 2]
     def marker_callback(self, data):

@@ -22,10 +22,6 @@ class VisionImage:
         over_bri = self.basement.img_v < 50
         return (over_sat & over_bri)
     def update(self):
-        self.timeout -= 1
-        if self.timeout < 0 :
-            self.basement.restart()
-            return
         img = self.basement.get_bgr_bottom()
         yellow = self.get_yellow()
         white = self.get_white()
