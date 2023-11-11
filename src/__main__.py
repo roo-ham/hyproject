@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import rospy, roslaunch
 import os
+import time
 from math import sin
 '''
 from sensor_msgs.msg import LaserScan
@@ -21,12 +22,14 @@ class Main:
         path = Path(os.path.abspath(__file__)).parent.parent.joinpath("launch/camera.launch")
         self.launch = roslaunch.parent.ROSLaunchParent(uuid, [str(path)])
         self.launch.start()
+        self.rate = rospy.Rate(60)
+        time.sleep(5)
+        
         self.vision_image = VisionImage(base)
         self.vision_marker = VisionMarker(base)
         #rospy.Subscriber('/scan', LaserScan, self.laser_callback)
         self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
         self.drive_data = Twist()
-        self.rate = rospy.Rate(60)
         self.t = 0.0
     def update(self):
         self.basement.update()
