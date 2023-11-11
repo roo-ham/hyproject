@@ -20,8 +20,8 @@ class Main:
         #self.drive_data = Twist()
         self.rate = rospy.Rate(60)
     def update(self):
+        self.vision_image.update()
         self.rate.sleep()
-        self.vision_image.get_yellow()
 
 
 if __name__ == "__main__":

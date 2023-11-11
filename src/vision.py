@@ -10,28 +10,36 @@ from sensor_msgs.msg import CompressedImage
 
 class VisionImage:
     def __init__(self, base:Basement):
-        self.basement = base
         rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
+        self.img_h, self.img_s, self.img_v = np.zeros((128,256), np.uint8),\
+            np.zeros((128,256), np.uint8),\
+                np.zeros((128,256), np.uint8)
         print("I'm VisionImage")
     def callback(self, data):
         bridge = CvBridge()
         origin = bridge.compressed_imgmsg_to_cv2(data, "bgr8")
         origin = cv2.resize(origin, (256, 256), interpolation=cv2.INTER_NEAREST)
-        self.basement.bgr_top = origin[0:128, :, :]
-        self.basement.bgr_bottom = origin[128:256, :, :]
+        self.basement.set_bgr(origin, origin[128:256, :, :])
+        img_hsv = cv2.cvtColor(origin[128:256, :, :], cv2.COLOR_BGR2HSV)
+        self.img_h, self.img_s, self.img_v = img_hsv[:, :, 0], img_hsv[:, :, 1], img_hsv[:, :, 2]
     def get_yellow(self):
-        img = cv2.cvtColor(self.basement.bgr_bottom, cv2.COLOR_BGR2HSV)
-        under_yellow = img[:, :, 0] < 15
-        over_yellow = img[:, :, 0] > 35
-        img[:, :, 0] = np.where(under_yellow, 0, img[:, :, 0])
-        img[:, :, 2] = np.where(under_yellow, 50, img[:, :, 2])
-        img[:, :, 0] = np.where(over_yellow, 128, img[:, :, 0])
-        img[:, :, 2] = np.where(over_yellow, 50, img[:, :, 2])
-        img = cv2.cvtColor(img, cv2.COLOR_HSV2BGR)
+        under_yellow = self.img_h < 15
+        over_yellow = self.img_h > 35
+        return ~(under_yellow & over_yellow)
+    def get_white(self):
+        over_sat = self.img_s > 230
+        over_bri = self.img_v > 230
+        return (over_sat & over_bri)
+    def update(self):
+        img = self.basement.get_bgr_bottom()
+        yellow = self.vision_image.get_yellow()
+        white = self.vision_image.get_white()
+        img[:, :, 2] = np.where(yellow, 64, img[:, :, 2])
+        img[:, :, 0] = np.where(yellow, 20, img[:, :, 0])
+        img[:, :, 2] = np.where(white, 255, img[:, :, 2])
         cv2.namedWindow("hyproject", cv2.WINDOW_NORMAL)
         cv2.imshow("hyproject", img)
         cv2.waitKey(1)
-        return ~(under_yellow & over_yellow)
 
 class VisionMarker:
     def __init__(self, base:Basement):
