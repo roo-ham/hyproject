@@ -12,23 +12,22 @@ class VisionImage:
     def __init__(self, base:Basement):
         self.basement = base
         self.timeout = 60
+        self.sub = None
         self.reset_camera()
         self.img_h, self.img_s, self.img_v = np.zeros((128,256), np.uint8),\
             np.zeros((128,256), np.uint8),\
                 np.zeros((128,256), np.uint8)
         print("I'm VisionImage")
     def reset_camera(self):
-        rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
-        rospy.Subscriber("/camera/rgb/camera_info", CameraInfo, self.camera_info_callback)
+        self.sub = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
     def callback(self, data):
+        self.timeout = 60
         bridge = CvBridge()
         origin = bridge.compressed_imgmsg_to_cv2(data, "bgr8")
         origin = cv2.resize(origin, (256, 256), interpolation=cv2.INTER_NEAREST)
         self.basement.set_bgr(origin, origin[128:256, :, :])
         img_hsv = cv2.cvtColor(origin[128:256, :, :], cv2.COLOR_BGR2HSV)
         self.img_h, self.img_s, self.img_v = img_hsv[:, :, 0], img_hsv[:, :, 1], img_hsv[:, :, 2]
-    def camera_info_callback(self, data):
-        self.timeout = 60
     def get_yellow(self):
         under_yellow = self.img_h < 15
         over_yellow = self.img_h > 35
@@ -44,6 +43,7 @@ class VisionImage:
     def update(self):
         self.timeout -= 1
         if self.timeout < 0 :
+            self.sub.unregister()
             self.reset_camera()
             print("ㅠㅠ")
         img = self.basement.get_bgr_bottom()
