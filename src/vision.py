@@ -6,18 +6,20 @@ from cv_bridge import CvBridge
 import cv2
 from ar_track_alvar_msgs.msg import AlvarMarkers
 from basement import Basement
-from sensor_msgs.msg import CompressedImage
-from dynamic_reconfigure.msg import Config
+from sensor_msgs.msg import CompressedImage, CameraInfo
 
 class VisionImage:
     def __init__(self, base:Basement):
         self.basement = base
-        rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
-        rospy.Subscriber("/camera/dabai_u3/parameter_updates", Config, self.camera_info_callback)
+        self.timeout = 60
+        self.reset_camera()
         self.img_h, self.img_s, self.img_v = np.zeros((128,256), np.uint8),\
             np.zeros((128,256), np.uint8),\
                 np.zeros((128,256), np.uint8)
         print("I'm VisionImage")
+    def reset_camera(self):
+        rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
+        rospy.Subscriber("/camera/rgb/camera_info", CameraInfo, self.camera_info_callback)
     def callback(self, data):
         bridge = CvBridge()
         origin = bridge.compressed_imgmsg_to_cv2(data, "bgr8")
@@ -26,7 +28,7 @@ class VisionImage:
         img_hsv = cv2.cvtColor(origin[128:256, :, :], cv2.COLOR_BGR2HSV)
         self.img_h, self.img_s, self.img_v = img_hsv[:, :, 0], img_hsv[:, :, 1], img_hsv[:, :, 2]
     def camera_info_callback(self, data):
-        print(data)
+        self.timeout = 60
     def get_yellow(self):
         under_yellow = self.img_h < 15
         over_yellow = self.img_h > 35
@@ -40,6 +42,9 @@ class VisionImage:
         over_bri = self.img_v < 50
         return (over_sat & over_bri)
     def update(self):
+        self.timeout -= 1
+        if self.timeout < 0 :
+            self.reset_camera()
         img = self.basement.get_bgr_bottom()
         yellow = self.get_yellow()
         white = self.get_white()
