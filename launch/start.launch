@@ -1,4 +1,4 @@
 <launch>
     <include file="$(find limo_bringup)/launch/limo_start.launch"/>
-    <node pkg="hyproject" type="__main__.py" name="hyproject_main" output="screen"/>
+    <node pkg="hyproject" type="__main__.py" name="hyproject_main" output="screen" respawn="true"/>
 </launch>
