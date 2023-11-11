@@ -29,6 +29,8 @@ class Basement:
 
     def restart(self):
         print("restarting...")
+        del self.sub_image_raw
+        del self.sub_marker
         rospy.signal_shutdown("restarting hyproject...")
     def start(self):
         self.sub_image_raw = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.image_raw_callback, queue_size=1)
