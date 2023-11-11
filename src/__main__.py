@@ -21,6 +21,7 @@ class Main:
         self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
         self.drive_data = Twist()
         self.rate = rospy.Rate(60)
+        self.t = 0.0
     def update(self):
         self.vision_image.update()
         self.t += 0.1
