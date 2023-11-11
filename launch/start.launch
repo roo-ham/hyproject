@@ -20,5 +20,5 @@
 		<remap from="camera_image"  to="$(arg cam_image_topic)" />
 		<remap from="camera_info"   to="$(arg cam_info_topic)" />
 	</node>
-    <node pkg="hyproject" type="__main__.py" name="hyproject_main" output="screen"></node>
+    <node pkg="hyproject" type="__main__.py" name="hyproject_main" output="screen" respawn="true"></node>
 </launch>
