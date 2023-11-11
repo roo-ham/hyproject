@@ -13,7 +13,6 @@ class VisionImage(Submodule):
     def __init__(self, base:Basement):
         super().__init__(base, "VisionImage")
         self.sub_image_raw = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
-        print("I'm VisionImage")
     def get_yellow(self):
         under_yellow = self.basement.img_h < 15
         over_yellow = self.basement.img_h > 35
