@@ -32,14 +32,13 @@ class Main:
 
 base = Basement()
 try:
-    while True:
-        rospy.init_node("hyproject_main")
-        os.system("clear")
-        print("Hello, Hanyang!")
-        print("Ctrl+C to exit.")
-        main_object = Main(base)
-        base.start()
-        while not rospy.is_shutdown():
-            main_object.update()
+    rospy.init_node("hyproject_main")
+    os.system("clear")
+    print("Hello, Hanyang!")
+    print("Ctrl+C to exit.")
+    main_object = Main(base)
+    base.start()
+    while not rospy.is_shutdown():
+        main_object.update()
 except KeyboardInterrupt:
-    exit()
+    pass
