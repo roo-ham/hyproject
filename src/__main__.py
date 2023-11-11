@@ -35,11 +35,13 @@ if __name__ == "__main__":
     os.system("clear")
     print("Hello, Hanyang!")
     print("Ctrl+C to exit.")
-    main_object = Main(Basement())
+    base = Basement()
     try:
         while True:
-            main_object.update()
-    except rospy.ROSInterruptException:
-        pass
+            main_object = Main(base)
+            rospy.init_node("hyproject_main")
+            base.start()
+            while not rospy.is_shutdown():
+                main_object.update()
     except KeyboardInterrupt:
-        pass
+        exit()

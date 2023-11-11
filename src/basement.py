@@ -18,7 +18,6 @@ class Basement:
         self.sub_image_raw = None
         self.sub_marker = None
         self.timeout = 60
-        self.start()
     def update(self):
         self.timeout -= 1
         if self.timeout < 0 :
@@ -29,11 +28,9 @@ class Basement:
         return self.__bgr_bottom.copy()
 
     def restart(self):
-        print("ㅠㅠ")
-        #rospy.signal_shutdown("restarting hyproject...")
-        self.start()
+        print("restarting...")
+        rospy.signal_shutdown("restarting hyproject...")
     def start(self):
-        rospy.init_node("hyproject_main")
         self.sub_image_raw = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.image_raw_callback, queue_size=1)
         self.sub_marker = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.marker_callback)
 
