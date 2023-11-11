@@ -11,7 +11,6 @@ from sensor_msgs.msg import CompressedImage, CameraInfo
 class VisionImage:
     def __init__(self, base:Basement):
         self.basement = base
-        self.timeout = 60
         self.sub = None
         self.reset_camera()
         self.img_h, self.img_s, self.img_v = np.zeros((128,256), np.uint8),\
@@ -19,6 +18,7 @@ class VisionImage:
                 np.zeros((128,256), np.uint8)
         print("I'm VisionImage")
     def reset_camera(self):
+        self.timeout = 60
         if self.sub != None :
             self.sub.unregister()
             self.sub = None
