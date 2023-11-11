@@ -1,6 +1,6 @@
 <launch>
     <include file="$(find limo_bringup)/launch/limo_start.launch"/>
-    <group ns="hyproject_group" respawn="true" respawn="true" respawn_delay="5">
+    <group ns="hyproject_group" respawn="true" respawn_delay="5">
         <include file="/home/wego/wego_ws/src/ros_astra_camera/launch/dabai_u3.launch"/>
         <arg name="marker_size" default="4.4" />
         <arg name="max_new_marker_error" default="0.08" />
