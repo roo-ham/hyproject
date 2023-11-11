@@ -26,7 +26,7 @@ class VisionImage:
     def get_yellow(self):
         under_yellow = self.img_h < 15
         over_yellow = self.img_h > 35
-        return ~(under_yellow & over_yellow)
+        return ~(under_yellow | over_yellow)
     def get_white(self):
         over_sat = self.img_s > 230
         over_bri = self.img_v > 230
