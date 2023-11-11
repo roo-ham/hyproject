@@ -32,6 +32,8 @@ class Main:
         self.drive_data = Twist()
         self.t = 0.0
     def update(self):
+        if self.vision_image.timeout < 0 and self.vision_marker.timeout < 0 :
+            self.restart()
         self.basement.update()
         self.vision_image.update()
         self.t += 0.1
@@ -40,6 +42,9 @@ class Main:
         self.rate.sleep()
     def end(self):
         self.launch.shutdown()
+    def restart(self):
+        print("restarting...")
+        rospy.signal_shutdown("restarting hyproject...")
 
 base = Basement()
 try:

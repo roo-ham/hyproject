@@ -14,20 +14,7 @@ class Basement:
                 np.zeros((128,256), np.uint8)
         self.sub_image_raw = None
         self.sub_marker = None
-        self.start()
-    def update(self):
-        self.timeout -= 1
-        if self.timeout < 0 :
-            self.restart()
     def get_bgr_full(self) -> np.ndarray:
         return self.__bgr_full.copy()
     def get_bgr_bottom(self) -> np.ndarray:
         return self.__bgr_bottom.copy()
-
-    def restart(self):
-        print("restarting...")
-        del self.sub_image_raw
-        del self.sub_marker
-        rospy.signal_shutdown("restarting hyproject...")
-    def start(self):
-        self.timeout = 60
