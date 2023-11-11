@@ -30,14 +30,12 @@ class Main:
         self.pub.publish(self.drive_data)
         self.rate.sleep()
 
-base = Basement()
 try:
     rospy.init_node("hyproject_main")
     os.system("clear")
     print("Hello, Hanyang!")
     print("Ctrl+C to exit.")
-    main_object = Main(base)
-    base.start()
+    main_object = Main(Basement())
     while not rospy.is_shutdown():
         main_object.update()
 except KeyboardInterrupt:

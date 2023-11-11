@@ -17,7 +17,7 @@ class Basement:
                 np.zeros((128,256), np.uint8)
         self.sub_image_raw = None
         self.sub_marker = None
-        self.timeout = 60
+        self.start()
     def update(self):
         self.timeout -= 1
         if self.timeout < 0 :
@@ -35,6 +35,7 @@ class Basement:
     def start(self):
         self.sub_image_raw = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.image_raw_callback, queue_size=1)
         self.sub_marker = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.marker_callback)
+        self.timeout = 60
 
     def image_raw_callback(self, data):
         self.timeout = 60
