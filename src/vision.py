@@ -19,14 +19,14 @@ class VisionImage(Submodule):
         return ~(under_yellow | over_yellow)
     def get_thick_h(self, original):
         thick_h = np.zeros((128,256), bool) | original
-        n = 2
+        n = 16
         for k in range(n + 1):
             thick_h[:, k:256-n+k] |= original[:, n-k:256-k]
             thick_h[:, n-k:256-k] |= original[:, k:256-n+k]
         return thick_h
     def get_thick_v(self, original):
         thick_v = np.zeros((128,256), bool) | original
-        n = 2
+        n = 16
         for k in range(n + 1):
             thick_v[k:128-n+k, :] |= original[n-k:128-k, :]
             thick_v[n-k:128-k, :] |= original[k:128-n+k, :]
