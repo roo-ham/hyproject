@@ -63,7 +63,7 @@ class VisionImage(Submodule):
         for n in range(4):
             y1[:, 0:255] &= y1[:, 1:256]
         y1[0:8, :], y1[120:128, :], y1[:, 0:8], y1[:, 248:256] = False, False, False, False
-
+        y2 = y1[0:254] & (~y1[2:256])
         points = self.get_yellow_point(y1)
         points_coord = np.array(np.where(points)).T
         points_tangent = []
@@ -72,7 +72,7 @@ class VisionImage(Submodule):
             tan1 = (x-64)/(y-128)
             mask = np.ones((17,17), np.int32)
             mask[1:16, 1:16] = 0
-            base = y1[-8+x:9+x, -8+y:9+y].copy() * mask
+            base = y2[-8+x:9+x, -8+y:9+y].copy() * mask
             base_sum = np.sum(base)
             base_coord = np.array(np.where(base != 0)).T
             com = sum([0 if j == 8 else (i-8)/(j-8) for i, j in base_coord])
@@ -81,9 +81,9 @@ class VisionImage(Submodule):
             points_tangent.append((tan1, tan2))
         print(points_tangent)
 
-        img[:, :, 0] = np.where(y1, 0, img[:, :, 0])
-        img[:, :, 1] = np.where(y1, 255, img[:, :, 1])
-        img[:, :, 2] = np.where(y1, 255, img[:, :, 2])
+        img[:, :, 0] = np.where(y2, 0, img[:, :, 0])
+        img[:, :, 1] = np.where(y2, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(y2, 255, img[:, :, 2])
 
         img[:, :, 0] = np.where(points, 0, img[:, :, 0])
         img[:, :, 1] = np.where(points, 0, img[:, :, 1])
