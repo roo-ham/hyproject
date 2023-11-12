@@ -64,7 +64,7 @@ class VisionImage(Submodule):
             y1[:, 0:255] &= y1[:, 1:256]
         y1[0:8, :], y1[120:128, :], y1[:, 0:8], y1[:, 248:256] = False, False, False, False
         y2 = np.zeros((128,256), bool)
-        y2[0:254] = y1[0:254] & (~y1[2:256])
+        y2[:, 0:254] = y1[:, 0:254] & (~y1[:, 2:256])
         points = self.get_yellow_point(y1)
         points_coord = np.array(np.where(points)).T
         points_tangent = []
