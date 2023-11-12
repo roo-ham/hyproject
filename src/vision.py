@@ -21,8 +21,8 @@ class VisionImage(Submodule):
         yellow = self.get_yellow()
         horizonal = np.zeros((128,256), bool)
         #vertical = np.zeros((128,256), bool)
-        horizonal[1:128, :] = (~yellow[0:127, :]) & (yellow[1:128, :])
-        #vertical[:, 1:256] = (~yellow[:, 0:255]) & (yellow[:, 1:256])
+        horizonal[1:128, :] = (yellow[0:127, :]) & (~yellow[1:128, :])
+        #vertical[:, 1:256] = (yellow[:, 0:255]) & (~yellow[:, 1:256])
         return horizonal
     def get_white(self):
         over_sat = self.basement.img_s < 64
