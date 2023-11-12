@@ -17,31 +17,6 @@ class VisionImage(Submodule):
         under_yellow = self.basement.img_h < 15
         over_yellow = self.basement.img_h > 35
         return ~(under_yellow | over_yellow)
-    def get_thick_h(self, original):
-        thick_h = np.zeros((128,256), bool) | original
-        n = 16
-        for k in range(n + 1):
-            thick_h[:, k:256-n+k] |= original[:, n-k:256-k]
-            thick_h[:, n-k:256-k] |= original[:, k:256-n+k]
-        return thick_h
-    def get_thick_v(self, original):
-        thick_v = np.zeros((128,256), bool) | original
-        n = 16
-        for k in range(n + 1):
-            thick_v[k:128-n+k, :] |= original[n-k:128-k, :]
-            thick_v[n-k:128-k, :] |= original[k:128-n+k, :]
-        return thick_v
-    def get_yellow_point(self, yellow):
-        yellow_thick_h = self.get_thick_h(yellow)
-        horizonal = np.zeros((128,256), bool) | yellow
-        horizonal[0:127, :] &= ~yellow_thick_h[1:128, :]
-
-        yellow_thick_v = self.get_thick_v(horizonal)
-        vertical = np.zeros((128,256), bool) | horizonal
-        vertical[:, 0:255] &= ~yellow_thick_v[:, 1:256]
-
-        return vertical
-    
     def get_white(self):
         over_sat = self.basement.img_s < 64
         over_bri = self.basement.img_v > 150
@@ -64,10 +39,9 @@ class VisionImage(Submodule):
             y1[:, 0:255] &= y1[:, 1:256]
         y1[0:8, :], y1[120:128, :], y1[:, 0:8], y1[:, 248:256] = False, False, False, False
         y2 = np.zeros((128,256), bool)
-        y2[:, 0:254] = y1[:, 0:254] & (~y1[:, 2:256])
-        points = self.get_yellow_point(y1)
-        points_coord = np.array(np.where(points)).T
-        points_tangent = []
+        y2[:, 0:254] = y1[:, 0:255] & (~y1[:, 1:256])
+        points_coord = np.array(np.where(y2)).T
+        self.basement.points_tangent = []
         for x, y in points_coord:
             if y == 128 : continue
             tan1 = np.arctan(x/(y-128))
@@ -79,16 +53,11 @@ class VisionImage(Submodule):
             com = sum([0 if j == 8 else np.arctan((i-8)/(j-8)) for i, j in base_coord])
             if base_sum == 0 : continue
             tan2 = com/base_sum
-            points_tangent.append((tan1, tan2))
-        print(points_tangent)
+            self.basement.points_tangent.append((tan1, tan2))
 
         img[:, :, 0] = np.where(y2, 0, img[:, :, 0])
         img[:, :, 1] = np.where(y2, 255, img[:, :, 1])
         img[:, :, 2] = np.where(y2, 255, img[:, :, 2])
-
-        img[:, :, 0] = np.where(points, 0, img[:, :, 0])
-        img[:, :, 1] = np.where(points, 0, img[:, :, 1])
-        img[:, :, 2] = np.where(points, 255, img[:, :, 2])
         cv2.namedWindow("hyproject", cv2.WINDOW_NORMAL)
         cv2.imshow("hyproject", img)
         cv2.waitKey(1)

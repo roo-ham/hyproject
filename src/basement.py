@@ -11,6 +11,7 @@ class Basement:
         self.img_h, self.img_s, self.img_v = np.zeros((128,256), np.uint8),\
             np.zeros((128,256), np.uint8),\
                 np.zeros((128,256), np.uint8)
+        self.points_tangent = []
     def set_bgr(self, full, bottom):
         self.__bgr_full = full
         self.__bgr_bottom = bottom
