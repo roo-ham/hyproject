@@ -22,7 +22,7 @@ class Main:
         path = Path(os.path.abspath(__file__)).parent.parent.joinpath("launch/camera.launch")
         self.launch = roslaunch.parent.ROSLaunchParent(uuid, [str(path)])
         self.launch.start()
-        self.rate = rospy.Rate(60)
+        self.rate = rospy.Rate(30)
         time.sleep(5)
         
         self.vision_image = VisionImage(base)
