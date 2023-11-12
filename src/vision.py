@@ -70,7 +70,7 @@ class VisionImage(Submodule):
         points_tangent = []
         for x, y in points_coord:
             if y == 128 : continue
-            tan1 = np.atan((x-64)/(y-128))
+            tan1 = np.atan(x/(y-128))
             mask = np.ones((17,17), np.int32)
             mask[1:16, 1:16] = 0
             base = y2[-8+x:9+x, -8+y:9+y].copy() * mask
