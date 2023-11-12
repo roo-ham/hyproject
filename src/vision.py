@@ -34,10 +34,10 @@ class VisionImage(Submodule):
     def get_yellow_hv(self):
         yellow = self.get_yellow()
         yellow_thick_h = self.get_thick_h(yellow)
-        yellow_thick_v = self.get_thick_v(yellow)
         horizonal = np.zeros((128,256), bool) | yellow
-        vertical = np.zeros((128,256), bool) | yellow
         horizonal[0:127, :] &= ~yellow_thick_h[1:128, :]
+        yellow_thick_v = self.get_thick_v(horizonal)
+        vertical = np.zeros((128,256), bool) | horizonal
         vertical[:, 0:255] &= ~yellow_thick_v[:, 1:256]
         return horizonal, vertical
     def get_white(self):
