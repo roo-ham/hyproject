@@ -19,9 +19,13 @@ class VisionImage(Submodule):
         return ~(under_yellow | over_yellow)
     def get_line_dot(self):
         yellow = self.get_yellow()
-        horizonal = np.zeros((128,256), bool)
-        #vertical = np.zeros((128,256), bool)
-        horizonal[1:128, :] = (yellow[0:127, :]) & (~yellow[1:128, :])
+        yellow_thick_h = np.zeros((128,256), bool) | yellow
+        #yellow_thick_v = np.zeros((128,256), bool) | yellow
+        yellow_thick_h[:, 0:127] |= yellow_thick_h[:, 1:128]
+        yellow_thick_h[:, 1:128] |= yellow_thick_h[:, 0:127]
+        horizonal = np.zeros((128,256), bool) | yellow
+        #vertical = np.zeros((128,256), bool) | yellow
+        horizonal[0:127, :] &= ~yellow_thick_h[1:128, :]
         #vertical[:, 1:256] = (yellow[:, 0:255]) & (~yellow[:, 1:256])
         return horizonal
     def get_white(self):
