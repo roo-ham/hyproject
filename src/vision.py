@@ -40,7 +40,7 @@ class VisionImage(Submodule):
         vertical = np.zeros((128,256), bool) | horizonal
         vertical[:, 0:255] &= ~yellow_thick_v[:, 1:256]
 
-        return horizonal
+        return vertical
     
     def get_white(self):
         over_sat = self.basement.img_s < 64
@@ -60,18 +60,32 @@ class VisionImage(Submodule):
         bw = black | white
         bw[:, 0:252] &= bw[:, 4:256]
         y1 = self.get_yellow()&(~bw)
-        y1[:, 0:255] &= y1[:, 1:256]
+        for n in range(4):
+            y1[:, 0:255] &= y1[:, 1:256]
         y1[0:8, :], y1[120:128, :], y1[:, 0:8], y1[:, 248:256] = False, False, False, False
 
-        a = self.get_yellow_point(y1)
+        points = self.get_yellow_point(y1)
+        points_coord = np.array(np.where(points)).T
+        points_tangent = []
+        for x, y in points_coord:
+            tan1 = 0.0 if y == 128 else (x-64)/(y-128)
+            mask = np.ones((17,17), bool)
+            mask[1:16, 1:16] = False
+            base = y1[-8+x:9+x, -8+y:9+y] & mask
+            base_sum = np.sum(base.astype(np.int32))
+            base_coord = np.array(np.where(base)).T
+            com = sum([0 if i[1] == 0 else i[0]/i[1] for i in base_coord])
+            tan2 = 0.0 if base_sum == 0 else com/base_sum
+            points_tangent.append((tan1, tan2))
+        print(points_tangent)
 
         img[:, :, 0] = np.where(y1, 0, img[:, :, 0])
         img[:, :, 1] = np.where(y1, 255, img[:, :, 1])
         img[:, :, 2] = np.where(y1, 255, img[:, :, 2])
 
-        img[:, :, 0] = np.where(a, 0, img[:, :, 0])
-        img[:, :, 1] = np.where(a, 0, img[:, :, 1])
-        img[:, :, 2] = np.where(a, 255, img[:, :, 2])
+        img[:, :, 0] = np.where(points, 0, img[:, :, 0])
+        img[:, :, 1] = np.where(points, 0, img[:, :, 1])
+        img[:, :, 2] = np.where(points, 255, img[:, :, 2])
         cv2.namedWindow("hyproject", cv2.WINDOW_NORMAL)
         cv2.imshow("hyproject", img)
         cv2.waitKey(1)
