@@ -34,7 +34,6 @@ class VisionImage(Submodule):
     def get_yellow_point(self, yellow):
         yellow_thick_h = self.get_thick_h(yellow)
         horizonal = np.zeros((128,256), bool) | yellow
-        horizonal[:, 0:252] &= horizonal[:, 4:256]
         horizonal[0:127, :] &= ~yellow_thick_h[1:128, :]
 
         yellow_thick_v = self.get_thick_v(horizonal)
@@ -59,8 +58,7 @@ class VisionImage(Submodule):
         black = self.get_black()
         white = self.get_black()
         y1 = self.get_yellow()&(~black)&(~white)
-        y1[2:126, 2:254] = y1[0:124, 0:252] | y1[4:128, 4:256]
-        y1[2:126, 2:254] = y1[0:124, 0:252] & y1[4:128, 4:256]
+        y1[:, 0:252] &= y1[:, 4:256]
         y1[0:8, :], y1[120:128, :], y1[:, 0:8], y1[:, 248:256] = False, False, False, False
 
         a = self.get_yellow_point(y1)
