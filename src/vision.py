@@ -33,8 +33,8 @@ class VisionImage(Submodule):
         return thick_v
     def get_yellow_hv(self):
         yellow = self.get_yellow()
-        white = self.get_white()
-        yellow &= ~white
+        black = self.get_black()
+        yellow &= ~black
         yellow_thick_h = self.get_thick_h(yellow)
         horizonal = np.zeros((128,256), bool) | yellow
         horizonal[0:127, :] &= ~yellow_thick_h[1:128, :]
@@ -58,17 +58,17 @@ class VisionImage(Submodule):
         a, b = self.get_yellow_hv()
         y = self.get_yellow()
         w = self.get_white()
-        b = self.get_black()
-        new_y = y&(~b)
+        black = self.get_black()
+        new_y = y&(~black)
 
 
         img[:, :, 0] = np.where(new_y, 0, img[:, :, 0])
         img[:, :, 1] = np.where(new_y, 255, img[:, :, 1])
         img[:, :, 2] = np.where(new_y, 255, img[:, :, 2])
 
-        img[:, :, 0] = np.where(a&b, 255, img[:, :, 0])
-        img[:, :, 1] = np.where(b, 255, img[:, :, 1])
-        img[:, :, 2] = np.where(a, 255, img[:, :, 2])
+        #img[:, :, 0] = np.where(a&b, 255, img[:, :, 0])
+        #img[:, :, 1] = np.where(b, 255, img[:, :, 1])
+        img[:, :, 1] = np.where(a, 0, img[:, :, 1])
 
         #img[:, :, 0] = np.where(black, 255, img[:, :, 0])
         #img[:, :, 1] = np.where(black, 0, img[:, :, 1])
