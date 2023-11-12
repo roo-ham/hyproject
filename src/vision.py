@@ -43,7 +43,7 @@ class VisionImage(Submodule):
         vertical = np.zeros((128,256), bool) | horizonal
         vertical[:, 0:255] &= ~yellow_thick_v[:, 1:256]
 
-        return horizonal
+        return vertical
     
     def get_white(self):
         over_sat = self.basement.img_s < 64
