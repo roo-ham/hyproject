@@ -31,8 +31,8 @@ class VisionImage(Submodule):
         img[:, :, :] = 0
 
         yellow = self.get_yellow()
-        black = self.get_white()
-        white = self.get_black()
+        black = self.get_black()
+        white = self.get_white()
         bw = black | white
         bw[:, 0:254] &= bw[:, 2:256]
         #points_coord = np.array(np.where(y2)).T
