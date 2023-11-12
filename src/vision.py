@@ -17,16 +17,28 @@ class VisionImage(Submodule):
         under_yellow = self.basement.img_h < 15
         over_yellow = self.basement.img_h > 35
         return ~(under_yellow | over_yellow)
+    def get_thick_h(self, original):
+        thick_h = np.zeros((128,256), bool) | original
+        n = 5
+        for k in range(n + 1):
+            thick_h[:, k:256-n+k] |= original[:, n-k:256-k]
+            thick_h[:, n-k:256-k] |= original[:, k:256-n+k]
+        return thick_h
+    def get_thick_v(self, original):
+        thick_v = np.zeros((128,256), bool) | original
+        n = 5
+        for k in range(n + 1):
+            thick_v[k:128-n+k, :] |= original[n-k:128-k, :]
+            thick_v[n-k:128-k, :] |= original[k:128-n+k, :]
+        return thick_v
     def get_line_dot(self):
         yellow = self.get_yellow()
-        yellow_thick_h = np.zeros((128,256), bool) | yellow
-        #yellow_thick_v = np.zeros((128,256), bool) | yellow
-        yellow_thick_h[:, 0:127] |= yellow_thick_h[:, 1:128]
-        yellow_thick_h[:, 1:128] |= yellow_thick_h[:, 0:127]
+        yellow_thick_h = self.get_thick_h(yellow)
+        #yellow_thick_v = self.get_thick_v(yellow)
         horizonal = np.zeros((128,256), bool) | yellow
         #vertical = np.zeros((128,256), bool) | yellow
         horizonal[0:127, :] &= ~yellow_thick_h[1:128, :]
-        #vertical[:, 1:256] = (yellow[:, 0:255]) & (~yellow[:, 1:256])
+        #vertical[:, 0:255] &= ~yellow_thick_v[:, 1:256]
         return horizonal
     def get_white(self):
         over_sat = self.basement.img_s < 64
