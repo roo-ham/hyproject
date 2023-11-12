@@ -15,6 +15,7 @@ class Basement:
     def set_bgr(self, full, bottom):
         self.__bgr_full = full
         self.__bgr_bottom = bottom
+        bottom = cv2.blur(bottom, (9, 9), anchor=(-1, -1), borderType=cv2.BORDER_DEFAULT)
         img_hsv = cv2.cvtColor(bottom, cv2.COLOR_BGR2HSV)
         self.img_h, self.img_s, self.img_v = img_hsv[:, :, 0], img_hsv[:, :, 1], img_hsv[:, :, 2]
     def get_bgr_full(self) -> np.ndarray:

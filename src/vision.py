@@ -37,7 +37,7 @@ class VisionImage(Submodule):
         bw[:, 0:254] &= bw[:, 2:256]
         #points_coord = np.array(np.where(y2)).T
         self.basement.points_tangent = []
-        for x, y in []:
+        '''for x, y in []:
             if y == 128 : continue
             tan1 = np.arctan(x/(y-128))
             mask = np.ones((17,17), np.int32)
@@ -48,7 +48,7 @@ class VisionImage(Submodule):
             com = sum([0 if j == 8 else np.arctan((i-8)/(j-8)) for i, j in base_coord])
             if base_sum == 0 : continue
             tan2 = com/base_sum
-            self.basement.points_tangent.append((tan1, tan2))
+            self.basement.points_tangent.append((tan1, tan2))'''
 
         img[:, :, 0] = np.where(yellow, 0, img[:, :, 0])
         img[:, :, 1] = np.where(yellow, 255, img[:, :, 1])
