@@ -56,15 +56,19 @@ class VisionImage(Submodule):
         img = self.basement.get_bgr_bottom()
         img[:, :, :] = 0
         a, b = self.get_yellow_hv()
-        #white = self.get_white()
+        y = self.get_yellow()
+        w = self.get_white()
+        new_y = y&(~w)
+
         #black = self.get_black()
+
+        img[:, :, 0] = np.where(new_y, 0, img[:, :, 0])
+        img[:, :, 1] = np.where(new_y, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(new_y, 255, img[:, :, 2])
+
         img[:, :, 0] = np.where(a&b, 255, img[:, :, 0])
         img[:, :, 1] = np.where(b, 255, img[:, :, 1])
         img[:, :, 2] = np.where(a, 255, img[:, :, 2])
-
-        #img[:, :, 0] = np.where(white, 255, img[:, :, 0])
-        #img[:, :, 1] = np.where(white, 255, img[:, :, 1])
-        #img[:, :, 2] = np.where(white, 0, img[:, :, 2])
 
         #img[:, :, 0] = np.where(black, 255, img[:, :, 0])
         #img[:, :, 1] = np.where(black, 0, img[:, :, 1])
