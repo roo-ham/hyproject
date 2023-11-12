@@ -36,22 +36,23 @@ class VisionImage(Submodule):
         bw = black | white
         bw[:, 0:254] &= bw[:, 2:256]
         yellow &= ~bw
-        yellow[0:self.basement.bottom_height-2, 0:254] &=\
-            (~yellow[1:self.basement.bottom_height-1, 2:256])\
-            & (~yellow[1:self.basement.bottom_height-1, 1:255])\
-            & (~yellow[2:self.basement.bottom_height, 1:255])
-        yellow[:, 0:8] = False
-        yellow[:, 248:256] = False
-        yellow[0:8, :] = False
-        yellow[self.basement.bottom_height-8:self.basement.bottom_height, :] = False
-        points_coord = np.array(np.where(yellow)).T
+        b_height = self.basement.bottom_height
+
+        y2 = np.zeros((b_height,256), bool)
+        y2 |= yellow[0:b_height, 0:255] & (~yellow[0:b_height, 1:256])
+        y2 |= yellow[0:b_height-1, 0:256] & (~yellow[1:b_height, 0:256])
+        y2[:, 0:8] = False
+        y2[:, 248:256] = False
+        y2[0:8, :] = False
+        y2[b_height-8:b_height, :] = False
+        points_coord = np.array(np.where(y2)).T
         self.basement.points_tangent = []
         for x, y in points_coord:
             if y == 128 : continue
             tan1 = np.arctan(x/(y-128))
             mask = np.ones((17,17), np.int32)
             mask[1:16, 1:16] = 0
-            base = yellow[-8+x:9+x, -8+y:9+y].copy() * mask
+            base = y2[-8+x:9+x, -8+y:9+y].copy() * mask
             base_sum = np.sum(base)
             base_coord = np.array(np.where(base != 0)).T
             com = sum([0 if j == 8 else np.arctan((i-8)/(j-8)) for i, j in base_coord])
@@ -59,9 +60,9 @@ class VisionImage(Submodule):
             tan2 = com/base_sum
             self.basement.points_tangent.append((tan1, tan2))
 
-        img[:, :, 0] = np.where(yellow, 0, img[:, :, 0])
-        img[:, :, 1] = np.where(yellow, 255, img[:, :, 1])
-        img[:, :, 2] = np.where(yellow, 255, img[:, :, 2])
+        img[:, :, 0] = np.where(y2, 0, img[:, :, 0])
+        img[:, :, 1] = np.where(y2, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(y2, 255, img[:, :, 2])
 
         #img[:, :, 0] = np.where(white, 255, img[:, :, 0])
         #img[:, :, 1] = np.where(white, 255, img[:, :, 1])
