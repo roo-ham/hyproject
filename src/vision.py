@@ -39,7 +39,7 @@ class VisionImage(Submodule):
             y1[:, 0:255] &= y1[:, 1:256]
         y1[0:8, :], y1[120:128, :], y1[:, 0:8], y1[:, 248:256] = False, False, False, False
         y2 = np.zeros((128,256), bool)
-        y2[:, 0:254] = y1[:, 0:255] & (~y1[:, 1:256])
+        y2[:, 0:255] = y1[:, 0:255] & (~y1[:, 1:256])
         points_coord = np.array(np.where(y2)).T
         self.basement.points_tangent = []
         for x, y in points_coord:
