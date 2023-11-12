@@ -36,7 +36,7 @@ class Main:
             self.restart()
         self.vision_image.update()
         self.drive_data.linear.x = 0.1
-        self.drive_data.linear.z = 0.0
+        self.drive_data.angular.z = 0.0
         point_num = len(self.basement.points_tangent) * 10
         for a, b in self.basement.points_tangent:
             self.drive_data.angular.z += (a)/point_num
