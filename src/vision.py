@@ -45,13 +45,13 @@ class VisionImage(Submodule):
         self.basement.points_tangent = []
         for x, y in points_coord:
             if y == 128 : continue
-            tan1 = np.arctan(x/(y-128))
+            tan1 = np.arctan((x/(y-128))**3)
             mask = np.ones((17,17), np.int32)
             mask[1:16, 1:16] = 0
             base = yellow[-8+x:9+x, -8+y:9+y].copy() * mask
             base_sum = np.sum(base)
             base_coord = np.array(np.where(base != 0)).T
-            com = sum([0 if j == 8 else np.arctan((i-8)/(j-8)) for i, j in base_coord])
+            com = sum([0 if j == 8 else np.arctan(((i-8)/(j-8))**3) for i, j in base_coord])
             if base_sum == 0 : continue
             tan2 = com/base_sum
             self.basement.points_tangent.append((tan1, tan2))
