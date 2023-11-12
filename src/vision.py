@@ -68,14 +68,16 @@ class VisionImage(Submodule):
         points_coord = np.array(np.where(points)).T
         points_tangent = []
         for x, y in points_coord:
-            tan1 = 0.0 if y == 128 else (x-64)/(y-128)
+            if y == 128 : continue
+            tan1 = (x-64)/(y-128)
             mask = np.ones((17,17), bool)
             mask[1:16, 1:16] = False
             base = y1[-8+x:9+x, -8+y:9+y] & mask
             base_sum = np.sum(base.astype(np.int32))
             base_coord = np.array(np.where(base)).T
             com = sum([0 if i[1] == 0 else i[0]/i[1] for i in base_coord])
-            tan2 = 0.0 if base_sum == 0 else com/base_sum
+            if base_sum == 0 : continue
+            tan2 = com/base_sum
             points_tangent.append((tan1, tan2))
         print(points_tangent)
 
