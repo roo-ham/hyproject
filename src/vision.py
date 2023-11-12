@@ -17,6 +17,13 @@ class VisionImage(Submodule):
         under_yellow = self.basement.img_h < 15
         over_yellow = self.basement.img_h > 35
         return ~(under_yellow | over_yellow)
+    def get_line_dot(self):
+        yellow = self.get_yellow()
+        horizonal = np.zeros((128,256,3), np.uint8)
+        vertical = np.zeros((128,256,3), np.uint8)
+        horizonal[1:128, :] = (~yellow[0:127, :]) & (yellow[1:128, :])
+        vertical[:, 1:256] = (~yellow[:, 0:255]) & (yellow[:, 1:256])
+        return horizonal & vertical
     def get_white(self):
         over_sat = self.basement.img_s < 64
         over_bri = self.basement.img_v > 150
@@ -28,7 +35,7 @@ class VisionImage(Submodule):
     def update(self):
         super().update()
         img = self.basement.get_bgr_bottom()
-        yellow = self.get_yellow()
+        yellow = self.get_line_dot()
         white = self.get_white()
         black = self.get_black()
         img[:, :, 0] = np.where(yellow, 0, img[:, :, 0])
