@@ -55,7 +55,8 @@ class VisionImage(Submodule):
         a, b = self.get_yellow_hv()
         #white = self.get_white()
         #black = self.get_black()
-        img[:, :, :] = np.where(a, 255, img[:, :, :])
+        img[:, :, 0] = np.where(a, 255, img[:, :, 0])
+        img[:, :, 1] = np.where(a, 255, img[:, :, 1])
 
         #img[:, :, 0] = np.where(white, 255, img[:, :, 0])
         #img[:, :, 1] = np.where(white, 255, img[:, :, 1])
