@@ -14,8 +14,8 @@ class VisionImage(Submodule):
         super().__init__(base, "VisionImage")
         self.sub_image_raw = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
     def get_yellow(self):
-        under_yellow = self.basement.img_h < 15
-        over_yellow = self.basement.img_h > 35
+        under_yellow = self.basement.img_h < 13
+        over_yellow = self.basement.img_h > 37
         return ~(under_yellow | over_yellow)
     def get_white(self):
         over_sat = self.basement.img_s < 64
@@ -50,13 +50,13 @@ class VisionImage(Submodule):
             tan2 = com/base_sum
             self.basement.points_tangent.append((tan1, tan2))
 
-        img[:, :, 0] = np.where(white, 255, img[:, :, 0])
-        img[:, :, 1] = np.where(white, 255, img[:, :, 1])
-        img[:, :, 2] = np.where(white, 0, img[:, :, 2])
-
         img[:, :, 0] = np.where(yellow, 0, img[:, :, 0])
         img[:, :, 1] = np.where(yellow, 255, img[:, :, 1])
         img[:, :, 2] = np.where(yellow, 255, img[:, :, 2])
+
+        img[:, :, 0] = np.where(white, 255, img[:, :, 0])
+        img[:, :, 1] = np.where(white, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(white, 0, img[:, :, 2])
 
         img[:, :, 0] = np.where(black, 255, img[:, :, 0])
         img[:, :, 1] = np.where(black, 0, img[:, :, 1])
