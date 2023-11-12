@@ -35,7 +35,7 @@ class Main:
         if self.vision_image.timeout < 0 or self.vision_marker.timeout < 0 :
             self.restart()
         self.vision_image.update()
-        self.drive_data.linear.x = 0.2
+        self.drive_data.linear.x = 0.2 * (b**2)
         self.drive_data.angular.z = 0.0
         point_num = len(self.basement.points_tangent) * 2
         for a, b in self.basement.points_tangent:
