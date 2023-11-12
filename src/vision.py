@@ -38,6 +38,7 @@ class VisionImage(Submodule):
         yellow &= ~bw
         yellow[0:self.basement.bottom_height-2, 0:254] &=\
             (~yellow[1:self.basement.bottom_height-1, 2:256])\
+            & (~yellow[1:self.basement.bottom_height-1, 1:255])\
             & (~yellow[2:self.basement.bottom_height, 1:255])
         yellow[:, 0:8] = False
         yellow[:, 248:256] = False
