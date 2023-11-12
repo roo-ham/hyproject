@@ -33,12 +33,14 @@ class VisionImage(Submodule):
         return thick_v
     def get_yellow_hv(self):
         yellow = self.get_yellow()
+        white = self.get_white()
         black = self.get_black()
         yellow &= ~black
         yellow_thick_h = self.get_thick_h(yellow)
         horizonal = np.zeros((128,256), bool) | yellow
         horizonal[0:127, :] &= ~yellow_thick_h[1:128, :]
         horizonal[:, 0:252] &= horizonal[:, 4:256]
+        horizonal &= ~white
         yellow_thick_v = self.get_thick_v(horizonal)
         vertical = np.zeros((128,256), bool) | horizonal
         vertical[:, 0:255] &= ~yellow_thick_v[:, 1:256]
@@ -70,9 +72,9 @@ class VisionImage(Submodule):
         #img[:, :, 1] = np.where(b, 255, img[:, :, 1])
         img[:, :, 1] = np.where(a, 0, img[:, :, 1])
 
-        #img[:, :, 0] = np.where(black, 255, img[:, :, 0])
-        #img[:, :, 1] = np.where(black, 0, img[:, :, 1])
-        #img[:, :, 2] = np.where(black, 0, img[:, :, 2])
+        img[:, :, 0] = np.where(b, 255, img[:, :, 0])
+        img[:, :, 1] = np.where(b, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(b, 0, img[:, :, 2])
         cv2.namedWindow("hyproject", cv2.WINDOW_NORMAL)
         cv2.imshow("hyproject", img)
         cv2.waitKey(1)
