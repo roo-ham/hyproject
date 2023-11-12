@@ -61,7 +61,7 @@ class VisionImage(Submodule):
         black = self.get_black()
         y1 = self.get_yellow()&(~black)
         y2 = self.get_yellow()&(~black)
-        y2[0:8, :], y2[120:128, :], y2[:, 0:8], y2[:, 198:256] = False, False, False, False
+        y2[0:8, :], y2[120:128, :], y2[:, 0:8], y2[:, 248:256] = False, False, False, False
 
         a = self.get_yellow_point(y2)
 
