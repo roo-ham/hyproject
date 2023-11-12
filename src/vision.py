@@ -56,13 +56,14 @@ class VisionImage(Submodule):
         img[:, :, :] = 0
 
         black = self.get_black()
-        y1 = self.get_yellow()&(~black)
+        white = self.get_white()
+        y1 = self.get_yellow()&(~black)&(~white)
         y1[0:124, 0:252] &= y1[4:128, 4:256]
+        y1[4:128, 4:256] |= y1[0:124, 0:252]
         #y1[0:127, 0:255] &= ~y1[1:128, 1:256]
-        y2 = y1.copy()
-        y2[0:8, :], y2[120:128, :], y2[:, 0:8], y2[:, 248:256] = False, False, False, False
+        y1[0:8, :], y1[120:128, :], y1[:, 0:8], y1[:, 248:256] = False, False, False, False
 
-        a = self.get_yellow_point(y2)
+        a = self.get_yellow_point(y1)
 
         img[:, :, 0] = np.where(y1, 0, img[:, :, 0])
         img[:, :, 1] = np.where(y1, 255, img[:, :, 1])
