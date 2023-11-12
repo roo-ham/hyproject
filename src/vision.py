@@ -58,7 +58,7 @@ class VisionImage(Submodule):
         black = self.get_black()
         y1 = self.get_yellow()&(~black)
         y1[0:124, 0:252] &= y1[4:128, 4:256]
-        y1[0:127, 0:255] &= ~y1[1:128, 1:256]
+        #y1[0:127, 0:255] &= ~y1[1:128, 1:256]
         y2 = y1.copy()
         y2[0:8, :], y2[120:128, :], y2[:, 0:8], y2[:, 248:256] = False, False, False, False
 
