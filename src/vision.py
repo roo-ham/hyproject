@@ -40,7 +40,7 @@ class VisionImage(Submodule):
         yellow[:, 0:8] = False
         yellow[:, 248:256] = False
         yellow[0:8, :] = False
-        yellow[120:128, :] = False
+        yellow[self.basement.bottom_height-8:self.basement.bottom_height, :] = False
         points_coord = np.array(np.where(yellow)).T
         self.basement.points_tangent = []
         for x, y in points_coord:
@@ -75,7 +75,7 @@ class VisionImage(Submodule):
         bridge = CvBridge()
         origin = bridge.compressed_imgmsg_to_cv2(data, "bgr8")
         origin = cv2.resize(origin, (256, 256))
-        self.basement.set_bgr(origin, origin[128:256, :, :])
+        self.basement.set_bgr(origin, origin[256-self.basement.bottom_height:256, :, :])
 
 class VisionMarker(Submodule):
     def __init__(self, base:Basement):

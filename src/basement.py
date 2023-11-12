@@ -6,11 +6,12 @@ import cv2
 class Basement:
     def __init__(self, name0:str = "release"):
         self.name = name0
+        self.bottom_height = 32
         self.__bgr_full = np.zeros((256,256,3), np.uint8)
-        self.__bgr_bottom = np.zeros((128,256,3), np.uint8)
-        self.img_h, self.img_s, self.img_v = np.zeros((128,256), np.uint8),\
-            np.zeros((128,256), np.uint8),\
-                np.zeros((128,256), np.uint8)
+        self.__bgr_bottom = np.zeros((256-self.bottom_height,256,3), np.uint8)
+        self.img_h, self.img_s, self.img_v = np.zeros((256-self.bottom_height,256), np.uint8),\
+            np.zeros((256-self.bottom_height,256), np.uint8),\
+                np.zeros((256-self.bottom_height,256), np.uint8)
         self.points_tangent = []
     def set_bgr(self, full, bottom):
         self.__bgr_full = full
