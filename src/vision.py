@@ -36,8 +36,6 @@ class VisionImage(Submodule):
         horizonal = np.zeros((128,256), bool) | yellow
         horizonal[0:127, :] &= ~yellow_thick_h[1:128, :]
 
-        white = self.get_white()
-        horizonal &= ~white
         yellow_thick_v = self.get_thick_v(horizonal)
         vertical = np.zeros((128,256), bool) | horizonal
         vertical[:, 0:255] &= ~yellow_thick_v[:, 1:256]
@@ -59,7 +57,8 @@ class VisionImage(Submodule):
 
         black = self.get_black()
         y1 = self.get_yellow()&(~black)
-        y1[:, 0:252] &= y1[:, 4:256]
+        y1[0:124, 0:252] &= y1[4:128, 4:256]
+        y1[0:127, 0:255] &= ~y1[1:128, 1:256]
         y2 = y1.copy()
         y2[0:8, :], y2[120:128, :], y2[:, 0:8], y2[:, 248:256] = False, False, False, False
 
