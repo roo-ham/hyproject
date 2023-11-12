@@ -55,7 +55,7 @@ class VisionImage(Submodule):
         img = self.basement.get_bgr_bottom()
         img[:, :, :] = 0
 
-        black = self.get_black()
+        black = self.get_white()
         white = self.get_black()
         bw = black | white
         bw[:, 0:252] &= bw[:, 4:256]
