@@ -39,7 +39,7 @@ class Main:
         self.drive_data.linear.z = 0.0
         point_num = len(self.basement.points_tangent)
         for a, b in self.basement.points_tangent:
-            self.drive_data.angular.z += (a - b)/point_num
+            self.drive_data.angular.z += (a + b)/point_num
         self.pub.publish(self.drive_data)
         self.rate.sleep()
         self.t += 1/60
