@@ -52,8 +52,8 @@ class VisionImage(Submodule):
         l_tan_squared = 0.0
         for x, y in points_coord:
             if y == 128 : continue
-            mask = np.ones((9,9), bool)
-            base = yellow[-8+x:9+x, -8+y:9+y]
+            base = yellow[-4+x:5+x, -4+y:5+y]
+            mask = np.ones_like(base, bool)
             x_set = np.where(mask, base, 0) * np.arange(-4, 5)
             y_set = (np.where(mask, base.T, 0) * np.arange(-4, 5)).T
             identity_size_local = np.sum(mask & yellow)
