@@ -3,13 +3,12 @@
 import rospy, roslaunch
 import os
 import time
-from math import sin
 '''
 from sensor_msgs.msg import LaserScan
 
 '''
-from geometry_msgs.msg import Twist
 from vision import VisionImage, VisionMarker
+from motor import Motor
 from basement import Basement
 from pathlib import Path
 
@@ -23,30 +22,21 @@ class Main:
         self.launch = roslaunch.parent.ROSLaunchParent(uuid, [str(path)])
         self.launch.start()
         self.rate = rospy.Rate(30)
-        time.sleep(5)
+        time.sleep(2)
         
         self.vision_image = VisionImage(base)
         self.vision_marker = VisionMarker(base)
+        #self.lidar = Lidar(base)
         #rospy.Subscriber('/scan', LaserScan, self.laser_callback)
-        self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
-        self.drive_data = Twist()
+        self.motor = Motor(base)
         self.t = 0.0
     def update(self):
         if self.vision_image.timeout < 0 or self.vision_marker.timeout < 0 :
             self.restart()
         self.vision_image.update()
-        self.drive_data.linear.x = 0.3
-        self.drive_data.angular.z = 0.0
+        self.vision_marker.update()
+        self.motor.update()
         
-        gtan = self.basement.global_tan
-        ltan = self.basement.local_tan
-        ltan2 = self.basement.local_tan_sqaured
-        OFFSET_CONSTANT = 0
-        
-        self.drive_data.linear.x *= ltan2 + 0.5
-        self.drive_data.angular.z += gtan / ((ltan**2) + 0.1) + OFFSET_CONSTANT
-        self.pub.publish(self.drive_data)
-        print(self.drive_data.angular.z)
         self.rate.sleep()
         self.t += 1/60
     def end(self):

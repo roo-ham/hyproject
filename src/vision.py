@@ -27,17 +27,46 @@ class VisionImage(Submodule):
         return (over_sat & over_bri)
     def update(self):
         super().update()
-        img = self.basement.get_bgr_bottom()
-        img[:, :, :] = 0
 
         yellow = self.get_yellow()
         black = self.get_black()
         white = self.get_white()
+
+        yellow = self.get_yellow_border(white, black, yellow)
+        identity_size = np.sum(yellow)
+        self.basement.global_tan = self.get_global_tangent(identity_size, yellow)
+        self.basement.local_tan, self.basement.local_tan_sqaured = self.get_local_tangent(identity_size, yellow)
+        
+        self.display(white, black, yellow)
+
+    def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
+        if identity_size > 0:
+            x_set = yellow * np.arange(-128, 128)
+            y_set = ((yellow.T) * np.arange(0, self.basement.bottom_height)).T
+            return np.sum(np.where(y_set != 0, np.arctan(x_set/y_set), 0)) / identity_size
+        return 0.0
+
+    def get_local_tangent(self, identity_size, yellow:np.ndarray) -> tuple:
+        points_coord = np.array(np.where(yellow)).T
+        l_tan = 0.0
+        l_tan_squared = 0.0
+        for x, y in points_coord:
+            if y == 128 : continue
+            mask = np.ones((9,9), bool)
+            base = yellow[-8+x:9+x, -8+y:9+y]
+            x_set = np.where(mask, base, 0) * np.arange(-4, 5)
+            y_set = (np.where(mask, base.T, 0) * np.arange(-4, 5)).T
+            identity_size_local = np.sum(mask & yellow)
+            tan0 = np.sum(np.where(y_set != 0, np.arctan(x_set/y_set), 0))
+            l_tan += np.sum(tan0) / (identity_size*identity_size_local)
+            l_tan_squared += np.sum(tan0**2) / (identity_size*identity_size_local)
+        return l_tan, l_tan_squared
+
+    def get_yellow_border(self, white, black, yellow):
+        b_height = self.basement.bottom_height
         bw = black | white
         bw[:, 0:254] &= bw[:, 2:256]
         yellow &= ~bw
-        b_height = self.basement.bottom_height
-
         y2 = np.zeros((b_height,256), bool)
         y2[0:b_height, 0:255] |= yellow[0:b_height, 0:255] ^ yellow[0:b_height, 1:256]
         y2[0:b_height-1, 0:256] |= yellow[0:b_height-1, 0:256] ^ yellow[1:b_height, 0:256]
@@ -45,35 +74,23 @@ class VisionImage(Submodule):
         y2[:, 248:256] = False
         y2[0:8, :] = False
         y2[b_height-8:b_height, :] = False
-        points_coord = np.array(np.where(y2)).T
-        self.basement.clear_tangents()
-        a = y2 * np.array()
-        b = np.sum(y2.astype(np.int32))
-        y2.astype(np.int32)@np.arange(-128, 128, 1)
-        for x, y in points_coord:
-            if y == 128 : continue
-            mask = np.ones((17,17), np.int32)
-            mask[1:16, 1:16] = 0
-            base = y2[-8+x:9+x, -8+y:9+y].copy() * mask
-            base_sum = np.sum(base)
-            base_coord = np.array(np.where(base != 0)).T
-            com = sum([0 if j == 8 else np.arctan((i-8)/(j-8)) for i, j in base_coord])
-            if base_sum == 0 : continue
-            tan2 = com/base_sum
-            #self.basement.points_tangent.append((tan1, tan2))
 
-        img[:, :, 0] = np.where(y2, 0, img[:, :, 0])
-        img[:, :, 1] = np.where(y2, 255, img[:, :, 1])
-        img[:, :, 2] = np.where(y2, 255, img[:, :, 2])
+    def display(self, white, black, yellow):
+        img = np.zeros_like(self.basement.get_bgr_bottom())
 
-        #img[:, :, 0] = np.where(white, 255, img[:, :, 0])
-        #img[:, :, 1] = np.where(white, 255, img[:, :, 1])
-        #img[:, :, 2] = np.where(white, 0, img[:, :, 2])
+        img[:, :, 0] = np.where(white, 255, img[:, :, 0])
+        img[:, :, 1] = np.where(white, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(white, 0, img[:, :, 2])
 
-        #img[:, :, 0] = np.where(black, 255, img[:, :, 0])
-        #img[:, :, 1] = np.where(black, 0, img[:, :, 1])
-        #img[:, :, 2] = np.where(black, 0, img[:, :, 2])
-        cv2.namedWindow("hyproject", cv2.WINDOW_NORMAL)
+        img[:, :, 0] = np.where(black, 255, img[:, :, 0])
+        img[:, :, 1] = np.where(black, 0, img[:, :, 1])
+        img[:, :, 2] = np.where(black, 0, img[:, :, 2])
+
+        img[:, :, 0] = np.where(yellow, 0, img[:, :, 0])
+        img[:, :, 1] = np.where(yellow, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(yellow, 255, img[:, :, 2])
+
+        cv2.namedWindow("hyproject", cv2.WINDOW_FULLSCREEN)
         cv2.imshow("hyproject", img)
         cv2.waitKey(1)
     def callback(self, data):
