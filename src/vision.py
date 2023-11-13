@@ -35,7 +35,7 @@ class VisionImage(Submodule):
         yellow = self.get_yellow_border(white, black, yellow)
         identity_size = np.sum(yellow)
         self.basement.global_tan = self.get_global_tangent(identity_size, yellow)
-        self.basement.local_tan, self.basement.local_tan_sqaured = self.get_local_tangent(identity_size, yellow)
+        #self.basement.local_tan, self.basement.local_tan_sqaured = self.get_local_tangent(identity_size, yellow)
         
         self.display(white, black, yellow)
 
@@ -45,7 +45,7 @@ class VisionImage(Submodule):
         x_set = yellow * np.arange(-128, 128)
         y_set = ((yellow.T) * np.arange(128-self.basement.bottom_height, 128)).T
         x_set, y_set = np.where(y_set != 0, x_set, 0), np.where(y_set != 0, y_set, 1)
-        return np.arctan(np.sum(x_set/y_set) / identity_size)
+        return np.sum(x_set/y_set) / identity_size
 
     def get_local_tangent(self, identity_size, yellow:np.ndarray) -> tuple:
         if identity_size <= 0:
@@ -63,8 +63,6 @@ class VisionImage(Submodule):
             tan0 = np.sum(x_set/y_set) / identity_size_local
             l_tan += tan0 / identity_size
             l_tan_squared += tan0**2 / identity_size
-        l_tan = np.arctan(l_tan)
-        l_tan_squared = np.arctan(l_tan_squared)
         return l_tan, l_tan_squared
 
     def get_yellow_border(self, white, black, yellow):
