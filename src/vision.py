@@ -36,6 +36,9 @@ class VisionImage(Submodule):
         identity_size = np.sum(yellow)
         self.basement.global_tan = self.get_global_tangent(identity_size, yellow)
         self.basement.local_tan, self.basement.local_tan_sqaured = self.get_local_tangent(identity_size, yellow)
+
+        rospy.loginfo("%f, %f, %f, %d"%(self.basement.global_tan, self.basement.local_tan,\
+                                        self.basement.local_tan_sqaured, identity_size))
         
         self.display(white, black, yellow)
 
@@ -55,13 +58,12 @@ class VisionImage(Submodule):
         for x, y in np.array(np.where(yellow)).T:
             base = yellow[-2+x:3+x, -2+y:3+y]
             mask = np.ones_like(base, bool)
-            arange = np.arange(0, 5)
+            arange = np.arange(-2, 3)
             x_set = (mask & base) * arange
             y_set = ((mask & base.T) * arange).T
-            x_sum = np.sum(x_set)
-            if x_sum == 0:
-                continue
-            tan0 = np.sum(y_set)/x_sum
+            x_set_zero = x_set != 0
+            x_set, y_set = np.where(x_set_zero, x_set, 1), np.where(x_set_zero, y_set, 0)
+            tan0 = np.sum(y_set/x_set)
             identity_size_local = np.sum(base)
             l_tan += tan0 / (identity_size*identity_size_local)
             l_tan_squared += tan0**2 / (identity_size*identity_size_local)
