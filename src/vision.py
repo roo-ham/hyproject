@@ -45,7 +45,7 @@ class VisionImage(Submodule):
         x_set = yellow * np.arange(-128, 128)
         y_set = ((yellow.T) * np.arange(128-self.basement.bottom_height, 128)).T
         x_set, y_set = np.where(x_set != 0, x_set, 1), np.where(x_set != 0, y_set, 0)
-        return np.sum(y_set/x_set) / identity_size
+        return np.arctan(np.sum(y_set/x_set) / identity_size)
 
     def get_local_tangent(self, identity_size, yellow:np.ndarray) -> tuple:
         if identity_size <= 0:
