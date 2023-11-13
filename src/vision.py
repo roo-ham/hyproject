@@ -40,24 +40,27 @@ class VisionImage(Submodule):
         self.display(white, black, yellow)
 
     def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
-        if identity_size > 0:
-            x_set = yellow * np.arange(-128, 128)
-            y_set = ((yellow.T) * np.arange(0, self.basement.bottom_height)).T
-            return np.sum(np.where(y_set != 0, np.arctan(x_set/y_set), 0)) / identity_size
-        return 0.0
+        if identity_size <= 0:
+            return 0.0
+        x_set = yellow * np.arange(-128, 128)
+        y_set = ((yellow.T) * np.arange(0, self.basement.bottom_height)).T
+        x_set, y_set = np.where(y_set != 0, x_set, 0), np.where(y_set != 0, y_set, 1)
+        return np.sum(np.arctan(x_set/y_set)) / identity_size
 
     def get_local_tangent(self, identity_size, yellow:np.ndarray) -> tuple:
-        points_coord = np.array(np.where(yellow)).T
+        if identity_size <= 0:
+            return 0.0, 0.0
         l_tan = 0.0
         l_tan_squared = 0.0
-        for x, y in points_coord:
+        for x, y in np.array(np.where(yellow)).T:
             if y == 128 : continue
             base = yellow[-4+x:5+x, -4+y:5+y]
             mask = np.ones_like(base, bool)
             x_set = np.where(mask, base, 0) * np.arange(-4, 5)
             y_set = (np.where(mask, base.T, 0) * np.arange(-4, 5)).T
+            x_set, y_set = np.where(y_set != 0, x_set, 0), np.where(y_set != 0, y_set, 1)
             identity_size_local = np.sum(base)
-            tan0 = np.sum(np.where(y_set != 0, np.arctan(x_set/y_set), 0))
+            tan0 = np.sum(np.arctan(x_set/y_set))
             l_tan += np.sum(tan0) / (identity_size*identity_size_local)
             l_tan_squared += np.sum(tan0**2) / (identity_size*identity_size_local)
         return l_tan, l_tan_squared
