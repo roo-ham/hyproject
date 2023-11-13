@@ -60,9 +60,11 @@ class VisionImage(Submodule):
             y_set = ((mask & base.T) * np.arange(-4, 5)).T
             x_set, y_set = np.where(y_set != 0, x_set, 0), np.where(y_set != 0, y_set, 1)
             identity_size_local = np.sum(base)
-            arctan0 = np.arctan(np.sum(x_set/y_set) / identity_size_local)
-            l_tan += arctan0 / identity_size
-            l_tan_squared += arctan0**2 / identity_size
+            tan0 = np.sum(x_set/y_set) / identity_size_local
+            l_tan += tan0 / identity_size
+            l_tan_squared += tan0**2 / identity_size
+        l_tan = np.arctan(l_tan)
+        l_tan_squared = np.arctan(l_tan_squared)
         return l_tan, l_tan_squared
 
     def get_yellow_border(self, white, black, yellow):
