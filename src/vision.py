@@ -55,12 +55,11 @@ class VisionImage(Submodule):
             return 0.0, 0.0
         l_tan = 0.0
         l_tan_squared = 0.0
+        arange = np.arange(-2, 3)
         for x, y in np.array(np.where(yellow)).T:
             base = yellow[-2+x:3+x, -2+y:3+y]
-            mask = np.ones_like(base, bool)
-            arange = np.arange(-2, 3)
-            x_set = (mask & base) * arange
-            y_set = ((mask & base.T) * arange).T
+            x_set = base * arange
+            y_set = (base.T * arange).T
             x_set_zero = x_set != 0
             x_set, y_set = np.where(x_set_zero, x_set, 1), np.where(x_set_zero, y_set, 0)
             tan0 = np.sum(y_set/x_set)
