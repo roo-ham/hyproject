@@ -43,9 +43,9 @@ class VisionImage(Submodule):
         if identity_size <= 0:
             return 0.0
         x_set = yellow * np.arange(-128, 128)
-        y_set = ((yellow.T) * np.arange(1, self.basement.bottom_height)).T
-        x_set, y_set = np.where(y_set != 0, x_set, 0), np.where(y_set != 0, y_set, 1)
-        return np.sum(x_set/y_set) / identity_size
+        y_set = ((yellow.T) * np.arange(128-self.basement.bottom_height, 128)).T
+        x_set, y_set = np.where(x_set != 0, x_set, 1), np.where(x_set != 0, y_set, 0)
+        return np.sum(y_set/x_set) / identity_size
 
     def get_local_tangent(self, identity_size, yellow:np.ndarray) -> tuple:
         if identity_size <= 0:
@@ -58,9 +58,9 @@ class VisionImage(Submodule):
             mask = np.ones_like(base, bool)
             x_set = (mask & base) * np.arange(-4, 5)
             y_set = ((mask & base.T) * np.arange(-4, 5)).T
-            x_set, y_set = np.where(y_set != 0, x_set, 0), np.where(y_set != 0, y_set, 1)
+            x_set, y_set = np.where(x_set != 0, x_set, 1), np.where(x_set != 0, y_set, 0)
             identity_size_local = np.sum(base)
-            tan0 = np.sum(x_set/y_set) / identity_size_local
+            tan0 = np.sum(y_set/x_set) / identity_size_local
             l_tan += tan0 / identity_size
             l_tan_squared += tan0**2 / identity_size
         return l_tan, l_tan_squared
