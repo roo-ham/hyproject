@@ -56,7 +56,7 @@ class VisionImage(Submodule):
             mask = np.ones_like(base, bool)
             x_set = np.where(mask, base, 0) * np.arange(-4, 5)
             y_set = (np.where(mask, base.T, 0) * np.arange(-4, 5)).T
-            identity_size_local = np.sum(mask & yellow)
+            identity_size_local = np.sum(base)
             tan0 = np.sum(np.where(y_set != 0, np.arctan(x_set/y_set), 0))
             l_tan += np.sum(tan0) / (identity_size*identity_size_local)
             l_tan_squared += np.sum(tan0**2) / (identity_size*identity_size_local)
