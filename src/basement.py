@@ -12,7 +12,11 @@ class Basement:
         self.img_h, self.img_s, self.img_v = np.zeros((self.bottom_height,256), np.uint8),\
             np.zeros((self.bottom_height,256), np.uint8),\
                 np.zeros((self.bottom_height,256), np.uint8)
-        self.points_tangent = []
+        self.clear_tangents()
+    def clear_tangents(self):
+        self.global_tan = 0.0
+        self.local_tan = 0.0
+        self.local_tan_sqaured = 0.0
     def set_bgr(self, full, bottom):
         self.__bgr_full = full
         self.__bgr_bottom = bottom
