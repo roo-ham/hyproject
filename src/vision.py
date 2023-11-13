@@ -43,7 +43,7 @@ class VisionImage(Submodule):
         if identity_size <= 0:
             return 0.0
         x_set = yellow * np.arange(-128, 128)
-        y_set = ((yellow.T) * np.arange(128-self.basement.bottom_height, 128)).T
+        y_set = ((yellow.T) * np.arange(1, self.basement.bottom_height)).T
         x_set, y_set = np.where(y_set != 0, x_set, 0), np.where(y_set != 0, y_set, 1)
         return np.sum(x_set/y_set) / identity_size
 
