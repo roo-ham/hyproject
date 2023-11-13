@@ -35,7 +35,7 @@ class VisionImage(Submodule):
         yellow = self.get_yellow_border(white, black, yellow)
         identity_size = np.sum(yellow)
         self.basement.global_tan = self.get_global_tangent(identity_size, yellow)
-        self.basement.local_tan, self.basement.local_tan_sqaured = self.get_local_tangent(identity_size, yellow)
+        #self.basement.local_tan, self.basement.local_tan_sqaured = self.get_local_tangent(identity_size, yellow)
         
         self.display(white, black, yellow)
 

@@ -11,11 +11,11 @@ class Motor(Submodule):
         self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
         self.drive_data = Twist()
         self.OFFSET_CONSTANT = 0
-        
+
     def update(self):
         super().update()
 
-        self.drive_data.linear.x = 0.3
+        self.drive_data.linear.x = 0.1
         self.drive_data.angular.z = 0.0
         
         gtan = self.basement.global_tan
