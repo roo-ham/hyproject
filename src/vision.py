@@ -35,7 +35,7 @@ class VisionImage(Submodule):
         yellow = self.get_yellow_border(white, black, yellow)
         identity_size = np.sum(yellow)
         self.basement.global_tan = self.get_global_tangent(identity_size, yellow)
-        #self.basement.local_tan, self.basement.local_tan_sqaured = self.get_local_tangent(identity_size, yellow)
+        self.basement.local_tan, self.basement.local_tan_sqaured = self.get_local_tangent(identity_size, yellow)
         
         self.display(white, black, yellow)
 
@@ -53,16 +53,17 @@ class VisionImage(Submodule):
         l_tan = 0.0
         l_tan_squared = 0.0
         for x, y in np.array(np.where(yellow)).T:
-            if y == 128 : continue
-            base = yellow[-4+x:5+x, -4+y:5+y]
+            base = yellow[-2+x:3+x, -2+y:3+y]
             mask = np.ones_like(base, bool)
-            x_set = (mask & base) * np.arange(-4, 5)
-            y_set = ((mask & base.T) * np.arange(-4, 5)).T
-            x_set, y_set = np.where(x_set != 0, x_set, 1), np.where(x_set != 0, y_set, 0)
+            arange = np.arange(-2, 3)
+            x_set = (mask & base) * arange
+            y_set = ((mask & base.T) * arange).T
+            x_set_zero = x_set != 0
+            x_set, y_set = np.where(x_set_zero, x_set, 1), np.where(x_set_zero, y_set, 0)
+            tan0 = np.sum(y_set/x_set)
             identity_size_local = np.sum(base)
-            tan0 = np.sum(y_set/x_set) / identity_size_local
-            l_tan += tan0 / identity_size
-            l_tan_squared += tan0**2 / identity_size
+            l_tan += tan0 / (identity_size*identity_size_local)
+            l_tan_squared += tan0**2 / (identity_size*identity_size_local)
         return l_tan, l_tan_squared
 
     def get_yellow_border(self, white, black, yellow):
@@ -72,7 +73,7 @@ class VisionImage(Submodule):
         yellow = yellow & ~bw
         y2 = np.zeros((b_height,256), bool)
         y2[0:b_height, 0:255] |= yellow[0:b_height, 0:255] ^ yellow[0:b_height, 1:256]
-        #y2[0:b_height-1, 0:256] |= yellow[0:b_height-1, 0:256] ^ yellow[1:b_height, 0:256]
+        y2[0:b_height-1, 0:256] |= yellow[0:b_height-1, 0:256] ^ yellow[1:b_height, 0:256]
         y2[:, 0:8] = False
         y2[:, 248:256] = False
         y2[0:8, :] = False

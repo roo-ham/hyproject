@@ -15,7 +15,7 @@ class Motor(Submodule):
     def update(self):
         super().update()
 
-        self.drive_data.linear.x = 0.1
+        self.drive_data.linear.x = 0.2
         self.drive_data.angular.z = 0.0
         
         gtan = self.basement.global_tan
