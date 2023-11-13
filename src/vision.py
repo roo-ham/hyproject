@@ -94,7 +94,7 @@ class VisionImage(Submodule):
         img[:, :, 1] = np.where(yellow, 255, img[:, :, 1])
         img[:, :, 2] = np.where(yellow, 255, img[:, :, 2])
 
-        cv2.namedWindow("hyproject", cv2.WINDOW_FULLSCREEN)
+        cv2.namedWindow("hyproject", cv2.WINDOW_GUI_EXPANDED)
         cv2.imshow("hyproject", img)
         cv2.waitKey(1)
     def callback(self, data):
