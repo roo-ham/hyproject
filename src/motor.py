@@ -25,5 +25,5 @@ class Motor(Submodule):
         rospy.loginfo("%f, %f, %f"%(gtan, ltan, ltan2))
         
         self.drive_data.linear.x *= ltan2 + 0.5
-        self.drive_data.angular.z += gtan / ((ltan**2) + 0.1) + self.OFFSET_CONSTANT
+        self.drive_data.angular.z += -gtan / ((ltan**2) + 0.1) + self.OFFSET_CONSTANT
         self.pub.publish(self.drive_data)
