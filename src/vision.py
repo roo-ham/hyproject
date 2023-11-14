@@ -3,6 +3,7 @@
 import rospy
 import numpy as np
 import cv2
+import storage
 from basement import Basement
 from submodule import Submodule
 from sensor_msgs.msg import CompressedImage
@@ -13,9 +14,7 @@ class VisionImage(Submodule):
     def __init__(self, base:Basement):
         super().__init__(base, "VisionImage")
         self.sub_image_raw = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
-        self.mask_global_x = np.arange(-128, 128)
-        self.mask_global_y = np.arange(128-self.basement.bottom_height, 128)
-        self.mask_local = np.arange(-2, 3)
+        self.lane_storage:storage.Lane = base.storages["lane"]
 
     def get_yellow(self):
         under_yellow = self.basement.img_h < 13
@@ -38,41 +37,9 @@ class VisionImage(Submodule):
 
         yellow = self.get_yellow_border(white, black, yellow)
         identity_size = np.sum(yellow)
-        self.basement.global_tan = self.get_global_tangent(identity_size, yellow)
-        self.basement.local_tan, self.basement.local_tan_sqaured = self.get_local_tangent(identity_size, yellow)
-
-        rospy.loginfo("%f, %f, %f, %d"%(self.basement.global_tan, self.basement.local_tan,\
-                                        self.basement.local_tan_sqaured, identity_size))
+        self.lane_storage.update(identity_size, yellow)
         
         self.display(white, black, yellow)
-
-    def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
-        if identity_size <= 0:
-            return 0.0
-        x_set = yellow * self.mask_global_x
-        y_set = ((yellow.T) * self.mask_global_y).T
-        x_set, y_set = np.where(x_set != 0, x_set, 1), np.where(x_set != 0, y_set, 0)
-        return np.arctan(np.sum(y_set/x_set) / identity_size)
-
-    def get_local_tangent(self, identity_size, yellow:np.ndarray) -> tuple:
-        if identity_size <= 0:
-            return 0.0, 0.0
-        l_tan = 0.0
-        l_tan_squared = 0.0
-        arange = self.mask_local
-        for x, y in np.argwhere(yellow):
-            base = yellow[-2+x:3+x, -2+y:3+y]
-            x_set = base * arange
-            y_set = (base.T * arange).T
-            x_set_zero = x_set != 0
-            x_set, y_set = np.where(x_set_zero, x_set, 1), np.where(x_set_zero, y_set, 0)
-            tan0 = np.sum(y_set/x_set)
-            identity_size_local = np.sum(base)
-            l_tan += tan0 / (identity_size*identity_size_local)
-            l_tan_squared += tan0**2 / (identity_size*identity_size_local)
-        l_tan = np.arctan(l_tan)
-        l_tan_squared = np.arctan(l_tan_squared)
-        return l_tan, l_tan_squared
 
     def get_yellow_border(self, white, black, yellow):
         b_height = self.basement.bottom_height

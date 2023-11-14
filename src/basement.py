@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import numpy as np
+import storage
 import cv2
 
 class Basement:
@@ -12,9 +13,9 @@ class Basement:
         self.img_h, self.img_s, self.img_v = np.zeros((self.bottom_height,256), np.uint8),\
             np.zeros((self.bottom_height,256), np.uint8),\
                 np.zeros((self.bottom_height,256), np.uint8)
-        self.global_tan = 0.0
-        self.local_tan = 0.0
-        self.local_tan_sqaured = 0.0
+        self.storages = dict()
+        self.storages["lane"] = storage.Lane(self.bottom_height)
+
     def set_bgr(self, full, bottom):
         self.__bgr_full = full
         self.__bgr_bottom = bottom
