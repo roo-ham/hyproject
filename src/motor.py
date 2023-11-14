@@ -15,7 +15,7 @@ class Motor(Submodule):
     def update(self):
         super().update()
 
-        self.drive_data.linear.x = 0.3
+        self.drive_data.linear.x = 0.5
         self.drive_data.angular.z = 1.0
         
         x = 0.0
