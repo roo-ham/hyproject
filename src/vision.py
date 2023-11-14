@@ -13,6 +13,10 @@ class VisionImage(Submodule):
     def __init__(self, base:Basement):
         super().__init__(base, "VisionImage")
         self.sub_image_raw = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
+        self.mask_global_x = np.arange(-128, 128)
+        self.mask_global_y = np.arange(128-self.basement.bottom_height, 128)
+        self.mask_local = np.arange(-2, 3)
+
     def get_yellow(self):
         under_yellow = self.basement.img_h < 13
         over_yellow = self.basement.img_h > 37
@@ -45,8 +49,8 @@ class VisionImage(Submodule):
     def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
         if identity_size <= 0:
             return 0.0
-        x_set = yellow * np.arange(-128, 128)
-        y_set = ((yellow.T) * np.arange(128-self.basement.bottom_height, 128)).T
+        x_set = yellow * self.mask_global_x
+        y_set = ((yellow.T) * self.mask_global_y).T
         x_set, y_set = np.where(x_set != 0, x_set, 1), np.where(x_set != 0, y_set, 0)
         return np.arctan(np.sum(y_set/x_set) / identity_size)
 
@@ -55,8 +59,8 @@ class VisionImage(Submodule):
             return 0.0, 0.0
         l_tan = 0.0
         l_tan_squared = 0.0
-        arange = np.arange(-2, 3)
-        for x, y in np.array(np.where(yellow)).T:
+        arange = self.mask_local
+        for x, y in np.argwhere(yellow):
             base = yellow[-2+x:3+x, -2+y:3+y]
             x_set = base * arange
             y_set = (base.T * arange).T
@@ -66,6 +70,8 @@ class VisionImage(Submodule):
             identity_size_local = np.sum(base)
             l_tan += tan0 / (identity_size*identity_size_local)
             l_tan_squared += tan0**2 / (identity_size*identity_size_local)
+        l_tan = np.arctan(l_tan)
+        l_tan_squared = np.arctan(l_tan_squared)
         return l_tan, l_tan_squared
 
     def get_yellow_border(self, white, black, yellow):
@@ -73,9 +79,11 @@ class VisionImage(Submodule):
         bw = black | white
         bw[:, 0:254] &= bw[:, 2:256]
         yellow = yellow & ~bw
-        y2 = np.zeros((b_height,256), bool)
+        y2 = np.zeros_like(yellow)
         y2[0:b_height, 0:255] |= yellow[0:b_height, 0:255] ^ yellow[0:b_height, 1:256]
-        y2[0:b_height-1, 0:256] |= yellow[0:b_height-1, 0:256] ^ yellow[1:b_height, 0:256]
+        horizonal = yellow[0:b_height-1, 0:256] ^ yellow[1:b_height, 0:256]
+        horizonal[0:b_height, 0:255] &= ~horizonal[0:b_height, 1:256]
+        y2[0:b_height-1, 0:256] |= horizonal
         y2[:, 0:8] = False
         y2[:, 248:256] = False
         y2[0:8, :] = False
