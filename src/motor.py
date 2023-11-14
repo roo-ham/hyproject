@@ -22,7 +22,7 @@ class Motor(Submodule):
         z = 0.0
         weight_x = 0.01
         weight_z = 0.01
-        for s in self.basement.storages.items():
+        for s in self.basement.storages.values():
             x0, z0, weight_x0, weight_z0 = Storage.getDataset(s)
             x += x0 * weight_x0
             z += z0 * weight_z0
