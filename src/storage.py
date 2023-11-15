@@ -38,20 +38,20 @@ class Lane(Storage):
         self.mask_local = np.arange(-2, 3)
         self.global_tan = 0.0
         self.local_tan = 0.0
-        self.local_tan_squared = 0.0
+        self.local_tan_abs = 0.0
         self.weight_x = 1.0
         self.weight_z = 1.0
 
     def update(self, identity_size, yellow:np.ndarray):
         self.global_tan = self.get_global_tangent(identity_size, yellow)
-        self.local_tan, self.local_tan_squared = self.get_local_tangent(identity_size, yellow)
+        self.local_tan, self.local_tan_abs = self.get_local_tangent(identity_size, yellow)
         self.x *= 0.5
         self.z *= 0.5
-        self.x += (self.local_tan_squared + 0.25) * 0.5
+        self.x += (self.local_tan_abs + 0.25) * 0.5
         self.z += (self.global_tan / ((self.local_tan**2) + 1)) * 0.5
         os.system("clear")
         print("%f, %f, %f"%(self.global_tan, self.local_tan,\
-                                        self.local_tan_squared))
+                                        self.local_tan_abs))
 
     def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
         if identity_size <= 0:
