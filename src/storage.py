@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 class Storage:
     def __init__(self) -> None:
@@ -44,9 +45,19 @@ class Lane(Storage):
     def update(self, identity_size, yellow:np.ndarray):
         self.global_tan = self.get_global_tangent(identity_size, yellow)
         self.local_tan, self.local_tan_squared = self.get_local_tangent(identity_size, yellow)
+<<<<<<< HEAD
         self.x = (self.local_tan_squared * 2) + 0.1
         self.z = self.global_tan / ((self.local_tan**2) + 0.5) + 0.8
         print("%f %f %d"%(self.x, self.z, identity_size))
+=======
+        self.x *= 0.9
+        self.z *= 0.9
+        self.x += (self.local_tan_squared + 0.25) * 0.1
+        self.z += (self.global_tan / ((self.local_tan**2) + 1) + 1.0) * 0.1
+        os.system("clear")
+        print("%f, %f, %f"%(self.global_tan, self.local_tan,\
+                                        self.local_tan_sqaured))
+>>>>>>> 9a5608e92f1970d6a9b3486288ab3929d8869818
 
     def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
         if identity_size <= 0:
