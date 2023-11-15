@@ -45,8 +45,6 @@ class Lane(Storage):
         self.x_data = range(60)
         plt.ion()
         self.fig, self.ax = plt.subplots()
-        self.ax.axis((0, 60, -3, 3))
-        plt.legend()
         plt.show()
 
     def update(self, tick, identity_size, yellow:np.ndarray):
@@ -63,6 +61,8 @@ class Lane(Storage):
             self.ax.plot(self.x_data, self.timescale_dataset[:, 0], label="gTan")
             self.ax.plot(self.x_data, self.timescale_dataset[:, 1], label="lTan")
             self.ax.plot(self.x_data, self.timescale_dataset[:, 2], label="lTan2")
+            self.ax.axis((0, 60, -3, 3))
+            plt.legend()
             plt.pause(0.01)
 
     def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
