@@ -48,10 +48,10 @@ class Main:
 base = Basement()
 try:
     rospy.init_node("hyproject_main")
+    main_object = Main(base)
     os.system("clear")
     print("Hello, Hanyang!")
     print("Ctrl+C to exit.")
-    main_object = Main(base)
     while not rospy.is_shutdown():
         main_object.update()
     main_object.end()
