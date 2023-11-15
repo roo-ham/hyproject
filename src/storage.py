@@ -62,7 +62,7 @@ class Lane(Storage):
         return np.arctan(np.sum(y_set/x_set) / identity_size)
 
     def get_local_tangent(self, identity_size, yellow:np.ndarray) -> tuple:
-        if identity_size <= 0:
+        if identity_size == 0:
             return 0.0, 0.0
         l_tan = 0.0
         l_tan_abs = 0.0
@@ -80,6 +80,8 @@ class Lane(Storage):
             identity_size_local += np.sum(base)
             l_tan += tan0
             l_tan_abs += abs(tan0)
+        if identity_size_local == 0:
+            return 0.0, 0.0
         l_tan = np.arctan(l_tan / identity_size_local)
         l_tan_abs = np.arctan(l_tan_abs / identity_size_local)
         return l_tan, l_tan_abs
