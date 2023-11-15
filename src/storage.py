@@ -67,10 +67,9 @@ class Lane(Storage):
         l_tan = 0.0
         l_tan_abs = 0.0
         arange = self.mask_local
+        identity_size_local = 0
         for x, y in np.argwhere(yellow):
-            if x%2 != 0:
-                continue
-            elif y%8 != 0:
+            if x%2 != 0 or y%8 != 0:
                 continue
             base = yellow[-2+x:3+x, -2+y:3+y]
             x_set = base * arange
@@ -78,10 +77,9 @@ class Lane(Storage):
             x_set_zero = x_set != 0
             x_set, y_set = np.where(x_set_zero, x_set, 1), np.where(x_set_zero, y_set, 0)
             tan0 = np.sum(y_set/x_set)
-            identity_size_local = np.sum(base)
-            tan0 /= (identity_size*identity_size_local)
+            identity_size_local += np.sum(base)
             l_tan += tan0
             l_tan_abs += abs(tan0)
-        l_tan = np.arctan(l_tan)
-        l_tan_abs = np.arctan(l_tan_abs)
+        l_tan = np.arctan(l_tan / identity_size_local)
+        l_tan_abs = np.arctan(l_tan_abs / identity_size_local)
         return l_tan, l_tan_abs
