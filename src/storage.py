@@ -72,14 +72,13 @@ class Lane(Storage):
             if x%2 != 0 or y%8 != 0:
                 continue
             base = yellow[-2+x:3+x, -2+y:3+y]
+            base[:, 2] = 0
             x_set = base * arange
             y_set = (base.T * arange).T
-            x_set_zero = x_set != 0
-            x_set, y_set = np.where(x_set_zero, x_set, 1), np.where(x_set_zero, y_set, 0)
-            tan0 = np.sum(y_set/x_set)
+            x_set, y_set = np.where(x_set, x_set, 1), np.where(x_set, y_set, 0)
             identity_size_local += np.sum(base)
-            l_tan += tan0
-            l_tan_abs += abs(tan0)
+            l_tan += np.sum(y_set/x_set)
+            l_tan_abs += np.sum(np.abs(y_set/x_set))
         if identity_size_local == 0:
             return 0.0, 0.0
         l_tan = np.arctan(l_tan / identity_size_local)
