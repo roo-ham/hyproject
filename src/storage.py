@@ -47,8 +47,8 @@ class Lane(Storage):
         self.local_tan, self.local_tan_squared = self.get_local_tangent(identity_size, yellow)
         self.x *= 0.9
         self.z *= 0.9
-        self.x += (self.local_tan_squared + 0.5) * 0.1
-        self.z += (self.global_tan / ((self.local_tan**2) + 1)) * 0.1
+        self.x += (self.local_tan_squared + 0.25) * 0.1
+        self.z += (self.global_tan / ((self.local_tan**2) + 1) + 1.0) * 0.1
         os.system("clear")
         print("%f, %f, %f"%(self.global_tan, self.local_tan,\
                                         self.local_tan_sqaured))
@@ -68,6 +68,10 @@ class Lane(Storage):
         l_tan_squared = 0.0
         arange = self.mask_local
         for x, y in np.argwhere(yellow):
+            if x%2 != 0:
+                continue
+            elif y%8 != 0:
+                continue
             base = yellow[-2+x:3+x, -2+y:3+y]
             x_set = base * arange
             y_set = (base.T * arange).T
