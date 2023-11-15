@@ -1,5 +1,5 @@
 import numpy as np
-import os
+import matplotlib.pyplot as plt
 
 class Storage:
     def __init__(self) -> None:
@@ -39,19 +39,31 @@ class Lane(Storage):
         self.global_tan = 0.0
         self.local_tan = 0.0
         self.local_tan_abs = 0.0
+        self.timescale_dataset = np.zeros((60,3), np.float32)
         self.weight_x = 1.0
         self.weight_z = 1.0
+        self.x_data = range(60)
+        plt.ion()
+        self.fig, self.ax = plt.subplots()
+        self.ax.axis((0, 60, -3, 3))
+        plt.legend()
+        plt.show()
 
-    def update(self, identity_size, yellow:np.ndarray):
+    def update(self, tick, identity_size, yellow:np.ndarray):
         self.global_tan = self.get_global_tangent(identity_size, yellow)
         self.local_tan, self.local_tan_abs = self.get_local_tangent(identity_size, yellow)
         self.x *= 0.5
         self.z *= 0.5
         self.x += (self.local_tan_abs + 0.25) * 0.5
         self.z += (self.global_tan / ((self.local_tan**2) + 1)) * 0.5
-        os.system("clear")
-        print("%f, %f, %f"%(self.global_tan, self.local_tan,\
-                                        self.local_tan_abs))
+        self.timescale_dataset[1:60, :] = self.timescale_dataset[0:59, :]
+        self.timescale_dataset[0, :] = (self.global_tan, self.local_tan, self.local_tan_abs)
+        if tick % 30 == 0:
+            self.ax.cla()
+            self.ax.plot(self.x_data, self.timescale_dataset[:, 0], label="gTan")
+            self.ax.plot(self.x_data, self.timescale_dataset[:, 1], label="lTan")
+            self.ax.plot(self.x_data, self.timescale_dataset[:, 2], label="lTan2")
+            plt.pause(0.01)
 
     def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
         if identity_size <= 0:

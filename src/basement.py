@@ -15,6 +15,7 @@ class Basement:
                 np.zeros((self.bottom_height,256), np.uint8)
         self.storages = dict()
         self.storages["lane"] = storage.Lane(self.bottom_height)
+        self.tick = 0
 
     def set_bgr(self, full, bottom):
         self.__bgr_full = full

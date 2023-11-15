@@ -29,16 +29,15 @@ class Main:
         #self.lidar = Lidar(base)
         #rospy.Subscriber('/scan', LaserScan, self.laser_callback)
         self.motor = Motor(base)
-        self.t = 0.0
     def update(self):
         if self.vision_image.timeout < 0 or self.vision_marker.timeout < 0 :
             self.restart()
         self.vision_image.update()
         self.vision_marker.update()
         self.motor.update()
-        
+        self.basement.tick += 1
         self.rate.sleep()
-        self.t += 1/60
+        
     def end(self):
         self.launch.shutdown()
     def restart(self):
