@@ -51,7 +51,7 @@ class Lane(Storage):
         self.z += (self.global_tan / ((self.local_tan**2) + 1) + 1.0) * 0.1
         os.system("clear")
         print("%f, %f, %f"%(self.global_tan, self.local_tan,\
-                                        self.local_tan_sqaured))
+                                        self.local_tan_squared))
 
     def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
         if identity_size <= 0:
