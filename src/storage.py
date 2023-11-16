@@ -53,10 +53,6 @@ class Lane(Storage):
     def update(self, tick, identity_size, yellow:np.ndarray):
         self.global_tan = self.get_global_tangent(identity_size, yellow)
         self.local_tan, self.local_tan_abs = self.get_local_tangent(identity_size, yellow)
-        self.x *= 0.5
-        self.z *= 0.5
-        self.x += (self.local_tan_abs + 0.25) * 0.5
-        self.z += (self.global_tan / ((self.local_tan**2) + 1)) * 0.5
         self.timescale_dataset[1:60, :] = self.timescale_dataset[0:59, :]
         self.timescale_dataset[0, :] = (self.global_tan, self.local_tan, self.local_tan_abs)
         if tick % 30 == 0:
@@ -65,6 +61,13 @@ class Lane(Storage):
             self.ax.plot(self.x_data, self.timescale_dataset[:, 1], label="lTan")
             self.ax.plot(self.x_data, self.timescale_dataset[:, 2], label="lTan2")
             plt.pause(0.01)
+
+        # 차선이 한쪽으로 치우쳐져 있어 global_tan의 값이 0이 아니면 회전
+        # 회전 속도는 차선이 수평할 수록 커짐 (local_tan의 절댓값에 반비례)
+        delta_z = self.global_tan / ((self.local_tan**2) + 1)
+
+        self.x = (self.x + self.local_tan_abs + 0.25) / 2
+        self.z = (self.z + delta_z) / 2
 
     def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
         if identity_size <= 0:
