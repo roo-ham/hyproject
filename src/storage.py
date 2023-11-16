@@ -66,6 +66,8 @@ class Lane(Storage):
         # 회전 속도는 차선이 수평할 수록 커짐 (local_tan의 절댓값에 반비례)
         delta_z = self.global_tan / ((self.local_tan**2) + 1)
 
+        # 새 속도는 바로 적용되는 것이 아니라 이전속도를 절반만큼 반영함
+        # 주행이 부드러워지는 효과를 낼 수 있음
         self.x = (self.x + self.local_tan_abs + 0.25) / 2
         self.z = (self.z + delta_z) / 2
 
