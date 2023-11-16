@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import random
 
 class Storage:
     def __init__(self) -> None:
@@ -81,7 +82,7 @@ class Lane(Storage):
         arange = self.mask_local
         identity_size_local = 0
         for x, y in np.argwhere(yellow):
-            if x%2 != 0 or y%8 != 0:
+            if random.randint(1, identity_size) > 32:
                 continue
             base = yellow[-2+x:3+x, -2+y:3+y]
             base[:, 2] = 0
