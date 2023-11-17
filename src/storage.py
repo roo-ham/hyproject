@@ -44,31 +44,71 @@ class Lane(Storage):
         self.weight_x = 1.0
         self.weight_z = 1.0
         self.x_data = range(60)
+        self.tick = 0
+
         plt.ion()
         self.fig, self.ax = plt.subplots()
         self.ax.axis((0, 60, -3, 3))
         plt.legend()
         plt.show()
 
-    def update(self, tick, identity_size, yellow:np.ndarray):
-        self.global_tan = self.get_global_tangent(identity_size, yellow)
-        self.local_tan, self.local_tan_abs = self.get_local_tangent(identity_size, yellow)
+    def append_latest_data(self):
         self.timescale_dataset[1:60, :] = self.timescale_dataset[0:59, :]
         self.timescale_dataset[0, :] = (self.global_tan, self.local_tan, self.local_tan_abs)
-        if tick % 30 == 0:
-            self.ax.cla()
-            self.ax.plot(self.x_data, self.timescale_dataset[:, 0], label="gTan")
-            self.ax.plot(self.x_data, self.timescale_dataset[:, 1], label="lTan")
-            self.ax.plot(self.x_data, self.timescale_dataset[:, 2], label="lTan2")
-            plt.pause(0.01)
+
+    def show_dataset_graph(self):
+        self.ax.cla()
+        self.ax.plot(self.x_data, self.timescale_dataset[:, 0], label="gTan")
+        self.ax.plot(self.x_data, self.timescale_dataset[:, 1], label="lTan")
+        self.ax.plot(self.x_data, self.timescale_dataset[:, 2], label="lTan2")
+        plt.pause(0.01)
+
+    def pause_until(self, t):
+        self.tick = t
+
+    def on_pause(self, t) -> bool:
+        return self.tick >= t
+
+    def update(self, tick, identity_size, yellow:np.ndarray):
+        on_curve_transition = False
+        if (self.global_tan * self.get_global_tangent(identity_size, yellow) < 0):
+            on_curve_transition = True
+
+        # to-do
+        # self.tick - 15 >= tick 일 경우 tan을 저장만 하고 x, z는 변경 없음
+        # on_curve_transition 일 경우 데이터 수집을 중단함
+        # self.tick - 15 < tick 일 경우 tan을 x, z에 반영함
+        
+        # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
+        if on_curve_transition and abs(self.global_tan) > 0.4 :
+            pass
+        else :
+            self.global_tan = self.get_global_tangent(identity_size, yellow)
+            self.local_tan, self.local_tan_abs = self.get_local_tangent(identity_size, yellow)
+
+        # 0.1초마다 데이터베이스를 그래프로 보여준다.
+        if tick % 3 == 0:
+            self.show_dataset_graph()
+
+        self.append_latest_data() # 데이터베이스에 데이터들을 실시간으로 나열한다.
+
+        if abs(self.global_tan) > 0.4 and (not self.on_pause(tick)) : # 1초 대기 시작
+            self.pause_until(tick + 30)
+
+        if self.on_pause(tick + 15):
+            return
+        
+        # 차선이 수평하면 (휘어있으면) 속도 줄임
+        # 그렇지 않으면 (곧으면) 속도 늘림
+        delta_x = self.local_tan_abs + 0.25
 
         # 차선이 한쪽으로 치우쳐져 있어 global_tan의 값이 0이 아니면 회전
-        # 회전 속도는 차선이 수평할 수록 커짐 (local_tan의 절댓값에 반비례)
+        # 회전 속도는 차선이 수평할 수록 (휘어있으면) 커짐 (local_tan의 절댓값에 반비례)
         delta_z = self.global_tan / ((self.local_tan**2) + 1)
 
         # 새 속도는 바로 적용되는 것이 아니라 이전속도를 절반만큼 반영함
         # 주행이 부드러워지는 효과를 낼 수 있음
-        self.x = (self.x + self.local_tan_abs + 0.25) / 2
+        self.x = (self.x + delta_x) / 2
         self.z = (self.z + delta_z) / 2
 
     def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
@@ -76,7 +116,7 @@ class Lane(Storage):
             return 0.0
         x_set = yellow * self.mask_global_x
         y_set = ((yellow.T) * self.mask_global_y).T
-        x_set, y_set = np.where(x_set != 0, x_set, 1), np.where(x_set != 0, y_set, 0)
+        x_set, y_set = np.where(x_set, x_set, 1), np.where(x_set, y_set, 1000*y_set)
         return np.arctan(np.sum(y_set/x_set) / identity_size)
 
     def get_local_tangent(self, identity_size, yellow:np.ndarray) -> tuple:
@@ -93,7 +133,7 @@ class Lane(Storage):
             base[:, 2] = 0
             x_set = base * arange
             y_set = (base.T * arange).T
-            x_set, y_set = np.where(x_set, x_set, 1), np.where(x_set, y_set, 0)
+            x_set, y_set = np.where(x_set, x_set, 1), np.where(x_set, y_set, 1000*y_set)
             identity_size_local += np.sum(base)
             l_tan += np.sum(y_set/x_set)
             l_tan_abs += np.sum(np.abs(y_set/x_set))
