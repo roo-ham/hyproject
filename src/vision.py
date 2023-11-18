@@ -34,12 +34,12 @@ class VisionImage(Submodule):
         yellow = self.get_yellow()
         black = self.get_black()
         white = self.get_white()
-
         yellow = self.get_yellow_border(white, black, yellow)
+
+        self.display(white, black, yellow)
+
         identity_size = np.sum(yellow)
         self.lane_storage.update(self.basement.tick, identity_size, yellow)
-        
-        self.display(white, black, yellow)
 
     def get_yellow_border(self, white, black, yellow):
         b_height = self.basement.bottom_height
