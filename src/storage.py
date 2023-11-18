@@ -80,6 +80,7 @@ class Lane(Storage):
             
 
     def update(self, tick, identity_size, yellow:np.ndarray):
+        yellow = yellow.copy()
         gtan = self.get_global_tangent(identity_size, yellow)
         ltan = self.get_local_tangent(identity_size, yellow)
 
