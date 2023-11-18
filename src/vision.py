@@ -45,7 +45,7 @@ class VisionImage(Submodule):
         b_height = self.basement.bottom_height
         bw = black | white
         bw[:, 0:254] &= bw[:, 2:256]
-        yellow = yellow & ~bw
+        #yellow = yellow & ~bw
         y2 = np.zeros_like(yellow)
         y2[0:b_height, 0:255] |= yellow[0:b_height, 0:255] ^ yellow[0:b_height, 1:256]
         horizonal = yellow[0:b_height-1, 0:256] ^ yellow[1:b_height, 0:256]
