@@ -53,22 +53,14 @@ class Lane(Storage):
     def append_latest_data(self):
         self.timescale_dataset[1:60, :] = self.timescale_dataset[0:59, :]
         self.timescale_dataset[0, :] = (self.global_tan, self.local_tan, self.local_tan_abs)
-<<<<<<< HEAD
-        if tick % 30 == 0:
-            self.ax.cla()
-            self.ax.plot(self.x_data, self.timescale_dataset[:, 0], label="gTan")
-            self.ax.plot(self.x_data, self.timescale_dataset[:, 1], label="lTan")
-            self.ax.plot(self.x_data, self.timescale_dataset[:, 2], label="lTan2")
-            self.ax.axis((0, 60, -3, 3))
-            plt.legend()
-            plt.pause(0.01)
-=======
 
     def show_dataset_graph(self):
         self.ax.cla()
         self.ax.plot(self.x_data, self.timescale_dataset[:, 0], label="gTan")
         self.ax.plot(self.x_data, self.timescale_dataset[:, 1], label="lTan")
         self.ax.plot(self.x_data, self.timescale_dataset[:, 2], label="lTan2")
+        self.ax.axis((0, 60, -3, 3))
+        plt.legend()
         plt.pause(0.01)
 
     def pause_until(self, t):
@@ -131,8 +123,7 @@ class Lane(Storage):
         # 주행이 부드러워지는 효과를 낼 수 있음
         self.x = (self.x + delta_x) / 2
         self.z = (self.z + delta_z) / 2
->>>>>>> 3d0eee71d17c2a607dd973a94f8bdda029bc359e
-
+        
     def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
         if identity_size <= 0:
             return 0.0
