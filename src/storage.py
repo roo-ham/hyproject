@@ -80,7 +80,6 @@ class Lane(Storage):
             
 
     def update(self, tick, identity_size, yellow:np.ndarray):
-        yellow = yellow.copy()
         gtan = self.get_global_tangent(identity_size, yellow)
         ltan = self.get_local_tangent(identity_size, yellow)
 
@@ -143,7 +142,7 @@ class Lane(Storage):
         for x, y in np.argwhere(yellow):
             if random.randint(1, identity_size) > 32:
                 continue
-            base = yellow[-2+x:3+x, -2+y:3+y]
+            base = yellow[-2+x:3+x, -2+y:3+y].copy()
             base[:, 2] = 0
             x_set = base * arange
             y_set = (base.T * arange).T
