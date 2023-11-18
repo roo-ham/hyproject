@@ -68,11 +68,20 @@ class Lane(Storage):
 
     def on_pause(self, t) -> bool:
         return self.tick >= t
+    
+    def on_curve_transition(self, tick, gtan):
+        if not self.on_pause(tick):
+            return False
+        elif self.global_tan * gtan >= 0:
+            return False
+        elif abs(self.global_tan) < 0.4:
+            return False
+        return True
+            
 
     def update(self, tick, identity_size, yellow:np.ndarray):
-        on_curve_transition = False
-        if (self.global_tan * self.get_global_tangent(identity_size, yellow) < 0):
-            on_curve_transition = True
+        gtan = self.get_global_tangent(identity_size, yellow)
+        ltan = self.get_local_tangent(identity_size, yellow)
 
         # to-do
         # self.tick - 15 >= tick 일 경우 tan을 저장만 하고 x, z는 변경 없음
@@ -80,23 +89,27 @@ class Lane(Storage):
         # self.tick - 15 < tick 일 경우 tan을 x, z에 반영함
         
         # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
-        if on_curve_transition and abs(self.global_tan) > 0.4 :
-            pass
-        else :
-            self.global_tan = self.get_global_tangent(identity_size, yellow)
-            self.local_tan, self.local_tan_abs = self.get_local_tangent(identity_size, yellow)
+        if not self.on_curve_transition(tick, gtan) :
+            self.global_tan = gtan
+            self.local_tan, self.local_tan_abs = ltan
+
+        # 데이터베이스에 데이터들을 실시간으로 나열한다.
+        self.append_latest_data()
 
         # 0.1초마다 데이터베이스를 그래프로 보여준다.
         if tick % 3 == 0:
             self.show_dataset_graph()
 
-        self.append_latest_data() # 데이터베이스에 데이터들을 실시간으로 나열한다.
-
-        if abs(self.global_tan) > 0.4 and (not self.on_pause(tick)) : # 1초 대기 시작
+        # 급경사를 발견하면 1초 대기 시작
+        if abs(self.global_tan) >= 0.4 and (not self.on_pause(tick)) :
             self.pause_until(tick + 30)
 
+        # 급경사를 발견 후 0.5초 까지는 직진을 함
         if self.on_pause(tick + 15):
+            self.weight_z = 0.0
             return
+        else:
+            self.weight_z = 1.0
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
         # 그렇지 않으면 (곧으면) 속도 늘림
