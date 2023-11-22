@@ -52,7 +52,7 @@ class Lane(Storage):
         styles = ['r-', 'g-', 'y-']
         labels = ['G tan', 'L tan', 'L tan (절댓값)']
         def plot(ax, style, label):
-            plot = ax.plot(self.x_data, self.self.timescale_dataset[:, 0], style, animated=True, label=label)[0]
+            plot = ax.plot(self.x_data, self.timescale_dataset[:, 0], style, animated=True, label=label)[0]
             ax.set_ylim(-3, 3)
             return plot
         self.lines = [plot(ax, style, label) for ax, style, label in zip(self.axes, styles, labels)]
