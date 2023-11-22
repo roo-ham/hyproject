@@ -50,8 +50,11 @@ class Lane(Storage):
         self.fig.show()
         self.fig.canvas.draw()
         styles = ['r-', 'g-', 'y-']
+        labels = ['G tan', 'L tan', 'L tan (절댓값)']
         def plot(ax, style):
-            return ax.plot(self.x_data, self.x_data, style, animated=True)[0]
+            plot = ax.plot(self.x_data, self.self.timescale_dataset[:, 0], style, animated=True)[0]
+            ax.set_ylim(-3, 3)
+            return plot
         self.lines = [plot(ax, style) for ax, style in zip(self.axes, styles)]
         self.backgrounds = [self.fig.canvas.copy_from_bbox(ax.bbox) for ax in self.axes]
 
