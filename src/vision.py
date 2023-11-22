@@ -28,6 +28,9 @@ class VisionImage(Submodule):
         over_sat = self.basement.img_s < 128
         over_bri = self.basement.img_v < 150
         return (over_sat & over_bri)
+    def get_high_saturation(self):
+        over_sat = self.basement.img_s > np.mean(self.basement.img_s)
+        return over_sat
     def update(self):
         super().update()
 
@@ -36,7 +39,7 @@ class VisionImage(Submodule):
         white = self.get_white()
         yellow = self.get_yellow_border(white, black, yellow)
 
-        self.display_s(self.basement.img_s)
+        self.display_s(self.get_high_saturation())
         #self.display_lane(white, black, yellow)
 
         identity_size = np.sum(yellow)
@@ -61,9 +64,9 @@ class VisionImage(Submodule):
     def display_s(self, s):
         img = np.zeros_like(self.basement.get_bgr_bottom())
 
-        img[:, :, 0] = s
-        img[:, :, 1] = s
-        img[:, :, 2] = s
+        img[:, :, 0] = np.where(s, 255, img[:, :, 0])
+        img[:, :, 1] = np.where(s, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(s, 255, img[:, :, 2])
 
         cv2.namedWindow("hyproject", cv2.WINDOW_GUI_EXPANDED)
         cv2.imshow("hyproject", img)
