@@ -64,6 +64,9 @@ class Lane(Storage):
         self.timescale_dataset[1:60, :] = self.timescale_dataset[0:59, :]
         self.timescale_dataset[0, :] = (self.global_tan, self.local_tan, self.local_tan_abs, self.timer)
 
+    def use_previous_data(self):
+        self.timescale_dataset[0, :] = self.timescale_dataset[1, :]
+
     def show_dataset_graph(self):
         items = enumerate(zip(self.lines, self.axes, self.backgrounds), start=0)
         for j, (line, ax, background) in items:
@@ -78,10 +81,8 @@ class Lane(Storage):
     def on_pause(self, t) -> bool:
         return self.timer > t
     
-    def on_curve_transition(self, tick, gtan):
-        if not self.on_pause(tick):
-            return False
-        elif self.global_tan * gtan >= 0:
+    def on_curve_transition(self, gtan):
+        if self.global_tan * gtan >= 0:
             return False
         elif abs(self.global_tan) < 0.4:
             return False
@@ -97,13 +98,16 @@ class Lane(Storage):
         # on_curve_transition 일 경우 데이터 수집을 중단함
         # self.tick - 15 < tick 일 경우 tan을 x, z에 반영함
 
+        # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
+        self.global_tan = gtan
+        self.local_tan, self.local_tan_abs = ltan
+
+        # 타이머가 작동하는 경우 적분을 이용하여 현재 속력만큼 타이머 숫자를 줄인다.
         if self.on_pause(0.0):
             self.timer -= real_speed[0] / 30
-        
-        # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
-        if not self.on_curve_transition(0.0, gtan) :
-            self.global_tan = gtan
-            self.local_tan, self.local_tan_abs = ltan
+            # 아래 조건을 불만족 하는 경우 이전 데이터를 계속 사용한다.
+            if (abs(gtan) <= abs(self.global_tan))|(self.on_curve_transition(gtan)):
+                self.use_previous_data()
 
         # 데이터베이스에 데이터들을 실시간으로 나열한다.
         self.append_latest_data()
@@ -112,23 +116,23 @@ class Lane(Storage):
         if tick % 3 == 0:
             self.show_dataset_graph()
 
-        # 급커브를 발견하면 2.3m 타이머 시작
+        # 급커브를 발견하면 1.8m 타이머 시작
         if abs(self.global_tan) >= 0.4 and (not self.on_pause(0.0)) :
-            self.pause_until(2.3)
+            self.pause_until(1.8)
 
-        # 급커브 발견 후 1.3m 직진 후 1.0m 동안 커브를 돔
-        if self.on_pause(1.0):
+        # 급커브 발견 후 1.2m 직진 후 0.8m 동안 커브를 돔
+        if self.on_pause(0.8):
             self.weight_z = 0.0
         else:
             self.weight_z = 1.0
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
         # 그렇지 않으면 (곧으면) 속도 늘림
-        delta_x = (self.local_tan_abs * 0.5) + 0.5
+        delta_x = (self.local_tan_abs * 0.5) + 0.25
 
         # 차선이 한쪽으로 치우쳐져 있어 global_tan의 값이 0이 아니면 회전
-        # 회전 속도는 차선이 수평할 수록 (휘어있으면) 커짐 (local_tan의 절댓값에 반비례)
-        delta_z = self.global_tan / ((self.local_tan**2) + 1)
+        # 회전 속도는 차선이 화면 기준으로 수평할 수록 (휘어있으면) 커짐
+        delta_z = self.global_tan * (0.5**abs(self.local_tan) + 1)
 
         # 새 속도는 바로 적용되는 것이 아니라 이전속도를 절반만큼 반영함
         # 주행이 부드러워지는 효과를 낼 수 있음
