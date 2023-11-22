@@ -81,8 +81,8 @@ class Lane(Storage):
     def on_pause(self, t) -> bool:
         return self.timer > t
     
-    def on_curve_transition(self, prev_gtan):
-        if self.global_tan * prev_gtan >= 0:
+    def on_curve_transition(self):
+        if self.global_tan * self.timescale_dataset[1, 0] >= 0:
             return False
         elif abs(self.global_tan) < 0.4:
             return False
@@ -102,19 +102,18 @@ class Lane(Storage):
             self.timer -= real_speed[0] / 30
 
             # 아래 조건을 불만족 하는 경우 이전 데이터를 계속 사용한다.
-            prev_gtan = self.timescale_dataset[1, 0]
-            if (abs(self.global_tan) <= abs(prev_gtan))|(self.on_curve_transition(prev_gtan)):
+            if self.on_curve_transition():
                 self.use_previous_data()
 
         # 0.1초마다 데이터베이스를 그래프로 보여준다.
         if tick % 3 == 0:
             self.show_dataset_graph()
 
-        # 급커브를 발견하면 1.8m 타이머 시작
+        # 급커브를 발견하면 2.4m 타이머 시작
         if abs(self.global_tan) >= 0.4 and (not self.on_pause(0.0)) :
-            self.pause_until(1.8)
+            self.pause_until(2.4)
 
-        # 급커브 발견 후 1.2m 직진 후 0.8m 동안 커브를 돔
+        # 급커브 발견 후 1.6m 직진 후 0.8m 동안 커브를 돔
         if self.on_pause(0.8):
             self.weight_z = 0.0
         else:
@@ -122,7 +121,7 @@ class Lane(Storage):
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
         # 그렇지 않으면 (곧으면) 속도 늘림
-        delta_x = (self.local_tan_abs * 0.5) + 0.25
+        delta_x = (self.local_tan_abs * 1.0) + 0.25
 
         # 차선이 한쪽으로 치우쳐져 있어 global_tan의 값이 0이 아니면 회전
         # 회전 속도는 차선이 화면 기준으로 수평할 수록 (휘어있으면) 커짐
