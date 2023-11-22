@@ -112,7 +112,8 @@ class Lane(Storage):
 
         # 급커브를 발견하면 2.8m 타이머 시작
         if abs(gtan) > 0.1 and abs(abs(ltan) - ltan_abs) < 0.1 and (not self.on_pause(0.0)) :
-            self.pause_until(2.8)
+            self.resume()
+            #self.pause_until(2.8)
 
         # 급커브 발견 후 1.8m 직진 후 1.0m 동안 커브를 돔
         if self.on_pause(1.0):
