@@ -37,9 +37,6 @@ class Lane(Storage):
         self.mask_global_x = np.arange(-128, 128)
         self.mask_global_y = np.arange(128-b_height, 128)
         self.mask_local = np.arange(-2, 3)
-        self.global_tan = 0.0
-        self.local_tan = 0.0
-        self.local_tan_abs = 0.0
         self.timescale_dataset = np.zeros((60,4), np.float32)
         self.weight_x = 1.0
         self.weight_z = 1.0
@@ -60,9 +57,9 @@ class Lane(Storage):
         self.fig.canvas.draw()
         self.backgrounds = [self.fig.canvas.copy_from_bbox(ax.bbox) for ax in self.axes]
 
-    def append_latest_data(self):
+    def append_latest_data(self, *data_tuple):
         self.timescale_dataset[1:60, :] = self.timescale_dataset[0:59, :]
-        self.timescale_dataset[0, :] = (self.global_tan, self.local_tan, self.local_tan_abs, self.timer)
+        self.timescale_dataset[0, :] = data_tuple
 
     def show_dataset_graph(self):
         items = enumerate(zip(self.lines, self.axes, self.backgrounds), start=0)
@@ -79,20 +76,18 @@ class Lane(Storage):
         return self.timer > t
     
     def on_curve_transition(self):
-        if self.global_tan * self.timescale_dataset[1, 0] >= 0:
+        if self.timescale_dataset[0, 0] * self.timescale_dataset[1, 0] >= 0:
             return False
-        elif abs(self.global_tan) < 0.4:
+        elif abs(self.timescale_dataset[0, 0]) < 0.4:
             return False
         return True
             
 
     def update(self, real_speed, tick, identity_size, yellow:np.ndarray):
         # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
-        self.global_tan = self.get_global_tangent(identity_size, yellow)
-        self.local_tan, self.local_tan_abs = self.get_local_tangent(identity_size, yellow)
-
         # 데이터베이스에 데이터들을 실시간으로 나열한다.
-        self.append_latest_data()
+        self.append_latest_data(self.get_global_tangent(identity_size, yellow),\
+                                *self.get_local_tangent(identity_size, yellow), self.timer)
 
         # 타이머가 작동하는 경우 적분을 이용하여 현재 속력만큼 타이머 숫자를 줄인다.
         if self.on_pause(0.0):
@@ -108,8 +103,10 @@ class Lane(Storage):
         if tick % 3 == 0:
             self.show_dataset_graph()
 
+        gtan, ltan, ltan_abs = self.timescale_dataset[0, 0:3]
+
         # 급커브를 발견하면 2.4m 타이머 시작
-        if abs(self.global_tan) >= 0.4 and (not self.on_pause(0.0)) :
+        if abs(gtan) >= 0.4 and (not self.on_pause(0.0)) :
             self.pause_until(2.4)
 
         # 급커브 발견 후 1.6m 직진 후 0.8m 동안 커브를 돔
@@ -120,11 +117,11 @@ class Lane(Storage):
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
         # 그렇지 않으면 (곧으면) 속도 늘림
-        delta_x = (self.local_tan_abs * 1.0) + 0.25
+        delta_x = (ltan_abs * 1.0) + 0.25
 
         # 차선이 한쪽으로 치우쳐져 있어 global_tan의 값이 0이 아니면 회전
         # 회전 속도는 차선이 화면 기준으로 수평할 수록 (휘어있으면) 커짐
-        delta_z = self.global_tan * (0.5**abs(self.local_tan) + 1)
+        delta_z = gtan * (0.5**abs(ltan) + 1)
 
         # 새 속도는 바로 적용되는 것이 아니라 이전속도를 절반만큼 반영함
         # 주행이 부드러워지는 효과를 낼 수 있음
