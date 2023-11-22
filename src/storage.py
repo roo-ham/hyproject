@@ -60,7 +60,7 @@ class Lane(Storage):
         self.timescale_dataset[0, :] = (self.global_tan, self.local_tan, self.local_tan_abs)
 
     def show_dataset_graph(self):
-        items = enumerate(zip(self.lines, self.axes, self.backgrounds), start=1)
+        items = enumerate(zip(self.lines, self.axes, self.backgrounds), start=0)
         for j, (line, ax, background) in items:
             self.fig.canvas.restore_region(background)
             line.set_ydata(self.timescale_dataset[:, j])
