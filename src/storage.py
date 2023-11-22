@@ -96,7 +96,10 @@ class Lane(Storage):
             # 아래 조건을 불만족 하는 경우 이전 데이터를 계속 사용한다.
             prev_gtan = self.timescale_dataset[1, 0]
             now_gtan = self.timescale_dataset[0, 0]
-            if self.on_curve_transition() or abs(prev_gtan) > abs(now_gtan):
+            now_ltan = self.timescale_dataset[0, 1]
+            if abs(now_gtan) < 0.2 and abs(now_ltan) < 0.2:
+                self.pause_until(0.0)
+            elif self.on_curve_transition() or abs(prev_gtan) > abs(now_gtan):
                 self.timescale_dataset[0, 0] = prev_gtan
 
         # 0.1초마다 데이터베이스를 그래프로 보여준다.
