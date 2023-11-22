@@ -88,12 +88,12 @@ class Lane(Storage):
 
     def update(self, real_speed, tick, identity_size, yellow:np.ndarray):
         # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
-        # 데이터베이스에 데이터들을 실시간으로 나열한다.
+        # 데이터베이스에 데이터들을 나열한다.
         self.append_latest_data(self.get_global_tangent(identity_size, yellow),\
                                 *self.get_local_tangent(identity_size, yellow), self.timer)
 
-        # 타이머가 작동하는 경우 적분을 이용하여 현재 속력만큼 타이머 숫자를 줄인다.
         if self.on_pause(0.0):
+            # 타이머가 작동하는 경우 적분을 이용하여 현재 속력만큼 타이머 숫자를 줄인다.
             self.timer -= real_speed[0] / 30
 
             # 아래 조건을 불만족 하는 경우 이전(previous) 데이터를 계속 사용한다.
@@ -103,23 +103,14 @@ class Lane(Storage):
                 self.resume()
             elif self.on_curve_transition() or abs(prev_gtan) > abs(now_gtan):
                 self.timescale_dataset[0, 0] = prev_gtan
+        elif abs(gtan) > 0.1 and abs(abs(ltan) - ltan_abs) < 0.1:
+            # 급커브를 발견하면 3.0m 타이머 시작
+            self.pause_until(3.0)
 
-        # 0.1초마다 데이터베이스를 그래프로 보여준다.
-        if tick % 3 == 0:
-            self.show_dataset_graph()
+        # 실시간으로 데이터베이스를 그래프로 보여준다.
+        self.show_dataset_graph()
 
         gtan, ltan, ltan_abs = self.timescale_dataset[0, 0:3]
-
-        # 급커브를 발견하면 2.8m 타이머 시작
-        if abs(gtan) > 0.1 and abs(abs(ltan) - ltan_abs) < 0.1 and (not self.on_pause(0.0)) :
-            self.resume()
-            #self.pause_until(2.8)
-
-        # 급커브 발견 후 1.8m 직진 후 1.0m 동안 커브를 돔
-        if self.on_pause(1.0):
-            self.weight_z = 0.0
-        else:
-            self.weight_z = 1.0
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
         # 그렇지 않으면 (곧으면) 속도 늘림
@@ -128,6 +119,13 @@ class Lane(Storage):
         # 차선이 한쪽으로 치우쳐져 있어 global_tan의 값이 0이 아니면 회전
         # 회전 속도는 차선이 화면 기준으로 수평할 수록 (휘어있으면) 커짐
         delta_z = gtan / (abs(ltan) + 1)
+
+        # 급커브 처리
+        if self.on_pause(0.0):
+            if (gtan > 0):
+                delta_z -= 0.5
+            elif (gtan < 0):
+                delta_z += 0.5
 
         # 새 속도는 바로 적용되는 것이 아니라 이전속도를 절반만큼 반영함
         # 주행이 부드러워지는 효과를 낼 수 있음
