@@ -39,8 +39,8 @@ class VisionImage(Submodule):
         white = self.get_white()
         yellow = self.get_yellow_border(white, black, yellow)
 
-        self.display_s(self.get_high_saturation())
-        #self.display_lane(white, black, yellow)
+        #self.display_s(self.get_high_saturation())
+        self.display_lane(white, black, yellow)
 
         identity_size = np.sum(yellow)
         self.lane_storage.update(self.basement.tick, identity_size, yellow)
