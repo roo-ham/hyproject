@@ -119,7 +119,7 @@ class Lane(Storage):
 
         # 차선이 한쪽으로 치우쳐져 있어 global_tan의 값이 0이 아니면 회전
         # 회전 속도는 차선이 화면 기준으로 수평할 수록 (휘어있으면) 커짐
-        delta_z = gtan / (ltan**2 + 0.5)
+        delta_z = gtan / (abs(ltan * 1.5) + 0.8)
 
         # 급커브 처리
         if self.on_pause(0.0):
