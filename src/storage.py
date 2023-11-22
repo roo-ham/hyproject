@@ -111,7 +111,7 @@ class Lane(Storage):
 
         # 급커브를 발견하면 2.0m 타이머 시작
         if abs(gtan) > 0.1 and abs(abs(ltan) - ltan_abs) < 0.1 and (not self.on_pause(0.0)):
-            self.pause_until(2.0)
+            self.pause_until(1.2)
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
         # 그렇지 않으면 (곧으면) 속도 늘림
@@ -119,11 +119,11 @@ class Lane(Storage):
 
         # 차선이 한쪽으로 치우쳐져 있어 global_tan의 값이 0이 아니면 회전
         # 회전 속도는 차선이 화면 기준으로 수평할 수록 (휘어있으면) 커짐
-        delta_z = gtan / (abs(ltan) + 1)
+        delta_z = gtan / (ltan**2 + 0.5)
 
         # 급커브 처리
         if self.on_pause(0.0):
-            arc_offset = self.timer - 1.0
+            arc_offset = self.timer - 0.6
             if (gtan > 0):
                 delta_z -= arc_offset
             elif (gtan < 0):
