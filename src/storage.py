@@ -94,12 +94,6 @@ class Lane(Storage):
         self.global_tan = self.get_global_tangent(identity_size, yellow)
         self.local_tan, self.local_tan_abs = self.get_local_tangent(identity_size, yellow)
 
-        # to-do
-        # self.tick - 15 >= tick 일 경우 tan을 저장만 하고 x, z는 변경 없음
-        # on_curve_transition 일 경우 데이터 수집을 중단함
-        # self.tick - 15 < tick 일 경우 tan을 x, z에 반영함
-        self.global_tan = gtan
-
         # 데이터베이스에 데이터들을 실시간으로 나열한다.
         self.append_latest_data()
 
