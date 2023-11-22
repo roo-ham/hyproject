@@ -112,12 +112,12 @@ class Lane(Storage):
         if tick % 3 == 0:
             self.show_dataset_graph()
 
-        # 급커브를 발견하면 1.2m 타이머 시작
+        # 급커브를 발견하면 2.3m 타이머 시작
         if abs(self.global_tan) >= 0.4 and (not self.on_pause(0.0)) :
-            self.pause_until(1.2)
+            self.pause_until(2.3)
 
-        # 급커브 발견 후 1.0m 동안 직진을 함 (즉 1.2m 중에서 1.0m를 가서 0.2m의 타이머가 남았을 때)
-        if self.on_pause(0.2):
+        # 급커브 발견 후 1.3m 직진 후 1.0m 동안 커브를 돔
+        if self.on_pause(1.0):
             self.weight_z = 0.0
         else:
             self.weight_z = 1.0
