@@ -86,7 +86,7 @@ class Lane(Storage):
         return True
             
 
-    def update(self, real_speed, tick, identity_size, yellow:np.ndarray):
+    def update(self, real_speed, identity_size, yellow:np.ndarray):
         # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
         # 데이터베이스에 데이터들을 나열한다.
         self.append_latest_data(self.get_global_tangent(identity_size, yellow),\
@@ -109,9 +109,9 @@ class Lane(Storage):
 
         gtan, ltan, ltan_abs = self.timescale_dataset[0, 0:3]
 
-        # 급커브를 발견하면 3.0m 타이머 시작
+        # 급커브를 발견하면 1.5m 타이머 시작
         if abs(gtan) > 0.1 and abs(abs(ltan) - ltan_abs) < 0.1:
-            self.pause_until(3.0)
+            self.pause_until(1.5)
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
         # 그렇지 않으면 (곧으면) 속도 늘림
