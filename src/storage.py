@@ -113,8 +113,8 @@ class Lane(Storage):
         if abs(self.global_tan) >= 0.2 and abs(self.global_tan-self.local_tan) >= 0.2 and (not self.on_pause(tick)) :
             self.pause_until(tick + 75)
 
-        # 급경사를 발견 후 1.5초 까지는 직진을 함
-        if self.on_pause(tick + 45):
+        # 급경사를 발견 후 2초 까지는 직진을 함
+        if self.on_pause(tick + 60):
             self.weight_z = 0.0
             return
         else:
@@ -126,7 +126,7 @@ class Lane(Storage):
 
         # 차선이 한쪽으로 치우쳐져 있어 global_tan의 값이 0이 아니면 회전
         # 회전 속도는 차선이 수평할 수록 (휘어있으면) 커짐 (local_tan의 절댓값에 반비례)
-        delta_z = self.global_tan / ((self.local_tan**2) + 2)
+        delta_z = self.global_tan / ((self.local_tan**2) + 1)
 
         # 새 속도는 바로 적용되는 것이 아니라 이전속도를 절반만큼 반영함
         # 주행이 부드러워지는 효과를 낼 수 있음
