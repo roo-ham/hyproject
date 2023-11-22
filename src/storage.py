@@ -111,8 +111,8 @@ class Lane(Storage):
         if abs(gtan) > 0.1 and abs(abs(ltan) - ltan_abs) < 0.1 and (not self.on_pause(0.0)) :
             self.pause_until(2.8)
 
-        # 급커브 발견 후 2.0m 직진 후 0.8m 동안 커브를 돔
-        if self.on_pause(0.8):
+        # 급커브 발견 후 1.8m 직진 후 1.0m 동안 커브를 돔
+        if self.on_pause(1.0):
             self.weight_z = 0.0
         else:
             self.weight_z = 1.0
