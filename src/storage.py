@@ -122,11 +122,11 @@ class Lane(Storage):
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
         # 그렇지 않으면 (곧으면) 속도 늘림
-        delta_x = self.local_tan_abs + 0.25
+        delta_x = (self.local_tan_abs * 0.5) + 0.5
 
         # 차선이 한쪽으로 치우쳐져 있어 global_tan의 값이 0이 아니면 회전
         # 회전 속도는 차선이 수평할 수록 (휘어있으면) 커짐 (local_tan의 절댓값에 반비례)
-        delta_z = self.global_tan / ((self.local_tan**2) + 1)
+        delta_z = self.global_tan / ((self.local_tan**2) + 2)
 
         # 새 속도는 바로 적용되는 것이 아니라 이전속도를 절반만큼 반영함
         # 주행이 부드러워지는 효과를 낼 수 있음
