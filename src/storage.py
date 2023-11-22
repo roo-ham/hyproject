@@ -103,14 +103,15 @@ class Lane(Storage):
                 self.resume()
             elif self.on_curve_transition() or abs(prev_gtan) > abs(now_gtan):
                 self.timescale_dataset[0, 0] = prev_gtan
-        elif abs(gtan) > 0.1 and abs(abs(ltan) - ltan_abs) < 0.1:
-            # 급커브를 발견하면 3.0m 타이머 시작
-            self.pause_until(3.0)
 
         # 실시간으로 데이터베이스를 그래프로 보여준다.
         self.show_dataset_graph()
 
         gtan, ltan, ltan_abs = self.timescale_dataset[0, 0:3]
+
+        # 급커브를 발견하면 3.0m 타이머 시작
+        if abs(gtan) > 0.1 and abs(abs(ltan) - ltan_abs) < 0.1:
+            self.pause_until(3.0)
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
         # 그렇지 않으면 (곧으면) 속도 늘림
