@@ -110,7 +110,7 @@ class Lane(Storage):
             self.show_dataset_graph()
 
         # 급경사를 발견하면 2초 대기 시작
-        if abs(self.global_tan) >= 0.4 and (not self.on_pause(tick)) :
+        if abs(self.global_tan) >= 0.2 and (not self.on_pause(tick)) :
             self.pause_until(tick + 60)
 
         # 급경사를 발견 후 1초 까지는 직진을 함
