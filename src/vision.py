@@ -36,7 +36,8 @@ class VisionImage(Submodule):
         white = self.get_white()
         yellow = self.get_yellow_border(white, black, yellow)
 
-        self.display(white, black, yellow)
+        self.display_s(self.basement.img_s)
+        #self.display_lane(white, black, yellow)
 
         identity_size = np.sum(yellow)
         self.lane_storage.update(self.basement.tick, identity_size, yellow)
@@ -57,7 +58,18 @@ class VisionImage(Submodule):
         y2[b_height-8:b_height, :] = False
         return y2
 
-    def display(self, white, black, yellow):
+    def display_s(self, s):
+        img = np.zeros_like(self.basement.get_bgr_bottom())
+
+        img[:, :, 0] = s
+        img[:, :, 1] = s
+        img[:, :, 2] = s
+
+        cv2.namedWindow("hyproject", cv2.WINDOW_GUI_EXPANDED)
+        cv2.imshow("hyproject", img)
+        cv2.waitKey(1)
+
+    def display_lane(self, white, black, yellow):
         img = np.zeros_like(self.basement.get_bgr_bottom())
 
         img[:, :, 0] = np.where(white, 255, img[:, :, 0])
@@ -75,6 +87,7 @@ class VisionImage(Submodule):
         cv2.namedWindow("hyproject", cv2.WINDOW_GUI_EXPANDED)
         cv2.imshow("hyproject", img)
         cv2.waitKey(1)
+
     def callback(self, data):
         super().callback(data)
         bridge = CvBridge()
