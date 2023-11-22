@@ -124,8 +124,8 @@ class Lane(Storage):
         # 급커브 처리
         if self.on_pause(0.0):
             arc_offset = 0.5
-            if (ltan_abs < 0.2)|self.on_pause(0.5):
-                arc_offset = -1.0
+            if ltan_abs < 0.2:
+                arc_offset = -0.5
             if (gtan > 0):
                 delta_z -= arc_offset
             elif (gtan < 0):
