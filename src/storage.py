@@ -40,19 +40,19 @@ class Lane(Storage):
         self.global_tan = 0.0
         self.local_tan = 0.0
         self.local_tan_abs = 0.0
-        self.timescale_dataset = np.zeros((60,3), np.float32)
+        self.timescale_dataset = np.zeros((60,4), np.float32)
         self.weight_x = 1.0
         self.weight_z = 1.0
         self.x_data = range(60)
         self.timer = 0.0
 
-        self.fig, self.axes = plt.subplots(nrows=3)
-        styles = ['r-', 'g-', 'y-']
-        labels = ['G tan', 'L tan', 'L tan (absolute)']
+        self.fig, self.axes = plt.subplots(nrows=4)
+        styles = ['r-', 'g-', 'y-', 'b-']
+        labels = ['G tan', 'L tan', 'L tan (absolute)', 'Integral Timer']
         def plot(ax, style, label):
             plot = ax.plot(self.x_data, self.timescale_dataset[:, 0], style, animated=True, label=label)[0]
             ax.set_xlim(0, 59)
-            ax.set_ylim(-3, 3)
+            ax.set_ylim(-1.6, 1.6)
             ax.legend()
             return plot
         self.lines = [plot(ax, style, label) for ax, style, label in zip(self.axes, styles, labels)]
@@ -62,7 +62,7 @@ class Lane(Storage):
 
     def append_latest_data(self):
         self.timescale_dataset[1:60, :] = self.timescale_dataset[0:59, :]
-        self.timescale_dataset[0, :] = (self.global_tan, self.local_tan, self.local_tan_abs)
+        self.timescale_dataset[0, :] = (self.global_tan, self.local_tan, self.local_tan_abs, self.timer)
 
     def show_dataset_graph(self):
         items = enumerate(zip(self.lines, self.axes, self.backgrounds), start=0)
