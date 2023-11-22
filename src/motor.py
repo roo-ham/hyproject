@@ -31,6 +31,9 @@ class Motor(Submodule):
         x /= weight_x
         z /= weight_z
         
+        self.basement.real_speed_x = x
+        self.basement.real_speed_z = z
+        
         self.drive_data.linear.x *= x
         self.drive_data.angular.z *= z
         self.pub.publish(self.drive_data)

@@ -44,7 +44,7 @@ class Lane(Storage):
         self.weight_x = 1.0
         self.weight_z = 1.0
         self.x_data = range(60)
-        self.tick = 0
+        self.timer = 0.0
 
         self.fig, self.axes = plt.subplots(nrows=3)
         styles = ['r-', 'g-', 'y-']
@@ -73,10 +73,10 @@ class Lane(Storage):
             self.fig.canvas.blit(ax.bbox)
 
     def pause_until(self, t):
-        self.tick = t
+        self.timer = t
 
     def on_pause(self, t) -> bool:
-        return self.tick >= t
+        return self.timer > t
     
     def on_curve_transition(self, tick, gtan):
         if not self.on_pause(tick):
@@ -88,7 +88,7 @@ class Lane(Storage):
         return True
             
 
-    def update(self, tick, identity_size, yellow:np.ndarray):
+    def update(self, real_speed, tick, identity_size, yellow:np.ndarray):
         gtan = self.get_global_tangent(identity_size, yellow)
         ltan = self.get_local_tangent(identity_size, yellow)
 
@@ -96,9 +96,12 @@ class Lane(Storage):
         # self.tick - 15 >= tick 일 경우 tan을 저장만 하고 x, z는 변경 없음
         # on_curve_transition 일 경우 데이터 수집을 중단함
         # self.tick - 15 < tick 일 경우 tan을 x, z에 반영함
+
+        if self.on_pause(0.0):
+            self.timer -= self.basement.real_speed[0] / 30
         
         # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
-        if not self.on_curve_transition(tick, gtan) :
+        if not self.on_curve_transition(0.0, gtan) :
             self.global_tan = gtan
             self.local_tan, self.local_tan_abs = ltan
 
@@ -109,12 +112,12 @@ class Lane(Storage):
         if tick % 3 == 0:
             self.show_dataset_graph()
 
-        # 급커브를 발견하면 2.5초 타이머 시작
-        if abs(self.global_tan) >= 0.2 and (not self.on_pause(tick)) :
-            self.pause_until(tick + 75)
+        # 급커브를 발견하면 1.0m 타이머 시작
+        if abs(self.global_tan) >= 0.1 and (not self.on_pause(0.0)) :
+            self.pause_until(1.0)
 
-        # 급커브 발견 후 2초 까지는 직진을 함
-        if self.on_pause(tick + 60):
+        # 급커브 발견 후 0.75m 까지는 직진을 함
+        if self.on_pause(0.75):
             self.weight_z = 0.0
             return
         else:

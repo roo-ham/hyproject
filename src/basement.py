@@ -16,6 +16,8 @@ class Basement:
         self.storages = dict()
         self.storages["lane"] = storage.Lane(self.bottom_height)
         self.tick = 0
+        self.real_speed_x = 0.0
+        self.real_speed_z = 0.0
 
     def set_bgr(self, full, bottom):
         self.__bgr_full = full
