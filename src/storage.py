@@ -57,6 +57,7 @@ class Lane(Storage):
         self.lines = [plot(ax, style, label) for ax, style, label in zip(self.axes, styles, labels)]
         self.fig.show()
         self.fig.canvas.draw()
+        self.fig.legend()
         self.backgrounds = [self.fig.canvas.copy_from_bbox(ax.bbox) for ax in self.axes]
 
     def append_latest_data(self):
