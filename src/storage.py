@@ -64,9 +64,6 @@ class Lane(Storage):
         self.timescale_dataset[1:60, :] = self.timescale_dataset[0:59, :]
         self.timescale_dataset[0, :] = (self.global_tan, self.local_tan, self.local_tan_abs, self.timer)
 
-    def use_previous_data(self):
-        self.timescale_dataset[0, :] = self.timescale_dataset[1, :]
-
     def show_dataset_graph(self):
         items = enumerate(zip(self.lines, self.axes, self.backgrounds), start=0)
         for j, (line, ax, background) in items:
@@ -102,8 +99,10 @@ class Lane(Storage):
             self.timer -= real_speed[0] / 30
 
             # 아래 조건을 불만족 하는 경우 이전 데이터를 계속 사용한다.
-            if self.on_curve_transition():
-                self.use_previous_data()
+            prev_gtan = self.timescale_dataset[1, 0]
+            now_gtan = self.timescale_dataset[0, 0]
+            if self.on_curve_transition() or abs(prev_gtan) > abs(now_gtan):
+                self.timescale_dataset[0, 0] = prev_gtan
 
         # 0.1초마다 데이터베이스를 그래프로 보여준다.
         if tick % 3 == 0:
