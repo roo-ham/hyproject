@@ -113,7 +113,7 @@ class Lane(Storage):
             self.show_dataset_graph()
 
         # 급커브를 발견하면 1.0m 타이머 시작
-        if abs(self.global_tan) >= 0.1 and (not self.on_pause(0.0)) :
+        if abs(self.global_tan) >= 0.4 and (not self.on_pause(0.0)) :
             self.pause_until(1.0)
 
         # 급커브 발견 후 0.75m 까지는 직진을 함
