@@ -46,22 +46,26 @@ class Lane(Storage):
         self.x_data = range(60)
         self.tick = 0
 
-        plt.ion()
-        self.fig, self.ax = plt.subplots()
-        plt.show()
+        self.fig, self.axes = plt.subplots(nrows=3)
+        self.fig.show()
+        self.fig.canvas.draw()
+        styles = ['r-', 'g-', 'y-']
+        def plot(ax, style):
+            return ax.plot(self.x_data, self.x_data, style, animated=True)[0]
+        self.lines = [plot(ax, style) for ax, style in zip(self.axes, styles)]
+        self.backgrounds = [self.fig.canvas.copy_from_bbox(ax.bbox) for ax in self.axes]
 
     def append_latest_data(self):
         self.timescale_dataset[1:60, :] = self.timescale_dataset[0:59, :]
         self.timescale_dataset[0, :] = (self.global_tan, self.local_tan, self.local_tan_abs)
 
     def show_dataset_graph(self):
-        self.ax.cla()
-        self.ax.plot(self.x_data, self.timescale_dataset[:, 0], label="gTan")
-        self.ax.plot(self.x_data, self.timescale_dataset[:, 1], label="lTan")
-        self.ax.plot(self.x_data, self.timescale_dataset[:, 2], label="lTan2")
-        self.ax.axis((0, 60, -3, 3))
-        plt.legend()
-        plt.pause(0.01)
+        items = enumerate(zip(self.lines, self.axes, self.backgrounds), start=1)
+        for j, (line, ax, background) in items:
+            self.fig.canvas.restore_region(background)
+            line.set_ydata(self.timescale_dataset[:, j])
+            ax.draw_artist(line)
+            self.fig.canvas.blit(ax.bbox)
 
     def pause_until(self, t):
         self.tick = t
