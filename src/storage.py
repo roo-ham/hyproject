@@ -109,9 +109,9 @@ class Lane(Storage):
 
         gtan, ltan, ltan_abs = self.timescale_dataset[0, 0:3]
 
-        # 급커브를 발견하면 1.5m 타이머 시작
+        # 급커브를 발견하면 2.0m 타이머 시작
         if abs(gtan) > 0.1 and abs(abs(ltan) - ltan_abs) < 0.1 and (not self.on_pause(0.0)):
-            self.pause_until(1.5)
+            self.pause_until(2.0)
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
         # 그렇지 않으면 (곧으면) 속도 늘림
@@ -123,10 +123,11 @@ class Lane(Storage):
 
         # 급커브 처리
         if self.on_pause(0.0):
+            arc_offset = self.timer - 1.0
             if (gtan > 0):
-                delta_z -= 0.5
+                delta_z -= arc_offset
             elif (gtan < 0):
-                delta_z += 0.5
+                delta_z += arc_offset
 
         # 새 속도는 바로 적용되는 것이 아니라 이전속도를 절반만큼 반영함
         # 주행이 부드러워지는 효과를 낼 수 있음
