@@ -72,6 +72,9 @@ class Lane(Storage):
     def pause_until(self, t):
         self.timer = t
 
+    def resume(self):
+        self.timer = -1.0
+
     def on_pause(self, t) -> bool:
         return self.timer > t
     
@@ -96,8 +99,8 @@ class Lane(Storage):
             # 아래 조건을 불만족 하는 경우 이전(previous) 데이터를 계속 사용한다.
             prev_gtan = self.timescale_dataset[1, 0]
             now_gtan, now_ltan, now_ltan_abs = self.timescale_dataset[0, 0:3]
-            if abs(now_gtan) < 0.1 and abs(now_ltan) < 0.1 and now_ltan_abs > 0.4:
-                self.pause_until(0.0)
+            if abs(now_gtan) < 0.1 and abs(abs(now_ltan) - now_ltan_abs) > 0.4:
+                self.resume()
             elif self.on_curve_transition() or abs(prev_gtan) > abs(now_gtan):
                 self.timescale_dataset[0, 0] = prev_gtan
 
