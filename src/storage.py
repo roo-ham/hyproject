@@ -108,7 +108,7 @@ class Lane(Storage):
         gtan, ltan, ltan_abs = self.timescale_dataset[0, 0:3]
 
         # 급커브를 발견하면 2.0m 타이머 시작
-        if abs(gtan) >= 0.4 and (not self.on_pause(0.0)) :
+        if abs(gtan) > 0.1 and abs(abs(ltan) - ltan_abs) < 0.1 and (not self.on_pause(0.0)) :
             self.pause_until(2.4)
 
         # 급커브 발견 후 1.6m 직진 후 0.4m 동안 커브를 돔
@@ -123,7 +123,7 @@ class Lane(Storage):
 
         # 차선이 한쪽으로 치우쳐져 있어 global_tan의 값이 0이 아니면 회전
         # 회전 속도는 차선이 화면 기준으로 수평할 수록 (휘어있으면) 커짐
-        delta_z = gtan * (0.5**abs(ltan) + 1)
+        delta_z = gtan / (abs(ltan) + 1)
 
         # 새 속도는 바로 적용되는 것이 아니라 이전속도를 절반만큼 반영함
         # 주행이 부드러워지는 효과를 낼 수 있음
