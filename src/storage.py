@@ -119,7 +119,6 @@ class Lane(Storage):
         # 급커브 발견 후 1.3m까지는 직진을 함
         if self.on_pause(1.3):
             self.weight_z = 0.0
-            return
         else:
             self.weight_z = 1.0
         
