@@ -81,7 +81,16 @@ class Lane(Storage):
         elif abs(self.timescale_dataset[0, 0]) < 0.4:
             return False
         return True
-            
+    
+    def found_junction(self, gtan):
+        ltan = np.mean(self.timescale_dataset[0:15, 1])
+        prev_ltan = np.mean(self.timescale_dataset[15:30, 1])
+        not_center = abs(gtan) > 0.2
+        lane_as_one = abs(gtan-ltan) < 0.1
+        diff_ltan_high = abs(ltan-prev_ltan) > 0.2
+        if not_center & lane_as_one & diff_ltan_high:
+            return True
+        return False
 
     def update(self, real_speed, identity_size, yellow:np.ndarray):
         # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
@@ -95,35 +104,32 @@ class Lane(Storage):
 
             # 아래 조건을 불만족 하는 경우 이전(previous) 데이터를 계속 사용한다.
             prev_gtan = self.timescale_dataset[1, 0]
-            now_gtan, now_ltan, now_ltan_abs = self.timescale_dataset[0, 0:3]
-            if prev_gtan * now_gtan <= 0 and now_gtan < 0.4:
-                self.resume()
-            elif self.on_curve_transition() or abs(prev_gtan) > abs(now_gtan):
+            if self.on_curve_transition():
                 self.timescale_dataset[0, 0] = prev_gtan
 
         # 실시간으로 데이터베이스를 그래프로 보여준다.
         self.show_dataset_graph()
 
-        gtan, ltan, ltan_abs = self.timescale_dataset[0, 0:3]
+        gtan, ltan_abs = self.timescale_dataset[0, 0], self.timescale_dataset[0, 2]
 
-        # 급커브를 발견하면 1.0m 타이머 시작
-        if abs(gtan) > 0.5 and self.timer <= 0:
-            self.pause_until(2.0)
+        # 커브를 발견하면 1.0m 타이머 시작
+        if self.found_junction(gtan) and self.timer <= 0:
+            self.pause_until(1.0)
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
         # 그렇지 않으면 (곧으면) 속도 늘림
-        delta_x = (ltan_abs * 1.0) + 0.25
+        delta_x = ltan_abs + 0.5
 
-        # 차선이 한쪽으로 치우쳐져 있어 global_tan의 값이 0이 아니면 회전
-        # 회전 속도는 차선이 화면 기준으로 수평할 수록 (휘어있으면) 커짐
-        delta_z = gtan / (abs(ltan * 2.0) + 1.0)
+        # 차선이 한쪽으로 치우쳐져 있어 global_tan이 0이 아니면 회전
+        delta_z = np.tan(gtan/2)*2
 
         # 급커브 처리
         if self.timer > 0:
             arc_offset = 0.5
-            if ltan_abs < 0.1 or self.timer <= 0.1:
-                self.timer = 0.1
+            if ltan_abs < 0.1 or abs(gtan) > 0.8:
                 arc_offset = 0
+                delta_x /= delta_z if delta_z != 0 else 1
+                delta_z /= 2
             if (gtan > 0):
                 delta_z -= arc_offset
             elif (gtan < 0):
