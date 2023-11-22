@@ -74,9 +74,6 @@ class Lane(Storage):
 
     def resume(self):
         self.timer = -1.0
-
-    def on_pause(self, t) -> bool:
-        return self.timer > t
     
     def on_curve_transition(self):
         if self.timescale_dataset[0, 0] * self.timescale_dataset[1, 0] >= 0:
@@ -92,7 +89,7 @@ class Lane(Storage):
         self.append_latest_data(self.get_global_tangent(identity_size, yellow),\
                                 *self.get_local_tangent(identity_size, yellow), self.timer)
 
-        if self.on_pause(0.0):
+        if self.timer > 0:
             # 타이머가 작동하는 경우 적분을 이용하여 현재 속력만큼 타이머 숫자를 줄인다.
             self.timer -= real_speed[0] / 30
 
@@ -110,7 +107,7 @@ class Lane(Storage):
         gtan, ltan, ltan_abs = self.timescale_dataset[0, 0:3]
 
         # 급커브를 발견하면 1.0m 타이머 시작
-        if abs(gtan) > 0.5 and (not self.on_pause(0.0)):
+        if abs(gtan) > 0.5 and self.timer <= 0:
             self.pause_until(1.0)
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
@@ -122,9 +119,10 @@ class Lane(Storage):
         delta_z = gtan / (abs(ltan * 2.0) + 1.0)
 
         # 급커브 처리
-        if self.on_pause(0.0):
+        if self.timer > 0:
             arc_offset = 0.5
-            if ltan_abs < 0.2:
+            if ltan_abs < 0.2 or self.timer <= 0.5:
+                self.timer = 0.5
                 arc_offset = -0.5
             if (gtan > 0):
                 delta_z -= arc_offset
