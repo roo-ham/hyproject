@@ -99,7 +99,7 @@ class Lane(Storage):
             # 아래 조건을 불만족 하는 경우 이전(previous) 데이터를 계속 사용한다.
             prev_gtan = self.timescale_dataset[1, 0]
             now_gtan, now_ltan, now_ltan_abs = self.timescale_dataset[0, 0:3]
-            if abs(now_gtan) < 0.1 and abs(abs(now_ltan) - now_ltan_abs) > 0.4:
+            if prev_gtan * now_gtan <= 0 and now_gtan < 0.4:
                 self.resume()
             elif self.on_curve_transition() or abs(prev_gtan) > abs(now_gtan):
                 self.timescale_dataset[0, 0] = prev_gtan
@@ -124,8 +124,8 @@ class Lane(Storage):
         # 급커브 처리
         if self.on_pause(0.0):
             arc_offset = 0.5
-            if (ltan_abs < 0.2):
-                arc_offset = 0
+            if (ltan_abs < 0.2)|self.on_pause(0.5):
+                arc_offset = -1.0
             if (gtan > 0):
                 delta_z -= arc_offset
             elif (gtan < 0):
