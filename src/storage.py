@@ -107,12 +107,12 @@ class Lane(Storage):
 
         gtan, ltan, ltan_abs = self.timescale_dataset[0, 0:3]
 
-        # 급커브를 발견하면 2.0m 타이머 시작
+        # 급커브를 발견하면 2.8m 타이머 시작
         if abs(gtan) > 0.1 and abs(abs(ltan) - ltan_abs) < 0.1 and (not self.on_pause(0.0)) :
-            self.pause_until(2.4)
+            self.pause_until(2.8)
 
-        # 급커브 발견 후 1.6m 직진 후 0.4m 동안 커브를 돔
-        if self.on_pause(0.4):
+        # 급커브 발견 후 2.0m 직진 후 0.8m 동안 커브를 돔
+        if self.on_pause(0.8):
             self.weight_z = 0.0
         else:
             self.weight_z = 1.0
