@@ -98,7 +98,7 @@ class Lane(Storage):
         # self.tick - 15 < tick 일 경우 tan을 x, z에 반영함
 
         if self.on_pause(0.0):
-            self.timer -= self.basement.real_speed[0] / 30
+            self.timer -= real_speed[0] / 30
         
         # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
         if not self.on_curve_transition(0.0, gtan) :
