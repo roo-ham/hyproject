@@ -81,8 +81,8 @@ class Lane(Storage):
     def on_pause(self, t) -> bool:
         return self.timer > t
     
-    def on_curve_transition(self, gtan):
-        if self.global_tan * gtan >= 0:
+    def on_curve_transition(self, prev_gtan):
+        if self.global_tan * prev_gtan >= 0:
             return False
         elif abs(self.global_tan) < 0.4:
             return False
@@ -90,27 +90,27 @@ class Lane(Storage):
             
 
     def update(self, real_speed, tick, identity_size, yellow:np.ndarray):
-        gtan = self.get_global_tangent(identity_size, yellow)
-        ltan = self.get_local_tangent(identity_size, yellow)
+        # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
+        self.global_tan = self.get_global_tangent(identity_size, yellow)
+        self.local_tan, self.local_tan_abs = self.get_local_tangent(identity_size, yellow)
 
         # to-do
         # self.tick - 15 >= tick 일 경우 tan을 저장만 하고 x, z는 변경 없음
         # on_curve_transition 일 경우 데이터 수집을 중단함
         # self.tick - 15 < tick 일 경우 tan을 x, z에 반영함
-
-        # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
         self.global_tan = gtan
-        self.local_tan, self.local_tan_abs = ltan
+
+        # 데이터베이스에 데이터들을 실시간으로 나열한다.
+        self.append_latest_data()
 
         # 타이머가 작동하는 경우 적분을 이용하여 현재 속력만큼 타이머 숫자를 줄인다.
         if self.on_pause(0.0):
             self.timer -= real_speed[0] / 30
-            # 아래 조건을 불만족 하는 경우 이전 데이터를 계속 사용한다.
-            if (abs(gtan) <= abs(self.global_tan))|(self.on_curve_transition(gtan)):
-                self.use_previous_data()
 
-        # 데이터베이스에 데이터들을 실시간으로 나열한다.
-        self.append_latest_data()
+            # 아래 조건을 불만족 하는 경우 이전 데이터를 계속 사용한다.
+            prev_gtan = self.timescale_dataset[1, 0]
+            if (abs(self.global_tan) <= abs(prev_gtan))|(self.on_curve_transition(prev_gtan)):
+                self.use_previous_data()
 
         # 0.1초마다 데이터베이스를 그래프로 보여준다.
         if tick % 3 == 0:
