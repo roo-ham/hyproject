@@ -125,13 +125,13 @@ class Lane(Storage):
 
         # 급커브 처리
         if self.timer > 0.5:
+            delta_z /= 2
             arc_offset = 0.5
             if (gtan > 0):
                 delta_z -= arc_offset
             elif (gtan < 0):
                 delta_z += arc_offset
         elif self.timer > 0.0:
-            #none
             if ltan_abs < 0.1 or abs(gtan) > 0.8:
                 delta_x /= abs(delta_z) if delta_z != 0 else 1
 
