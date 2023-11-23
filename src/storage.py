@@ -85,9 +85,9 @@ class Lane(Storage):
     def found_junction(self, gtan):
         ltan = np.mean(self.timescale_dataset[0:15, 1])
         prev_ltan = np.mean(self.timescale_dataset[15:30, 1])
-        not_center = abs(gtan) > 0.2
-        lane_as_one = abs(gtan-ltan) < 0.1
-        diff_ltan_high = abs(ltan-prev_ltan) > 0.2
+        not_center = abs(gtan) > 0.3
+        lane_as_one = abs(gtan-ltan) < 0.3
+        diff_ltan_high = abs(ltan-prev_ltan) > 0.3
         if not_center & lane_as_one & diff_ltan_high:
             return True
         return False
@@ -114,7 +114,7 @@ class Lane(Storage):
 
         # 커브를 발견하면 1.0m 타이머 시작
         if self.found_junction(gtan) and self.timer <= 0:
-            self.pause_until(1.0)
+            self.pause_until(1.5)
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
         # 그렇지 않으면 (곧으면) 속도 늘림
@@ -124,16 +124,16 @@ class Lane(Storage):
         delta_z = np.tan(gtan/2)*2
 
         # 급커브 처리
-        if self.timer > 0:
+        if self.timer > 0.5:
             arc_offset = 0.5
-            if ltan_abs < 0.1 or abs(gtan) > 0.8:
-                arc_offset = 0
-                delta_x /= delta_z if delta_z != 0 else 1
-                delta_z /= 2
             if (gtan > 0):
                 delta_z -= arc_offset
             elif (gtan < 0):
                 delta_z += arc_offset
+        elif self.timer > 0.0:
+            #none
+            if ltan_abs < 0.1 or abs(gtan) > 0.8:
+                delta_x /= abs(delta_z) if delta_z != 0 else 1
 
         # 새 속도는 바로 적용되는 것이 아니라 이전속도를 절반만큼 반영함
         # 주행이 부드러워지는 효과를 낼 수 있음
