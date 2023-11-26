@@ -139,8 +139,7 @@ class Lane(Storage):
             pass
         else:
             if identity_size == 0:
-                delta_x *= -1
-                delta_z = 0
+                delta_x = 0
 
         # 새 속도는 바로 적용되는 것이 아니라 이전속도를 절반만큼 반영함
         # 주행이 부드러워지는 효과를 낼 수 있음

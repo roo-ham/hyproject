@@ -28,11 +28,10 @@ class Main:
         self.motor.update()
         self.basement.tick += 1
         self.rate.sleep()
-    def end(self):
-        for l in self.basement.launch.values():
-            l.shutdown()
     def restart(self):
         print("restarting...")
+        for l in self.basement.launch.values():
+            l.shutdown()
         rospy.signal_shutdown("restarting hyproject...")
 
 base = Basement()
@@ -44,7 +43,6 @@ try:
     print("Ctrl+C to exit.")
     while not rospy.is_shutdown():
         main_object.update()
-    main_object.end()
 except KeyboardInterrupt:
     pass
 
