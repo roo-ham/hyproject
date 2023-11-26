@@ -100,7 +100,7 @@ class Lane(Storage):
         # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
         # 어떤 조건을 불만족 하는 경우 이전(previous) 데이터를 계속 사용한다.
         # 데이터베이스에 데이터들을 나열한다.
-        gtan, ltan, ltan_abs = None
+        gtan, ltan, ltan_abs = None, None, None
         if (identity_size > 0):
             gtan = self.get_global_tangent(identity_size, yellow)
             ltan, ltan_abs = self.get_local_tangent(identity_size, yellow)
