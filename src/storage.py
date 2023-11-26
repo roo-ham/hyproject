@@ -144,13 +144,12 @@ class Lane(Storage):
         x_set = yellow * self.mask_global_x
         y_set = ((yellow.T) * self.mask_global_y).T
         x_set, y_set = np.where(x_set, x_set, 1), np.where(x_set, y_set, 1000*y_set)
-        return np.arctan(np.sum(y_set/x_set) / identity_size)
+        return np.sum(np.arctan(y_set/x_set)) / identity_size
 
     def get_local_tangent(self, identity_size, yellow:np.ndarray) -> tuple:
         l_tan = 0.0
         l_tan_abs = 0.0
         arange = self.mask_local
-        identity_size_local = 0
         for x, y in np.argwhere(yellow):
             if random.randint(1, identity_size) > 32:
                 continue
@@ -159,11 +158,11 @@ class Lane(Storage):
             x_set = base * arange
             y_set = (base.T * arange).T
             x_set, y_set = np.where(x_set, x_set, 1), np.where(x_set, y_set, 1000*y_set)
-            identity_size_local += np.sum(base)
-            l_tan += np.sum(y_set/x_set)
-            l_tan_abs += np.sum(np.abs(y_set/x_set))
-        if identity_size_local == 0:
-            return 0.0, 0.0
-        l_tan = np.arctan(l_tan / identity_size_local)
-        l_tan_abs = np.arctan(l_tan_abs / identity_size_local)
+            identity_size_local = np.sum(base)
+            if identity_size_local == 0:
+                continue
+            atan = np.arctan(y_set/x_set)
+            atan_abs = np.abs(atan)
+            l_tan += np.sum(atan) / identity_size_local
+            l_tan_abs += np.sum(atan_abs) / identity_size_local
         return l_tan, l_tan_abs
