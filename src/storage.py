@@ -78,7 +78,9 @@ class Lane(Storage):
         self.timer = -1.0
     
     def on_curve_transition(self, gtan):
-        if self.timescale_dataset[0, 0] * gtan >= 0:
+        if gtan == None:
+            return False
+        elif self.timescale_dataset[0, 0] * gtan >= 0:
             return False
         elif abs(gtan) < 0.4:
             return False
