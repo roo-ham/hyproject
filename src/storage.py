@@ -165,4 +165,6 @@ class Lane(Storage):
             atan_abs = np.abs(atan)
             l_tan += np.sum(atan) / identity_size_local
             l_tan_abs += np.sum(atan_abs) / identity_size_local
+        l_tan /= identity_size
+        l_tan_abs /= identity_size
         return l_tan, l_tan_abs
