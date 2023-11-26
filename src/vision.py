@@ -106,3 +106,6 @@ class VisionMarker(Submodule):
 
     def callback(self, data):
         super().callback(data)
+        
+    def update(self):
+        super().update()

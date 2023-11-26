@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import rospy
 import os
-import time
 
 from vision import VisionImage, VisionMarker
 from lidar import Lidar
@@ -15,7 +14,6 @@ class Main:
         self.basement = base
         self.basement.roslaunch("camera.launch")
         self.rate = rospy.Rate(30)
-        time.sleep(2)
         self.vision_image = VisionImage(base)
         self.vision_marker = VisionMarker(base)
         self.lidar = Lidar(base)
