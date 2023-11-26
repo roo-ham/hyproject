@@ -60,6 +60,9 @@ class Lane(Storage):
     def append_latest_data(self, *data_tuple):
         self.timescale_dataset[1:60, :] = self.timescale_dataset[0:59, :]
         self.timescale_dataset[0, :] = data_tuple
+        for key, value in enumerate(data_tuple):
+            if type(value) == type(None):
+                self.timescale_dataset[0, key] = self.timescale_dataset[1, key]
 
     def show_dataset_graph(self):
         items = enumerate(zip(self.lines, self.axes, self.backgrounds), start=0)
@@ -98,6 +101,8 @@ class Lane(Storage):
         if (identity_size > 0):
             self.append_latest_data(self.get_global_tangent(identity_size, yellow),\
                                     *self.get_local_tangent(identity_size, yellow), self.timer)
+        else:
+            self.append_latest_data(None, None, None, self.timer)
 
         if self.timer > 0:
             # 타이머가 작동하는 경우 적분을 이용하여 현재 속력만큼 타이머 숫자를 줄인다.
