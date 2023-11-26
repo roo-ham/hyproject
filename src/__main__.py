@@ -1,33 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import rospy, roslaunch
+import rospy
 import os
 import time
-'''
-from sensor_msgs.msg import LaserScan
 
-'''
 from vision import VisionImage, VisionMarker
+from lidar import Lidar
 from motor import Motor
 from basement import Basement
-from pathlib import Path
 
 # 클래스 생성
 class Main:
     def __init__(self, base:Basement):
         self.basement = base
-        uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
-        roslaunch.configure_logging(uuid)
-        path = Path(os.path.abspath(__file__)).parent.parent.joinpath("launch/camera.launch")
-        self.launch = roslaunch.parent.ROSLaunchParent(uuid, [str(path)])
-        self.launch.start()
+        self.basement.roslaunch("camera.launch")
         self.rate = rospy.Rate(30)
         time.sleep(2)
-        
         self.vision_image = VisionImage(base)
         self.vision_marker = VisionMarker(base)
-        #self.lidar = Lidar(base)
-        #rospy.Subscriber('/scan', LaserScan, self.laser_callback)
+        self.lidar = Lidar(base)
         self.motor = Motor(base)
     def update(self):
         if self.vision_image.timeout < 0 or self.vision_marker.timeout < 0 :
@@ -37,9 +28,9 @@ class Main:
         self.motor.update()
         self.basement.tick += 1
         self.rate.sleep()
-        
     def end(self):
-        self.launch.shutdown()
+        for l in self.basement.launch.values():
+            l.shutdown()
     def restart(self):
         print("restarting...")
         rospy.signal_shutdown("restarting hyproject...")

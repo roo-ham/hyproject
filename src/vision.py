@@ -97,8 +97,12 @@ class VisionImage(Submodule):
         origin = bridge.compressed_imgmsg_to_cv2(data, "bgr8")
         origin = cv2.resize(origin, (256, 256))
         self.basement.set_bgr(origin, origin[256-self.basement.bottom_height:256, :, :])
+        self.basement.roslaunch("marker.launch")
 
 class VisionMarker(Submodule):
     def __init__(self, base:Basement):
         super().__init__(base, "VisionMarker")
         self.sub_marker = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.callback)
+
+    def callback(self, data):
+        super().callback(data)

@@ -4,7 +4,9 @@ class Submodule:
         print("I'm %s"%name)
         self.basement = base
         self.timeout = 300
+
     def callback(self, data):
         self.timeout = 60
+        
     def update(self):
         self.timeout -= 1

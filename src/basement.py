@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import roslaunch, cv2
 import numpy as np
+from pathlib import Path
+
 import storage
-import cv2
 
 class Basement:
     def __init__(self, name0:str = "release"):
@@ -18,7 +20,15 @@ class Basement:
         self.tick = 0
         self.real_speed_x = 0.0
         self.real_speed_z = 0.0
-
+        self.launch = dict()
+    def roslaunch(self, filename):
+        if filename in self.launch:
+            return
+        uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
+        roslaunch.configure_logging(uuid)
+        path = Path(os.path.abspath(__file__)).parent.parent.joinpath("launch/%s"%filename)
+        self.launch[filename] = roslaunch.parent.ROSLaunchParent(uuid, [str(path)])
+        self.launch[filename].start()
     def set_bgr(self, full, bottom):
         self.__bgr_full = full
         self.__bgr_bottom = bottom
