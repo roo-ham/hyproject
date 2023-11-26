@@ -95,8 +95,9 @@ class Lane(Storage):
     def update(self, real_speed, identity_size, yellow:np.ndarray):
         # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
         # 데이터베이스에 데이터들을 나열한다.
-        self.append_latest_data(self.get_global_tangent(identity_size, yellow),\
-                                *self.get_local_tangent(identity_size, yellow), self.timer)
+        if (identity_size > 0):
+            self.append_latest_data(self.get_global_tangent(identity_size, yellow),\
+                                    *self.get_local_tangent(identity_size, yellow), self.timer)
 
         if self.timer > 0:
             # 타이머가 작동하는 경우 적분을 이용하여 현재 속력만큼 타이머 숫자를 줄인다.
@@ -140,16 +141,12 @@ class Lane(Storage):
         self.z = (self.z + delta_z) / 2
         
     def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
-        if identity_size <= 0:
-            return 0.0
         x_set = yellow * self.mask_global_x
         y_set = ((yellow.T) * self.mask_global_y).T
         x_set, y_set = np.where(x_set, x_set, 1), np.where(x_set, y_set, 1000*y_set)
         return np.arctan(np.sum(y_set/x_set) / identity_size)
 
     def get_local_tangent(self, identity_size, yellow:np.ndarray) -> tuple:
-        if identity_size == 0:
-            return 0.0, 0.0
         l_tan = 0.0
         l_tan_abs = 0.0
         arange = self.mask_local
