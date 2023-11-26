@@ -59,10 +59,11 @@ class Lane(Storage):
 
     def append_latest_data(self, *data_tuple):
         self.timescale_dataset[1:60, :] = self.timescale_dataset[0:59, :]
-        self.timescale_dataset[0, :] = data_tuple
         for key, value in enumerate(data_tuple):
             if type(value) == type(None):
                 self.timescale_dataset[0, key] = self.timescale_dataset[1, key]
+            else:
+                self.timescale_dataset[0, key] = value
 
     def show_dataset_graph(self):
         items = enumerate(zip(self.lines, self.axes, self.backgrounds), start=0)
@@ -78,10 +79,10 @@ class Lane(Storage):
     def resume(self):
         self.timer = -1.0
     
-    def on_curve_transition(self):
-        if self.timescale_dataset[0, 0] * self.timescale_dataset[1, 0] >= 0:
+    def on_curve_transition(self, gtan):
+        if self.timescale_dataset[0, 0] * gtan >= 0:
             return False
-        elif abs(self.timescale_dataset[0, 0]) < 0.4:
+        elif abs(gtan) < 0.4:
             return False
         return True
     
@@ -97,26 +98,23 @@ class Lane(Storage):
 
     def update(self, real_speed, identity_size, yellow:np.ndarray):
         # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
+        # 어떤 조건을 불만족 하는 경우 이전(previous) 데이터를 계속 사용한다.
         # 데이터베이스에 데이터들을 나열한다.
+        gtan, ltan, ltan_abs = None
         if (identity_size > 0):
-            self.append_latest_data(self.get_global_tangent(identity_size, yellow),\
-                                    *self.get_local_tangent(identity_size, yellow), self.timer)
-        else:
-            self.append_latest_data(None, None, None, self.timer)
+            gtan = self.get_global_tangent(identity_size, yellow)
+            ltan, ltan_abs = self.get_local_tangent(identity_size, yellow)
+        if self.on_curve_transition(gtan):
+            gtan = None
+        self.append_latest_data(gtan, ltan, ltan_abs, self.timer)
+        gtan, ltan, ltan_abs = self.timescale_dataset[0, 0:3]
 
         if self.timer > 0:
             # 타이머가 작동하는 경우 적분을 이용하여 현재 속력만큼 타이머 숫자를 줄인다.
             self.timer -= real_speed[0] / 30
 
-        # 아래 조건을 불만족 하는 경우 이전(previous) 데이터를 계속 사용한다.
-        prev_gtan = self.timescale_dataset[1, 0]
-        if self.on_curve_transition():
-            self.timescale_dataset[0, 0] = prev_gtan
-
         # 실시간으로 데이터베이스를 그래프로 보여준다.
         self.show_dataset_graph()
-
-        gtan, ltan_abs = self.timescale_dataset[0, 0], self.timescale_dataset[0, 2]
 
         # 커브를 발견하면 2.2m 타이머 시작
         if self.found_junction(gtan) and self.timer <= 0:
