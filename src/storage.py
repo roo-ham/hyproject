@@ -112,9 +112,9 @@ class Lane(Storage):
 
         gtan, ltan_abs = self.timescale_dataset[0, 0], self.timescale_dataset[0, 2]
 
-        # 커브를 발견하면 1.0m 타이머 시작
+        # 커브를 발견하면 2.6m 타이머 시작
         if self.found_junction(gtan) and self.timer <= 0:
-            self.pause_until(2.5)
+            self.pause_until(2.6)
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
         # 그렇지 않으면 (곧으면) 속도 늘림
@@ -126,7 +126,7 @@ class Lane(Storage):
         # 급커브 처리
         if self.timer > 1.0 :
             delta_x += 1.0
-            arc_offset = 0.2
+            arc_offset = 0.3
             if (gtan > 0):
                 delta_z -= arc_offset
             elif (gtan < 0):
