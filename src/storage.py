@@ -58,11 +58,9 @@ class Lane(Storage):
         self.backgrounds = [self.fig.canvas.copy_from_bbox(ax.bbox) for ax in self.axes]
 
     def append_latest_data(self, *data_tuple):
-        self.timescale_dataset[1:60, :] = self.timescale_dataset[0:59, :]
         for key, value in enumerate(data_tuple):
-            if type(value) == type(None):
-                self.timescale_dataset[0, key] = self.timescale_dataset[1, key]
-            else:
+            if type(value) != type(None):
+                self.timescale_dataset[1:60, key] = self.timescale_dataset[0:59, key]
                 self.timescale_dataset[0, key] = value
 
     def show_dataset_graph(self):
