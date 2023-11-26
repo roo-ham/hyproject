@@ -144,7 +144,7 @@ class Lane(Storage):
         x_set = yellow * self.mask_global_x
         y_set = ((yellow.T) * self.mask_global_y).T
         x_set, y_set = np.where(x_set, x_set, 1), np.where(x_set, y_set, 1000*y_set)
-        return np.sum(np.arctan(y_set/x_set)) / identity_size
+        return np.arctan(np.sum(y_set)/np.sum(x_set))
 
     def get_local_tangent(self, identity_size, yellow:np.ndarray) -> tuple:
         l_tan = 0.0
