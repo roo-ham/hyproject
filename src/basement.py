@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import roslaunch, cv2
+import roslaunch, cv2, os
 import numpy as np
 from pathlib import Path
 
