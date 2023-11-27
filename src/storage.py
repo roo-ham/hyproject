@@ -45,7 +45,7 @@ class Wall(Storage):
         if len(in_range_pos) == 0:
             return
         
-        self.weight_x = 10.0
+        self.weight_x = 1.0
         self.weight_z = 1.0
         number_of_point = len(in_range_pos)
         mean_pos = sum(in_range_pos)/number_of_point
