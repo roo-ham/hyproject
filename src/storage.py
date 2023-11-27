@@ -59,6 +59,7 @@ class Wall(Storage):
 
         delta_x = 0
         delta_z = atan
+        print(atan)
 
         self.x = (self.x + delta_x) / 2
         self.z = (self.z + delta_z) / 2
