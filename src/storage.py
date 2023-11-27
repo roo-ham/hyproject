@@ -41,6 +41,7 @@ class Wall(Storage):
         for p1 in polar_pos:
             if p1[0] > 0.3 or abs(p1[1]) > 0.05:
                 continue
+            back = True
         if not back:
             return
         
