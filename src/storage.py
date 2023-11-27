@@ -128,19 +128,21 @@ class Lane(Storage):
         delta_z = gtan * 0.5
         
         # 급커브 처리
+        arc_offset = 0.0
         if self.timer > 0.5 :
             delta_x += 1.0
             arc_offset = 0.4
-            if (gtan > 0):
-                delta_z -= arc_offset
-            elif (gtan < 0):
-                delta_z += arc_offset
         elif self.timer > 0.0:
-            pass
+            arc_offset = 0.2
         else:
             if identity_size == 0:
                 delta_x = 0
-                delta_z *= -1
+                delta_z = 0
+        
+        if (gtan > 0):
+            delta_z -= arc_offset
+        elif (gtan < 0):
+            delta_z += arc_offset
 
         # 새 속도는 바로 적용되는 것이 아니라 이전속도를 절반만큼 반영함
         # 주행이 부드러워지는 효과를 낼 수 있음
