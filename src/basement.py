@@ -17,10 +17,12 @@ class Basement:
                 np.zeros((self.bottom_height,256), np.uint8)
         self.storages = dict()
         self.storages["lane"] = storage.Lane(self.bottom_height)
+        self.storages["wall"] = storage.Wall()
         self.tick = 0
         self.real_speed_x = 0.0
         self.real_speed_z = 0.0
         self.launch = dict()
+
     def roslaunch(self, filename):
         if filename in self.launch:
             return

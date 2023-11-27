@@ -31,6 +31,38 @@ class Wall(Storage):
     def __init__(self) -> None:
         super().__init__()
 
+    def update(self, orthogonal_pos, polar_pos):
+        self.weight_x = 0.0
+        self.weight_z = 0.0
+        self.x = 0.0
+        self.z = 0.0
+
+        back = False
+        for point in polar_pos:
+            if point[0] < 0.2 and abs(point[1]) < 0.1:
+                back = True
+        if not back:
+            return
+        
+        self.weight_x = 100.0
+        self.weight_z = 1.0
+        number_of_point = len(orthogonal_pos)
+        mean_pos = sum(orthogonal_pos)/number_of_point
+        sum_tangent = 0.0
+        for point in orthogonal_pos:
+            relative_point = point - mean_pos
+            if relative_point[0] == 0:
+                number_of_point -= 1
+                continue
+            sum_tangent += relative_point[1]/relative_point[0]
+        atan = np.arctan(sum_tangent / number_of_point)
+
+        delta_x = 0
+        delta_z = atan
+
+        self.x = (self.x + delta_x) / 2
+        self.z = (self.z + delta_z) / 2
+
 class Lane(Storage):
     def __init__(self, b_height) -> None:
         super().__init__()

@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import rospy
+import rospy, cv2
 import numpy as np
-import cv2
-import storage
-from basement import Basement
-from submodule import Submodule
 from sensor_msgs.msg import CompressedImage
 from ar_track_alvar_msgs.msg import AlvarMarkers
 from cv_bridge import CvBridge
+
+import storage
+from basement import Basement
+from submodule import Submodule
 
 class VisionImage(Submodule):
     def __init__(self, base:Basement):
