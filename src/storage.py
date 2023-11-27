@@ -37,22 +37,22 @@ class Wall(Storage):
         self.x = 0.0
         self.z = 0.0
 
-        back = False
-        for p1 in polar_pos:
+        in_range_pos = []
+        for p1, p2 in zip(polar_pos, orthogonal_pos):
             if p1[0] > 0.3 or abs(p1[1]) > 0.05:
                 continue
-            back = True
-        if not back:
+            in_range_pos.append(p2)
+        if len(in_range_pos) == 0:
             return
         
         self.weight_x = 100.0
         self.weight_z = 1.0
-        number_of_point = len(orthogonal_pos)
-        mean_pos = sum(orthogonal_pos)/number_of_point
+        number_of_point = len(in_range_pos)
+        mean_pos = sum(in_range_pos)/number_of_point
         sum_tangent = 0.0
-        for p1, p2 in zip(polar_pos, orthogonal_pos):
+        for p2 in in_range_pos:
             relative_point = p2 - mean_pos
-            if p1[0] > 0.3 or abs(p1[1]) > 0.05 or relative_point[0] == 0:
+            if relative_point[0] == 0:
                 number_of_point -= 1
                 continue
             sum_tangent += relative_point[1]/relative_point[0]
