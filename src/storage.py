@@ -56,6 +56,7 @@ class Wall(Storage):
                 continue
             sum_tangent += relative_point[1]/relative_point[0]
         atan = np.arctan(sum_tangent / number_of_point)
+        print(atan)
 
         delta_x = 0
         delta_z = atan
