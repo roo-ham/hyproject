@@ -39,7 +39,7 @@ class Wall(Storage):
 
         in_range_pos = []
         for p1, p2 in zip(polar_pos, orthogonal_pos):
-            if p1[0] > 0.5 or abs(p1[1]) > 0.05:
+            if p1[0] > 0.35 or abs(p1[1]) > 0.05:
                 continue
             in_range_pos.append(p2)
 
@@ -175,7 +175,6 @@ class Lane(Storage):
             arc_offset = 0.2
         else:
             if identity_size == 0:
-                delta_x = 0
                 delta_z = 0
         
         if (gtan > 0):

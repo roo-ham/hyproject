@@ -57,8 +57,8 @@ class VisionImage(Submodule):
         y2[0:b_height-1, 0:256] |= horizonal
         y2[:, 0:8] = False
         y2[:, 248:256] = False
-        y2[0:8, :] = False
-        y2[b_height-8:b_height, :] = False
+        y2[0:64, :] = False
+        y2[b_height-64:b_height, :] = False
         return y2
 
     def display_s(self, s):
