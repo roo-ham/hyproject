@@ -16,6 +16,7 @@ class Lidar(Submodule):
         
     def callback(self, data):
         super().callback(data)
+        print(".")
         self.orthogonal_pos = []
         self.polar_pos = []
         for n, radius in enumerate(data.ranges):
