@@ -19,6 +19,8 @@ class Lidar(Submodule):
         self.orthogonal_pos = []
         self.polar_pos = []
         for n, radius in enumerate(data.ranges):
+            if radius < data.range_min:
+                continue
             angle = data.angle_min + data.angle_increment * n
             self.orthogonal_pos.append(np.array((radius, angle)))
             self.polar_pos.append(radius * np.array((np.sin(angle), np.cos(angle))))

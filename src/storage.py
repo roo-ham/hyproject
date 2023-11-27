@@ -38,9 +38,9 @@ class Wall(Storage):
         self.z = 0.0
 
         back = False
-        for point in polar_pos:
-            if point[0] < 0.2 and abs(point[1]) < 0.1:
-                back = True
+        for p1 in polar_pos:
+            if p1[0] > 0.2 or abs(p1[1]) > 0.1:
+                continue
         if not back:
             return
         
@@ -49,8 +49,11 @@ class Wall(Storage):
         number_of_point = len(orthogonal_pos)
         mean_pos = sum(orthogonal_pos)/number_of_point
         sum_tangent = 0.0
-        for point in orthogonal_pos:
-            relative_point = point - mean_pos
+        for p1, p2 in zip(polar_pos, orthogonal_pos):
+            if p1[0] > 0.2 or abs(p1[1]) > 0.1:
+                number_of_point -= 1
+                continue
+            relative_point = p2 - mean_pos
             if relative_point[0] == 0:
                 number_of_point -= 1
                 continue
