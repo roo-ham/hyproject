@@ -31,9 +31,17 @@ class Motor(Submodule):
         x /= weight_x
         z /= weight_z
         
+        # 새 속도는 바로 적용되는 것이 아니라 이전 속도를 반영함
+        # 주행이 부드러워지는 효과를 낼 수 있음
+        x = self.smoothFunction(self.basement.real_speed_x, x)
+        z = self.smoothFunction(self.basement.real_speed_z, z)
+        
         self.basement.real_speed_x = x
         self.basement.real_speed_z = z
         
         self.drive_data.linear.x *= x
         self.drive_data.angular.z *= z
         self.pub.publish(self.drive_data)
+
+    def smoothFunction(self, a, b):
+        return ((a*4) + b)/5

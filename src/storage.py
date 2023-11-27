@@ -39,14 +39,13 @@ class Wall(Storage):
 
         in_range_pos = []
         for p1, p2 in zip(polar_pos, orthogonal_pos):
-            if p1[0] > 0.3 or abs(p1[1]) > 0.05:
+            if p1[0] > 0.5 or abs(p1[1]) > 0.05:
                 continue
             in_range_pos.append(p2)
+
         if len(in_range_pos) == 0:
             return
-        
-        self.weight_x = 1.0
-        self.weight_z = 1.0
+
         number_of_point = len(in_range_pos)
         mean_pos = sum(in_range_pos)/number_of_point
         sum_tangent = 0.0
@@ -62,11 +61,14 @@ class Wall(Storage):
             return
         atan = np.arctan(sum_tangent / number_of_point)
 
-        delta_x = -0.1
+        delta_x = -1.5
         delta_z = atan
+        
+        k = np.pi * 0.5
+        self.weight_x = 2.0
+        self.weight_z = 1 - np.sqrt(abs(atan / k))
 
-        self.x = (self.x + delta_x) / 2
-        self.z = (self.z + delta_z) / 2
+        self.x, self.z = delta_x, delta_z
 
 class Lane(Storage):
     def __init__(self, b_height) -> None:
@@ -181,10 +183,7 @@ class Lane(Storage):
         elif (gtan < 0):
             delta_z += arc_offset
 
-        # 새 속도는 바로 적용되는 것이 아니라 이전속도를 절반만큼 반영함
-        # 주행이 부드러워지는 효과를 낼 수 있음
-        self.x = (self.x + delta_x) / 2
-        self.z = (self.z + delta_z) / 2
+        self.x, self.z = delta_x, delta_z
         
     def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
         x_set = yellow * self.mask_global_x
