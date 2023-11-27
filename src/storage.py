@@ -53,10 +53,10 @@ class Wall(Storage):
 
         for p2 in in_range_pos:
             relative_point = p2 - mean_pos
-            if relative_point[0] == 0:
+            if relative_point[1] == 0:
                 number_of_point -= 1
                 continue
-            sum_tangent += relative_point[1]/relative_point[0]
+            sum_tangent += relative_point[0]/relative_point[1]
         
         if number_of_point == 0:
             return
