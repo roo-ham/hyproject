@@ -20,6 +20,6 @@ class Lidar(Submodule):
             if radius < data.range_min:
                 continue
             angle = data.angle_min + data.angle_increment * n
-            orthogonal_pos.append(np.array((radius, angle)))
-            polar_pos.append(radius * np.array((np.sin(angle), np.cos(angle))))
+            orthogonal_pos.append(radius * np.array((np.sin(angle), np.cos(angle))))
+            polar_pos.append(np.array((radius, angle)))
         self.wall_storage.update(orthogonal_pos, polar_pos)
