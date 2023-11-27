@@ -50,12 +50,16 @@ class Wall(Storage):
         number_of_point = len(in_range_pos)
         mean_pos = sum(in_range_pos)/number_of_point
         sum_tangent = 0.0
+        
         for p2 in in_range_pos:
             relative_point = p2 - mean_pos
             if relative_point[0] == 0:
                 number_of_point -= 1
                 continue
             sum_tangent += relative_point[1]/relative_point[0]
+        
+        if number_of_point == 0:
+            return
         atan = np.arctan(sum_tangent / number_of_point)
 
         delta_x = 0
