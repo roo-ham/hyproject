@@ -45,8 +45,8 @@ class Wall(Storage):
         if len(in_range_pos) == 0:
             return
         
-        self.weight_x = 100.0
-        self.weight_z = 100.0
+        self.weight_x = 10.0
+        self.weight_z = 1.0
         number_of_point = len(in_range_pos)
         mean_pos = sum(in_range_pos)/number_of_point
         sum_tangent = 0.0
@@ -62,7 +62,7 @@ class Wall(Storage):
             return
         atan = np.arctan(sum_tangent / number_of_point)
 
-        delta_x = 0
+        delta_x = -0.1
         delta_z = atan
 
         self.x = (self.x + delta_x) / 2
