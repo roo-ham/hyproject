@@ -3,11 +3,9 @@
 import rospy
 import os
 
-from vision import VisionImage, VisionMarker
-from lidar import Lidar
-from motor import Motor
 from basement import Basement
-from storage import *
+from iomodules import *
+from taskmodules import *
 
 # 클래스 생성
 class Main:

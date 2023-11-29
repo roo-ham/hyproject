@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
+
 from basement import Basement
+
 class AbstractModule(ABC):
     @abstractmethod
     def __init__(self, base:Basement, name:str):

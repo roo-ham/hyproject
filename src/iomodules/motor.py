@@ -2,8 +2,8 @@ import rospy
 import numpy as np
 from geometry_msgs.msg import Twist
 
-from basement import Basement
-from module import IOModule
+from ..basement import Basement
+from ..module import IOModule
 
 class Motor(IOModule):
     def __init__(self, base:Basement):

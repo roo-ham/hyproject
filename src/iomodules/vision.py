@@ -6,15 +6,15 @@ from sensor_msgs.msg import CompressedImage
 from ar_track_alvar_msgs.msg import AlvarMarkers
 from cv_bridge import CvBridge
 
-import storage
-from basement import Basement
-from module import IOModule
+from ..taskmodules import *
+from ..basement import Basement
+from ..module import IOModule
 
 class VisionImage(IOModule):
     def __init__(self, base:Basement):
         super().__init__(base, "VisionImage")
         self.sub_image_raw = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
-        self.lane_storage:storage.Lane = base.taskmodules["lane"]
+        self.lane_storage:Lane = base.taskmodules["lane"]
 
     def get_yellow(self):
         under_yellow = self.basement.img_h < 13
