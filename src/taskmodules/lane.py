@@ -102,7 +102,7 @@ class Lane(TaskModule):
         delta_x = 1.0
 
         # 차선이 한쪽으로 치우쳐져 있어 global_tan이 0이 아니면 회전
-        delta_z = gtan * 0.5
+        delta_z = gtan - ltan
         
         # 급커브 처리
         arc_offset = 0.0
