@@ -22,7 +22,6 @@ class IOModule(AbstractModule):
     def callback(self, data):
         self.timeout = 60
         
-    @abstractmethod
     def update(self):
         self.timeout -= 1
 
