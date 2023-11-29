@@ -93,10 +93,16 @@ class VisionImage(IOModule):
 
     def callback(self, data):
         super().callback(data)
+
         bridge = CvBridge()
         origin = bridge.compressed_imgmsg_to_cv2(data, "bgr8")
         origin = cv2.resize(origin, (256, 256))
         self.basement.set_bgr(origin, origin[256-self.basement.bottom_height:256, :, :])
+
+        bottom = cv2.blur(self.basement.get_bgr_bottom(), (5, 5), anchor=(-1, -1), borderType=cv2.BORDER_DEFAULT)
+        img_hsv = cv2.cvtColor(bottom, cv2.COLOR_BGR2HSV)
+        self.basement.set_hsv(img_hsv)
+
         self.basement.roslaunch("marker.launch")
 
 class VisionMarker(IOModule):
