@@ -8,13 +8,13 @@ from cv_bridge import CvBridge
 
 import storage
 from basement import Basement
-from submodule import Submodule
+from module import IOModule
 
-class VisionImage(Submodule):
+class VisionImage(IOModule):
     def __init__(self, base:Basement):
         super().__init__(base, "VisionImage")
         self.sub_image_raw = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
-        self.lane_storage:storage.Lane = base.storages["lane"]
+        self.lane_storage:storage.Lane = base.taskmodules["lane"]
 
     def get_yellow(self):
         under_yellow = self.basement.img_h < 13
@@ -99,7 +99,7 @@ class VisionImage(Submodule):
         self.basement.set_bgr(origin, origin[256-self.basement.bottom_height:256, :, :])
         self.basement.roslaunch("marker.launch")
 
-class VisionMarker(Submodule):
+class VisionMarker(IOModule):
     def __init__(self, base:Basement):
         super().__init__(base, "VisionMarker")
         self.sub_marker = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.callback)

@@ -4,13 +4,13 @@ from sensor_msgs.msg import LaserScan
 
 import storage
 from basement import Basement
-from submodule import Submodule
+from module import IOModule
 
-class Lidar(Submodule):
+class Lidar(IOModule):
     def __init__(self, base:Basement):
         super().__init__(base, "Lidar")
         rospy.Subscriber('/scan', LaserScan, self.callback)
-        self.wall_storage:storage.Wall = base.storages["wall"]
+        self.wall_storage:storage.Wall = base.taskmodules["wall"]
         
     def callback(self, data):
         super().callback(data)

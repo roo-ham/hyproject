@@ -2,11 +2,10 @@ import rospy
 import numpy as np
 from geometry_msgs.msg import Twist
 
-from storage import Storage
 from basement import Basement
-from submodule import Submodule
+from module import IOModule
 
-class Motor(Submodule):
+class Motor(IOModule):
     def __init__(self, base:Basement):
         super().__init__(base, "Motor")
         self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
@@ -22,8 +21,8 @@ class Motor(Submodule):
         z = 0.0
         weight_x = 0.01
         weight_z = 0.01
-        for s in self.basement.storages.values():
-            x0, z0, weight_x0, weight_z0 = Storage.getDataset(s)
+        for s in self.basement.taskmodules.values():
+            x0, z0, weight_x0, weight_z0 = s.getDataset()
             x += x0 * weight_x0
             z += z0 * weight_z0
             weight_x += weight_x0

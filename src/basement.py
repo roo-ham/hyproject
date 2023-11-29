@@ -4,8 +4,6 @@ import roslaunch, cv2, os
 import numpy as np
 from pathlib import Path
 
-import storage
-
 class Basement:
     def __init__(self, name0:str = "release"):
         self.name = name0
@@ -15,9 +13,7 @@ class Basement:
         self.img_h, self.img_s, self.img_v = np.zeros((self.bottom_height,256), np.uint8),\
             np.zeros((self.bottom_height,256), np.uint8),\
                 np.zeros((self.bottom_height,256), np.uint8)
-        self.storages = dict()
-        self.storages["lane"] = storage.Lane(self.bottom_height)
-        self.storages["wall"] = storage.Wall()
+        self.taskmodules = dict()
         self.tick = 0
         self.real_speed_x = 0.0
         self.real_speed_z = 0.0

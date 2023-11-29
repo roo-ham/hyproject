@@ -7,6 +7,7 @@ from vision import VisionImage, VisionMarker
 from lidar import Lidar
 from motor import Motor
 from basement import Basement
+from storage import *
 
 # 클래스 생성
 class Main:
@@ -33,6 +34,8 @@ class Main:
         rospy.signal_shutdown("restarting hyproject...")
 
 base = Basement()
+Lane(base)
+Wall(base)
 try:
     rospy.init_node("hyproject_main")
     main_object = Main(base)

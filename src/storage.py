@@ -1,35 +1,28 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import random
+from basement import Basement
+from module import TaskModule
 
-class Storage:
-    def __init__(self) -> None:
-        self.x = 0.0
-        self.z = 0.0
-        self.weight_x = 0.0
-        self.weight_z = 0.0
-    def getDataset(self):
-        return self.x, self.z, self.weight_x, self.weight_z
+class Sign(TaskModule):
+    def __init__(self, base:Basement) -> None:
+        super().__init__(base, "Sign")
 
-class Sign(Storage):
-    def __init__(self) -> None:
-        super().__init__()
+class Arrow(TaskModule):
+    def __init__(self, base:Basement) -> None:
+        super().__init__(base, "Arrow")
 
-class Arrow(Storage):
-    def __init__(self) -> None:
-        super().__init__()
+class TPark(TaskModule):
+    def __init__(self, base:Basement) -> None:
+        super().__init__(base, "TPark")
 
-class TPark(Storage):
-    def __init__(self) -> None:
-        super().__init__()
-
-class Ramp(Storage):
-    def __init__(self) -> None:
-        super().__init__()
+class Ramp(TaskModule):
+    def __init__(self, base:Basement) -> None:
+        super().__init__(base, "Ramp")
     
-class Wall(Storage):
-    def __init__(self) -> None:
-        super().__init__()
+class Wall(TaskModule):
+    def __init__(self, base:Basement) -> None:
+        super().__init__(base, "Wall")
 
     def update(self, orthogonal_pos, polar_pos):
         self.weight_x = 0.0
@@ -70,9 +63,10 @@ class Wall(Storage):
 
         self.x, self.z = delta_x, delta_z
 
-class Lane(Storage):
-    def __init__(self, b_height) -> None:
-        super().__init__()
+class Lane(TaskModule):
+    def __init__(self, base:Basement) -> None:
+        super().__init__(base, "Wall")
+        b_height = base.bottom_height
         self.mask_global_x = np.arange(-128, 128)
         self.mask_global_y = np.arange(128-b_height, 128)
         self.mask_local = np.arange(-2, 3)
