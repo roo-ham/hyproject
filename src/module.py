@@ -18,7 +18,6 @@ class IOModule(AbstractModule):
         self.basement = base
         self.timeout = 300
 
-    @abstractmethod
     def callback(self, data):
         self.timeout = 60
         
