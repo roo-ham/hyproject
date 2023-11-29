@@ -113,6 +113,7 @@ class Lane(TaskModule):
             arc_offset = 0.2
         else:
             if identity_size == 0:
+                delta_x = 0
                 delta_z = 0
         
         if (gtan > 0):
