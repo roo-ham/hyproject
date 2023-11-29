@@ -33,7 +33,9 @@ class Basement:
         self.__bgr_bottom = bottom
 
     def set_hsv(self, origin):
-        self.img_h, self.img_s, self.img_v = origin[:, :, 0], origin[:, :, 1], origin[:, :, 2]
+        self.img_h = origin[:, :, 0]
+        self.img_s = origin[:, :, 1]
+        self.img_v = origin[:, :, 2]
 
     def get_bgr_full(self) -> np.ndarray:
         return self.__bgr_full.copy()
