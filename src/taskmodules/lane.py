@@ -7,7 +7,7 @@ from module import TaskModule
 
 class Lane(TaskModule):
     def __init__(self, base:Basement) -> None:
-        super().__init__(base, "Wall")
+        super().__init__(base, "Lane")
         b_height = base.bottom_height
         self.mask_global_x = np.arange(-128, 128)
         self.mask_global_y = np.arange(128-b_height, 128)

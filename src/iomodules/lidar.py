@@ -10,7 +10,7 @@ class Lidar(IOModule):
     def __init__(self, base:Basement):
         super().__init__(base, "Lidar")
         rospy.Subscriber('/scan', LaserScan, self.callback)
-        self.wall_storage:Wall = base.taskmodules["wall"]
+        self.wall_storage:Wall = base.taskmodules["Wall"]
         
     def callback(self, data):
         super().callback(data)
