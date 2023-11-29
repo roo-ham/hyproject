@@ -6,9 +6,9 @@ from sensor_msgs.msg import CompressedImage
 from ar_track_alvar_msgs.msg import AlvarMarkers
 from cv_bridge import CvBridge
 
-from ..taskmodules import *
-from ..basement import Basement
-from ..module import IOModule
+from taskmodules import *
+from basement import Basement
+from module import IOModule
 
 class VisionImage(IOModule):
     def __init__(self, base:Basement):

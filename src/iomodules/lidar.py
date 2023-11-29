@@ -2,9 +2,9 @@ import rospy
 import numpy as np
 from sensor_msgs.msg import LaserScan
 
-from ..taskmodules import *
-from ..basement import Basement
-from ..module import IOModule
+from taskmodules import *
+from basement import Basement
+from module import IOModule
 
 class Lidar(IOModule):
     def __init__(self, base:Basement):

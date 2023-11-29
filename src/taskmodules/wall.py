@@ -1,7 +1,7 @@
 import numpy as np
 
-from ..basement import Basement
-from ..module import TaskModule
+from basement import Basement
+from module import TaskModule
     
 class Wall(TaskModule):
     def __init__(self, base:Basement) -> None:

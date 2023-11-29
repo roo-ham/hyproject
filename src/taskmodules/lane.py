@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 
-from ..basement import Basement
-from ..module import TaskModule
+from basement import Basement
+from module import TaskModule
 
 class Lane(TaskModule):
     def __init__(self, base:Basement) -> None:
