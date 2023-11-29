@@ -93,9 +93,9 @@ class Lane(TaskModule):
         # 실시간으로 데이터베이스를 그래프로 보여준다.
         self.show_dataset_graph()
 
-        # 커브를 발견하면 2.2m 타이머 시작
+        # 커브를 발견하면 2.0m 타이머 시작
         if self.found_junction(gtan) and self.timer <= 0:
-            self.pause_until(2.2)
+            self.pause_until(2.0)
         
         # 차선이 수평하면 (휘어있으면) 속도 줄임
         # 그렇지 않으면 (곧으면) 속도 늘림
@@ -108,7 +108,7 @@ class Lane(TaskModule):
         arc_offset = 0.0
         if self.timer > 0.5 :
             delta_x += 1.0
-            arc_offset = 0.4
+            arc_offset = 0.2
         elif self.timer > 0.0:
             arc_offset = 0.2
         else:
