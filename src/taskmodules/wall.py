@@ -43,7 +43,7 @@ class Wall(TaskModule):
         delta_z = atan
         
         k = np.pi * 0.5
-        self.weight_x = 2.0
-        self.weight_z = 1 - np.sqrt(abs(atan / k))
+        #self.weight_x = 2.0
+        #self.weight_z = 1 - np.sqrt(abs(atan / k))
 
-        self.x, self.z = delta_x, delta_z
+        #self.x, self.z = delta_x, delta_z
