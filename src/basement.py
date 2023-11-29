@@ -13,10 +13,10 @@ class Basement:
         self.img_h, self.img_s, self.img_v = np.zeros((self.bottom_height,256), np.uint8),\
             np.zeros((self.bottom_height,256), np.uint8),\
                 np.zeros((self.bottom_height,256), np.uint8)
-        self.taskmodules = dict()
         self.tick = 0
         self.real_speed_x = 0.0
         self.real_speed_z = 0.0
+        self.taskmodules = dict()
         self.launch = dict()
 
     def roslaunch(self, filename):
