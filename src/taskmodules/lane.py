@@ -23,7 +23,7 @@ class Lane(TaskModule):
         labels = ['G tan', 'L tan', 'L tan (absolute)', 'Integral Timer']
         self.lines = []
         for style, label in zip(styles, labels):
-            plot = self.axes.plot(self.x_data, self.timescale_dataset[:, 0], style, animated=True, label=label)
+            plot = self.axes.plot(self.x_data, self.timescale_dataset[:, 0], style, animated=True, label=label)[0]
             self.axes.set_xlim(0, 59)
             self.axes.set_ylim(-1.6, 1.6)
             self.axes.legend()
@@ -42,7 +42,7 @@ class Lane(TaskModule):
         items = enumerate(self.lines)
         for j, line in items:
             self.fig.canvas.restore_region(self.backgrounds)
-            self.axes.set_ydata(self.timescale_dataset[:, j])
+            line.set_ydata(self.timescale_dataset[:, j])
             self.axes.draw_artist(line)
             self.fig.canvas.blit(self.axes.bbox)
 
