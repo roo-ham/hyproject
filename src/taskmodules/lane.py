@@ -19,7 +19,6 @@ class Lane(TaskModule):
         self.timer = 0.0
 
         self.fig, self.axes = plt.subplots()
-        self.axes = self.axes[0]
         styles = ['r-', 'g-', 'y-', 'b-']
         labels = ['G tan', 'L tan', 'L tan (absolute)', 'Integral Timer']
         self.lines = []
@@ -40,7 +39,7 @@ class Lane(TaskModule):
                 self.timescale_dataset[0, key] = value
 
     def show_dataset_graph(self):
-        items = enumerate(self.axes)
+        items = enumerate(self.lines)
         for j, line in items:
             self.fig.canvas.restore_region(self.backgrounds)
             line.set_ydata(self.timescale_dataset[:, j])
