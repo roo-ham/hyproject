@@ -118,7 +118,4 @@ class Lane(TaskModule):
             delta_x = 1.5
             delta_z = 0
 
-        if is_timer_running("lane/lane_exception"):
-            self.weight_z = 0.0
-
         self.x, self.z = delta_x, delta_z
