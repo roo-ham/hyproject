@@ -22,7 +22,7 @@ class Wall(TaskModule):
                 continue
             in_range_pos.append(p2)
         if len(in_range_pos) < 5:
-            set_timer("wall/obstacle_ignore", 1, True)
+            set_timer("wall/obstacle_ignore", 0.2, True)
             set_timer("wall/waiting_rotation", 5, True)
             return
         elif is_timer_running("wall/obstacle_ignore"):
