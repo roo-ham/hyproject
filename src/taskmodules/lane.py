@@ -74,6 +74,9 @@ class Lane(TaskModule):
         if (identity_size > 0):
             gtan = get_global_tangent(self.mask_global_x, self.mask_global_y, identity_size, yellow)
             ltan, ltan_abs = get_local_tangent(self.mask_local, identity_size, yellow)
+        elif is_timer_running("lane/lane_exception"):
+            set_timer("lane/lane_exception", -1, True)
+            gtan = 0
         if not self.on_curve_transition(gtan):
             pass
         elif is_timer_running("lane/lane_exception"):
