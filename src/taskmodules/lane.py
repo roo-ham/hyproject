@@ -19,6 +19,7 @@ class Lane(TaskModule):
         self.timer = 0.0
 
         self.fig, self.axes = plt.subplots()
+        self.axes = self.axes[0]
         styles = ['r-', 'g-', 'y-', 'b-']
         labels = ['G tan', 'L tan', 'L tan (absolute)', 'Integral Timer']
         self.lines = []
