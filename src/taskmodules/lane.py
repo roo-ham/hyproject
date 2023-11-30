@@ -3,6 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from rooham.timer import *
 from rooham.mathtools import get_global_tangent, get_local_tangent
 from basement import Basement
 from module import TaskModule
@@ -16,7 +17,6 @@ class Lane(TaskModule):
         self.mask_local = np.arange(-2, 3)
         self.timescale_dataset = np.zeros((60,3), np.float32)
         self.x_data = range(60)
-        self.timer = dict()
 
         self.fig, self.axes = plt.subplots()
         styles = ['r-', 'g-', 'y-']
@@ -45,16 +45,6 @@ class Lane(TaskModule):
             line.set_ydata(self.timescale_dataset[:, j])
             self.axes.draw_artist(line)
         self.fig.canvas.blit(self.axes.bbox)
-
-    def is_timer_running(self, key) -> bool:
-        if key in self.timer:
-            return rospy.get_time() < self.timer[key]
-        return False
-    
-    def set_timer(self, key, seconds, force=False):
-        if self.is_timer_running(key) and (not force):
-            return
-        self.timer[key] = rospy.get_time() + seconds
     
     def on_curve_transition(self, gtan):
         if gtan == None:
@@ -87,7 +77,7 @@ class Lane(TaskModule):
         if self.on_curve_transition(gtan):
             gtan = None
         if gtan == None and ltan == None:
-            self.set_timer("ramp", 0.8)
+            set_timer("ramp", 0.8)
         self.append_latest_data(gtan, ltan, ltan_abs)
         gtan, ltan, ltan_abs = self.timescale_dataset[0, :]
 
@@ -113,7 +103,7 @@ class Lane(TaskModule):
         else:
             delta_z = (gtan - ltan) / 1.5
 
-        if self.is_timer_running("ramp"):
+        if is_timer_running("ramp"):
             delta_x = 1.5
             delta_z = 0
 
