@@ -49,8 +49,9 @@ class Lane(TaskModule):
     def on_curve_transition(self, gtan):
         if gtan == None:
             gtan = 0
-
-        if self.timescale_dataset[0, 0] * gtan > 0:
+        if not is_timer_running("lane/continous_curve"):
+            return False
+        elif self.timescale_dataset[0, 0] * gtan > 0:
             return False
         elif abs(self.timescale_dataset[0, 0]) < 1.0:
             return False
@@ -76,8 +77,10 @@ class Lane(TaskModule):
             ltan, ltan_abs = get_local_tangent(self.mask_local, identity_size, yellow)
         if self.on_curve_transition(gtan):
             gtan = None
+        else:
+            set_timer("lane/continous_curve", 5, True)
         if gtan == None and ltan == None:
-            set_timer("ramp", 0.8)
+            set_timer("lane/ramp", 0.8)
         self.append_latest_data(gtan, ltan, ltan_abs)
         gtan, ltan, ltan_abs = self.timescale_dataset[0, :]
 
@@ -103,7 +106,7 @@ class Lane(TaskModule):
         else:
             delta_z = (gtan - (ltan*0.9)) / 1.5
 
-        if is_timer_running("ramp"):
+        if is_timer_running("lane/ramp"):
             delta_x = 1.5
             delta_z = 0
 
