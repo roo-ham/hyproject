@@ -14,13 +14,13 @@ class Lane(TaskModule):
         self.mask_global_x = np.arange(-128, 128)
         self.mask_global_y = np.arange(128-b_height, 128)
         self.mask_local = np.arange(-2, 3)
-        self.timescale_dataset = np.zeros((60,4), np.float32)
+        self.timescale_dataset = np.zeros((60,3), np.float32)
         self.x_data = range(60)
-        self.timer = 0.0
+        self.timer = dict()
 
         self.fig, self.axes = plt.subplots()
-        styles = ['r-', 'g-', 'y-', 'b-']
-        labels = ['G tan', 'L tan', 'L tan (absolute)', 'Integral Timer']
+        styles = ['r-', 'g-', 'y-']
+        labels = ['G tan', 'L tan', 'L tan (absolute)']
         self.lines = []
         for style, label in zip(styles, labels):
             plot = self.axes.plot(self.x_data, self.timescale_dataset[:, 0], style, animated=True, label=label)[0]
@@ -46,11 +46,15 @@ class Lane(TaskModule):
             self.axes.draw_artist(line)
         self.fig.canvas.blit(self.axes.bbox)
 
-    def pause_until(self, t):
-        self.timer = t
-
-    def resume(self):
-        self.timer = -1.0
+    def is_timer_running(self, key) -> bool:
+        if key in self.timer:
+            return rospy.get_time() < self.timer[key]
+        return False
+    
+    def set_timer(self, key, seconds, force=False):
+        if self.is_timer_running(key) and (not force):
+            return
+        self.timer[key] = rospy.get_time() + seconds
     
     def on_curve_transition(self, gtan):
         if gtan == None:
@@ -82,8 +86,10 @@ class Lane(TaskModule):
             ltan, ltan_abs = get_local_tangent(self.mask_local, identity_size, yellow)
         if self.on_curve_transition(gtan):
             gtan = None
-        self.append_latest_data(gtan, ltan, ltan_abs, self.timer)
-        gtan, ltan, ltan_abs = self.timescale_dataset[0, 0:3]
+        if gtan == None and ltan == None:
+            self.set_timer("ramp", 0.8)
+        self.append_latest_data(gtan, ltan, ltan_abs)
+        gtan, ltan, ltan_abs = self.timescale_dataset[0, :]
 
         #if self.timer > 0:
             # 타이머가 작동하는 경우 적분을 이용하여 현재 속력만큼 타이머 숫자를 줄인다.
@@ -106,6 +112,11 @@ class Lane(TaskModule):
             delta_z = 0
         else:
             delta_z = (gtan - ltan) / 1.5
+
+        if self.is_timer_running("ramp"):
+            delta_x = 1.5
+            delta_z = 0
+
 
         self.weight_x = 1.0
         self.weight_z = delta_z**2
