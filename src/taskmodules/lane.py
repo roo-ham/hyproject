@@ -54,10 +54,11 @@ class Lane(TaskModule):
     
     def on_curve_transition(self, gtan):
         if gtan == None:
+            gtan = 0
+
+        if self.timescale_dataset[0, 0] * gtan > 0:
             return False
-        elif self.timescale_dataset[0, 0] * gtan >= 0:
-            return False
-        elif abs(gtan) < 0.4:
+        elif abs(self.timescale_dataset[0, 0]) < 1.0:
             return False
         return True
     
@@ -99,12 +100,12 @@ class Lane(TaskModule):
         delta_z = gtan - ltan
         
         # 급커브 처리
-        if abs(gtan) < 0.1:
+        if abs(gtan) < 0.2:
             delta_z = gtan
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.2:
             delta_z = 0
         else:
-            delta_z = (gtan - ltan) / 2
+            delta_z = (gtan - ltan) / 1.5
 
         self.weight_x = 1.0
         self.weight_z = delta_z**2
