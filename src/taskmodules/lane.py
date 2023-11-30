@@ -62,9 +62,9 @@ class Lane(TaskModule):
         return True
     
     def found_junction(self, gtan):
-        ltan = np.mean(self.timescale_dataset[0:15, 1])
-        prev_ltan = np.mean(self.timescale_dataset[15:30, 1])
-        not_center = abs(gtan) > 0.3
+        ltan = np.mean(self.timescale_dataset[0:20, 1])
+        prev_ltan = np.mean(self.timescale_dataset[20:40, 1])
+        not_center = abs(gtan) > 1.2
         lane_as_one = abs(gtan-ltan) < 0.3
         diff_ltan_high = abs(ltan-prev_ltan) > 0.3
         if not_center & lane_as_one & diff_ltan_high:
