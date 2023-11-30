@@ -71,7 +71,7 @@ class Lane(TaskModule):
             return True
         return False
 
-    def update(self, real_speed, identity_size, yellow:np.ndarray):
+    def update(self, identity_size, yellow:np.ndarray):
         # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
         # 어떤 조건을 불만족 하는 경우 이전(previous) 데이터를 계속 사용한다.
         # 데이터베이스에 데이터들을 나열한다.
@@ -95,16 +95,16 @@ class Lane(TaskModule):
         #if self.found_junction(gtan) and self.timer <= 0:
         #    self.pause_until(1.5)
         
-        # 차선이 수평하면 (휘어있으면) 속도 줄임
-        # 그렇지 않으면 (곧으면) 속도 늘림
         delta_x = 1.0
-
-        # 차선이 한쪽으로 치우쳐져 있어 global_tan이 0이 아니면 회전
         delta_z = gtan - ltan
         
         # 급커브 처리
-        if abs(delta_z) > 0.2 and abs(gtan) < 1.4:
+        if abs(gtan) < 0.1:
+            delta_z = gtan
+        elif abs(delta_z) > 0.2 and abs(gtan) < 1.35:
             delta_z = 0
+        else:
+            delta_z = gtan - ltan
 
         self.weight_x = 1.0
         self.weight_z = delta_z**2
