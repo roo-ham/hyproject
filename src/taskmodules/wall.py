@@ -10,6 +10,24 @@ class Wall(TaskModule):
         super().__init__(base, "Wall")
         set_timer("wall/waiting_rotation", 5)
 
+    def do_front(self, front_points):
+        if is_timer_running("wall/obstacle_ignore"):
+            return
+
+        atan = get_wall_angle(front_points)
+
+        delta_x = 0.0
+        delta_z = atan
+        
+        self.weight_x = 1000*atan
+        self.weight_z = 1.0
+
+        if is_timer_running("wall/waiting_rotation"):
+            self.weight_z = 0
+
+        self.x += delta_x
+        self.z += delta_z
+
     def update(self, orthogonal_pos, polar_pos):
         self.weight_x = 0.0
         self.weight_z = 0.0
@@ -30,25 +48,11 @@ class Wall(TaskModule):
 
         if len(left_points) > 10:
             self.weight_z = 100
-            self.z += -0.5
+            self.z += -1
 
-        if len(front_points) < 5:
+        if len(front_points) > 10:
+            self.do_front(front_points)
+            return
+        else:
             set_timer("wall/obstacle_ignore", 0.2, True)
             set_timer("wall/waiting_rotation", 5, True)
-            return
-        
-        if is_timer_running("wall/obstacle_ignore"):
-            return
-
-        atan = get_wall_angle(front_points)
-
-        delta_x = 0.0
-        delta_z = atan
-        
-        self.weight_x = 1000*atan
-        self.weight_z = 1.0
-
-        if is_timer_running("wall/waiting_rotation"):
-            self.weight_z = 0
-
-        self.x, self.z = delta_x, delta_z
