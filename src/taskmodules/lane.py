@@ -101,10 +101,7 @@ class Lane(TaskModule):
 
         # 차선이 한쪽으로 치우쳐져 있어 global_tan이 0이 아니면 회전
         delta_z = gtan - ltan
-        
-        # 급커브 처리
-        if abs(delta_z) < 0.5:
-            delta_z = 0
+        delta_z = 0
 
         self.weight_x = 1.0
         self.weight_z = delta_z**2
