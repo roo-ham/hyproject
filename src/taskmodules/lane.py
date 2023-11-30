@@ -84,7 +84,7 @@ class Lane(TaskModule):
         else:
             gtan = None
         if gtan == None and ltan == None:
-            set_timer("lane/ramp", 0.8)
+            set_timer("lane/ramp", 0.4)
         self.append_latest_data(gtan, ltan, ltan_abs)
         gtan, ltan, ltan_abs = self.timescale_dataset[0, :]
 
