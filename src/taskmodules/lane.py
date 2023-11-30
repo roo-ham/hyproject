@@ -113,6 +113,6 @@ class Lane(TaskModule):
             delta_z = 0
 
         if not is_timer_running("wall/waiting_rotation"):
-            self.weight_z = 0.5
+            self.weight_z = 0.1
 
         self.x, self.z = delta_x, delta_z
