@@ -19,13 +19,13 @@ class Wall(TaskModule):
         delta_x = 0.0
         delta_z = atan
         
-        self.weight_x = 1000*atan
+        self.weight_x = 100 * (abs(atan) + 1)
         self.weight_z = 1.0
 
         if is_timer_running("wall/waiting_rotation"):
             self.weight_z = 0
         elif is_timer_running("wall/side_blocked"):
-            delta_x = -0.5
+            delta_x = -1.0
 
         self.x += delta_x
         self.z += delta_z
