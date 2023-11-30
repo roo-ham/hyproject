@@ -47,12 +47,15 @@ class Wall(TaskModule):
                 right_points.append(p2)
 
         if len(left_points) > 10:
-            self.weight_z = 100
-            self.z += -1
+            self.weight_z = 0.5
+            self.z += 0.5
+
+        if len(right_points) > 10:
+            self.weight_z = 0.5
+            self.z += -0.5
 
         if len(front_points) > 10:
             self.do_front(front_points)
-            return
         else:
             set_timer("wall/obstacle_ignore", 0.2, True)
             set_timer("wall/waiting_rotation", 5, True)
