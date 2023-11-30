@@ -32,10 +32,6 @@ class Wall(TaskModule):
             self.weight_z = 0.2
             self.z += -0.5
 
-        if len(right_points) > 10:
-            self.weight_z = 0.2
-            self.z += 0.5
-
         if len(front_points) < 5:
             set_timer("wall/obstacle_ignore", 0.2, True)
             set_timer("wall/waiting_rotation", 5, True)
