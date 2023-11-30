@@ -78,10 +78,6 @@ class Lane(TaskModule):
             set_timer("lane/continous_curve", 5, True)
         elif is_timer_running("lane/continous_curve"):
             gtan = None
-        else:
-            set_timer("lane/continous_curve", 5, True)
-            gtan = -self.timescale_dataset[0, 0]
-
         if gtan == None and ltan == None:
             set_timer("lane/ramp", 0.8)
         self.append_latest_data(gtan, ltan, ltan_abs)
@@ -100,6 +96,9 @@ class Lane(TaskModule):
         
         delta_x = 1.0
         delta_z = gtan - ltan
+
+        self.weight_x = 1.0
+        self.weight_z = delta_z**2
         
         # 급커브 처리
         if abs(gtan) < 0.2:
@@ -113,8 +112,7 @@ class Lane(TaskModule):
             delta_x = 1.5
             delta_z = 0
 
-
-        self.weight_x = 1.0
-        self.weight_z = delta_z**2
+        if not is_timer_running("wall/waiting_rotation"):
+            self.weight_z = 0.5
 
         self.x, self.z = delta_x, delta_z
