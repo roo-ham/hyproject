@@ -46,13 +46,23 @@ class Wall(TaskModule):
             if p1[0] < 0.25 and p1[1] < -0.4:
                 right_points.append(p2)
 
+        side_blocked = False
+
         if len(left_points) > 10:
             self.weight_z = 0.5
             self.z += -0.5
+            side_blocked = True
 
         if len(right_points) > 10:
             self.weight_z = 0.5
             self.z += 0.5
+            side_blocked = True
+
+        if not side_blocked:
+            set_timer("wall/side_blocked", 6, True)
+
+        if not is_timer_running("wall/side_blocked"):
+            set_timer("lane/lane_exception", 3)
 
         if len(front_points) > 1:
             self.do_front(front_points)

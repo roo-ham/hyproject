@@ -74,9 +74,8 @@ class Lane(TaskModule):
         if (identity_size > 0):
             gtan = get_global_tangent(self.mask_global_x, self.mask_global_y, identity_size, yellow)
             ltan, ltan_abs = get_local_tangent(self.mask_local, identity_size, yellow)
-        if not self.on_curve_transition(gtan):
-            set_timer("lane/continous_curve", 5, True)
-        elif is_timer_running("lane/continous_curve"):
+        if self.on_curve_transition(gtan):
+            set_timer("lane/lane_exception", 0.1)
             gtan = None
         if gtan == None and ltan == None:
             set_timer("lane/ramp", 0.8)
@@ -112,7 +111,7 @@ class Lane(TaskModule):
             delta_x = 1.5
             delta_z = 0
 
-        if not is_timer_running("wall/waiting_rotation"):
-            self.weight_z = 0.1
+        if is_timer_running("lane/lane_exception"):
+            self.weight_z = 0.0
 
         self.x, self.z = delta_x, delta_z
