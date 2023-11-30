@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import matplotlib.pyplot as plt
-import random
 
+from rooham.mathtools import get_global_tangent, get_local_tangent
 from basement import Basement
 from module import TaskModule
 
@@ -79,8 +79,8 @@ class Lane(TaskModule):
         # 데이터베이스에 데이터들을 나열한다.
         gtan, ltan, ltan_abs = None, None, None
         if (identity_size > 0):
-            gtan = self.get_global_tangent(identity_size, yellow)
-            ltan, ltan_abs = self.get_local_tangent(identity_size, yellow)
+            gtan = get_global_tangent(self.mask_global_x, self.mask_global_y, identity_size, yellow)
+            ltan, ltan_abs = get_local_tangent(self.mask_local, identity_size, yellow)
         if self.on_curve_transition(gtan):
             gtan = None
         self.append_latest_data(gtan, ltan, ltan_abs, self.timer)
@@ -121,32 +121,3 @@ class Lane(TaskModule):
             delta_z += arc_offset
 
         self.x, self.z = delta_x, delta_z
-        
-    def get_global_tangent(self, identity_size, yellow:np.ndarray) -> float:
-        x_set = yellow * self.mask_global_x
-        y_set = ((yellow.T) * self.mask_global_y).T
-        x_set, y_set = np.where(x_set, x_set, 1), np.where(x_set, y_set, 1000*y_set)
-        return np.arctan(np.sum(y_set/x_set) / identity_size)
-
-    def get_local_tangent(self, identity_size, yellow:np.ndarray) -> tuple:
-        l_tan = 0.0
-        l_tan_abs = 0.0
-        arange = self.mask_local
-        for x, y in np.argwhere(yellow):
-            if random.randint(1, identity_size) > 32:
-                continue
-            base = yellow[-2+x:3+x, -2+y:3+y].copy()
-            base[:, 2] = 0
-            x_set = base * arange
-            y_set = (base.T * arange).T
-            x_set, y_set = np.where(x_set, x_set, 1), np.where(x_set, y_set, 1000*y_set)
-            identity_size_local = np.sum(base)
-            if identity_size_local == 0:
-                continue
-            atan = np.arctan(y_set/x_set)
-            atan_abs = np.abs(atan)
-            l_tan += np.sum(atan) / identity_size_local
-            l_tan_abs += np.sum(atan_abs) / identity_size_local
-        l_tan /= identity_size
-        l_tan_abs /= identity_size
-        return l_tan, l_tan_abs
