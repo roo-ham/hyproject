@@ -15,8 +15,6 @@ class Lane(TaskModule):
         self.mask_global_y = np.arange(128-b_height, 128)
         self.mask_local = np.arange(-2, 3)
         self.timescale_dataset = np.zeros((60,4), np.float32)
-        self.weight_x = 1.0
-        self.weight_z = 1.0
         self.x_data = range(60)
         self.timer = 0.0
 
@@ -119,5 +117,8 @@ class Lane(TaskModule):
             delta_z -= arc_offset
         elif (gtan < 0):
             delta_z += arc_offset
+
+        self.weight_x = 1.0
+        self.weight_z = delta_z**2
 
         self.x, self.z = delta_x, delta_z
