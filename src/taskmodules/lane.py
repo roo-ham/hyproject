@@ -42,7 +42,7 @@ class Lane(TaskModule):
         items = enumerate(self.lines)
         for j, line in items:
             self.fig.canvas.restore_region(self.backgrounds)
-            line.set_ydata(self.timescale_dataset[:, j])
+            self.axes.set_ydata(self.timescale_dataset[:, j])
             self.axes.draw_artist(line)
             self.fig.canvas.blit(self.axes.bbox)
 
