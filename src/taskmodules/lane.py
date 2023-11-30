@@ -18,19 +18,19 @@ class Lane(TaskModule):
         self.x_data = range(60)
         self.timer = 0.0
 
-        self.fig, self.axes = plt.subplots(nrows=4)
+        self.fig, self.axes = plt.subplots()
         styles = ['r-', 'g-', 'y-', 'b-']
         labels = ['G tan', 'L tan', 'L tan (absolute)', 'Integral Timer']
-        def plot(ax, style, label):
-            plot = ax.plot(self.x_data, self.timescale_dataset[:, 0], style, animated=True, label=label)[0]
-            ax.set_xlim(0, 59)
-            ax.set_ylim(-1.6, 1.6)
-            ax.legend()
-            return plot
-        self.lines = [plot(ax, style, label) for ax, style, label in zip(self.axes, styles, labels)]
+        self.lines = []
+        for style, label in zip(styles, labels):
+            plot = self.axes.plot(self.x_data, self.timescale_dataset[:, 0], style, animated=True, label=label)
+            self.axes.set_xlim(0, 59)
+            self.axes.set_ylim(-1.6, 1.6)
+            self.axes.legend()
+            self.lines.append(plot)
         self.fig.show()
         self.fig.canvas.draw()
-        self.backgrounds = [self.fig.canvas.copy_from_bbox(ax.bbox) for ax in self.axes]
+        self.backgrounds = self.fig.canvas.copy_from_bbox(self.axes.bbox)
 
     def append_latest_data(self, *data_tuple):
         for key, value in enumerate(data_tuple):
@@ -39,12 +39,12 @@ class Lane(TaskModule):
                 self.timescale_dataset[0, key] = value
 
     def show_dataset_graph(self):
-        items = enumerate(zip(self.lines, self.axes, self.backgrounds), start=0)
-        for j, (line, ax, background) in items:
-            self.fig.canvas.restore_region(background)
+        items = enumerate(self.axes)
+        for j, line in items:
+            self.fig.canvas.restore_region(self.backgrounds)
             line.set_ydata(self.timescale_dataset[:, j])
-            ax.draw_artist(line)
-            self.fig.canvas.blit(ax.bbox)
+            self.axes.draw_artist(line)
+            self.fig.canvas.blit(self.axes.bbox)
 
     def pause_until(self, t):
         self.timer = t
