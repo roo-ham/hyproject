@@ -27,13 +27,12 @@ class Wall(TaskModule):
         elif is_timer_running("wall/side_blocked"):
             delta_x = -1.0
 
-        self.x += delta_x
+        self.x = delta_x
         self.z += delta_z
 
     def update(self, orthogonal_pos, polar_pos):
         self.weight_x = 0.0
         self.weight_z = 0.0
-        self.x = 0.0
         self.z = 0.0
 
         left_points = []
@@ -49,15 +48,16 @@ class Wall(TaskModule):
                 right_points.append(p2)
 
         side_blocked = [False, False]
+        direction = 1 if self.x >= 0 else -1
 
         if len(left_points) > 10:
             self.weight_z = 0.5
-            self.z += -0.5
+            self.z += -0.5 * direction
             side_blocked[0] = True
 
         if len(right_points) > 10:
             self.weight_z = 0.5
-            self.z += 0.5
+            self.z += 0.5 * direction
             side_blocked[1] = True
 
         if side_blocked[0] == side_blocked[1]:
