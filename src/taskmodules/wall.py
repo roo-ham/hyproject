@@ -54,7 +54,7 @@ class Wall(TaskModule):
             self.weight_z = 0.5
             self.z += 0.5
 
-        if len(front_points) > 3:
+        if len(front_points) > 1:
             self.do_front(front_points)
         else:
             set_timer("wall/obstacle_ignore", 0.2, True)
