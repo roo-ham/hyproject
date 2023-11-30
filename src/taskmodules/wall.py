@@ -29,7 +29,7 @@ class Wall(TaskModule):
                 right_points.append(p2)
 
         if len(left_points) > 10:
-            self.weight_z = 0.2
+            self.weight_z = 100
             self.z += -0.5
 
         if len(front_points) < 5:
