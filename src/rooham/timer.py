@@ -11,8 +11,6 @@ def __is_timer_running(timer, key) -> bool:
 is_timer_running = partial(__is_timer_running, __timer)
 
 def __set_timer(timer, key, seconds, force=False):
-    while not rospy.is_shutdown():
-        pass
     if is_timer_running(key) and (not force):
         return
     timer[key] = rospy.get_time() + seconds

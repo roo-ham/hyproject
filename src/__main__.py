@@ -32,10 +32,10 @@ class Main:
         rospy.signal_shutdown("restarting hyproject...")
 
 base = Basement()
-Lane(base)
-Wall(base)
 try:
     rospy.init_node("hyproject_main")
+    Lane(base)
+    Wall(base)
     main_object = Main(base)
     os.system("clear")
     print("Hello, Hanyang!")
