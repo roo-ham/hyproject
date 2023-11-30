@@ -40,11 +40,11 @@ class Lane(TaskModule):
 
     def show_dataset_graph(self):
         items = enumerate(self.lines)
+        self.fig.canvas.restore_region(self.backgrounds)
         for j, line in items:
-            self.fig.canvas.restore_region(self.backgrounds)
             line.set_ydata(self.timescale_dataset[:, j])
             self.axes.draw_artist(line)
-            self.fig.canvas.blit(self.axes.bbox)
+        self.fig.canvas.blit(self.axes.bbox)
 
     def pause_until(self, t):
         self.timer = t
