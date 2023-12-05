@@ -26,8 +26,9 @@ class Main:
         self.motor.update()
         self.basement.tick += 1
         self.rate.sleep()
-        os.system("clear")
-        debugTimers()
+        if self.basement.tick % 10 == 0:
+            os.system("clear")
+            debugTimers()
     def restart(self):
         print("restarting...")
         for l in self.basement.launch.values():
