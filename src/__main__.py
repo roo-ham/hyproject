@@ -3,6 +3,7 @@
 import rospy
 import os
 
+from rooham.timer import debugTimers
 from basement import Basement
 from iomodules import *
 from taskmodules import *
@@ -25,6 +26,8 @@ class Main:
         self.motor.update()
         self.basement.tick += 1
         self.rate.sleep()
+        os.system("clear")
+        debugTimers()
     def restart(self):
         print("restarting...")
         for l in self.basement.launch.values():

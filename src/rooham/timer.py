@@ -16,3 +16,8 @@ def __set_timer(timer, key, seconds, force=False):
     timer[key] = rospy.get_time() + seconds
 
 set_timer = partial(__set_timer, __timer)
+
+def debugTimers():
+    global __timer
+    for k, v in __timer.items():
+        print("%s:%f"%(k,v))
