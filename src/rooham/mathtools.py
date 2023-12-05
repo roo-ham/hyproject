@@ -12,14 +12,14 @@ def get_wall_angle(positions:list):
 
     for pos in positions:
         relative_point:np.ndarray = pos - mean_pos
-        if relative_point[0] == 0:
+        if relative_point[1] == 0:
             continue
-        arctan = np.arctan(relative_point[1]/relative_point[0])
+        arctan = np.arctan(relative_point[0]/relative_point[1])
         length2 = np.sum(relative_point**2)
         sum1 += arctan*length2
         sum2 += length2
     
-    return 0 if sum2 == 0 else (sum1/sum2) + (np.pi / 2)
+    return 0 if sum2 == 0 else sum1/sum2
 
 def get_global_tangent(mask_x, mask_y, identity_size, yellow:np.ndarray) -> float:
     x_set = yellow * mask_x
