@@ -43,7 +43,7 @@ class Wall(TaskModule):
         for p1, p2 in zip(polar_pos, orthogonal_pos):
             if p1[0] < 0.25 and p1[1] > 0.4:
                 left_points.append(p2)
-            if p1[0] < 0.4 and abs(p1[1]) < 0.1:
+            if p1[0] < 0.4 and abs(p1[1]) < 0.2:
                 front_points.append(p2)
             if p1[0] < 0.25 and p1[1] < -0.4:
                 right_points.append(p2)
@@ -73,5 +73,5 @@ class Wall(TaskModule):
         if len(front_points) > 1:
             self.do_front(front_points)
         else:
-            set_timer("wall/obstacle_ignore", 0.2, True)
+            set_timer("wall/obstacle_ignore", 0.1, True)
             set_timer("wall/waiting_rotation", 5, True)
