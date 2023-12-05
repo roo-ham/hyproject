@@ -23,6 +23,5 @@ class TPark(TaskModule):
         super().__init__(base, "TPark")
         self.enabled = False
 
-class Ramp(TaskModule):
-    def __init__(self, base:Basement) -> None:
-        super().__init__(base, "Ramp")
+    def update(self):
+        pass
