@@ -88,7 +88,7 @@ class Lane(TaskModule):
         return 0.0
 
     def update(self, identity_size, yellow:np.ndarray):
-        if is_timer_running("marker/stop"):
+        if is_timer_running("marker/stop/phase1"):
             self.weight_x = 0
             self.weight_z = 0
             return
