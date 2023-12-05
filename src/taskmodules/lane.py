@@ -80,10 +80,10 @@ class Lane(TaskModule):
             gtan = None
         if is_timer_running("lane/lane_exception/left"):
             set_timer("lane/lane_exception", -1, True)
-            gtan = -1.0
+            gtan = -0.2
         elif is_timer_running("lane/lane_exception/right"):
             set_timer("lane/lane_exception", -1, True)
-            gtan = 1.0
+            gtan = 0.2
         if gtan == None and ltan == None:
             set_timer("lane/ramp", 0.4)
         self.append_latest_data(gtan, ltan, ltan_abs)
