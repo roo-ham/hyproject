@@ -32,6 +32,9 @@ class Main:
                 print("%10s : %10.3f"%marker)
             print()
             debugTimers()
+            print()
+            lane:Lane = self.basement.taskmodules["Lane"]
+            print("%s %s %s"%(lane.left_enabled, lane.right_enabled, lane.on_manual_curve))
     def restart(self):
         print("restarting...")
         for l in self.basement.launch.values():
