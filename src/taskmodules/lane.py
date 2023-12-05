@@ -103,6 +103,7 @@ class Lane(TaskModule):
         
         # 급커브 처리
         if abs(gtan) < 0.2:
+            delta_x = 2.0
             delta_z = gtan
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.2:
             delta_z = 0
