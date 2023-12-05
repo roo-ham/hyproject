@@ -14,10 +14,10 @@ class Wall(TaskModule):
         if is_timer_running("wall/obstacle_ignore"):
             return
 
-        atan = get_wall_angle(front_points)
+        wall_angle = get_wall_angle(front_points)
 
         delta_x = 0.0
-        delta_z = atan
+        delta_z = wall_angle
         
         self.weight_x = 1.0
         self.weight_z = 1.0
@@ -25,7 +25,8 @@ class Wall(TaskModule):
         if is_timer_running("wall/waiting_rotation"):
             self.weight_z = 0
         elif is_timer_running("wall/side_blocked"):
-            delta_x = -1.0
+            delta_x = -0.5
+            delta_z *= 2
 
         self.x = delta_x
         self.z += delta_z
