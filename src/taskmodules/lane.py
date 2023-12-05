@@ -81,9 +81,9 @@ class Lane(TaskModule):
             self.on_manual_curve = False
 
         if (self.left_enabled):
-            return offset - 1
+            return -1
         elif (self.right_enabled):
-            return offset + 1
+            return 1
 
         return 0.0
 
