@@ -21,4 +21,4 @@ def debugTimers():
     global __timer
     now = rospy.get_time()
     for k, v in __timer.items():
-        print("%10s : %10.3f"%(k,v-now))
+        print("%20s : %10.3f"%(k,v-now))
