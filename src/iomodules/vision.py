@@ -121,7 +121,7 @@ class VisionMarker(IOModule):
 
         for marker in data.markers:
             marker_id, marker_distance = marker.id, marker.pose.pose.position.x
-            if marker_distance > 0.5:
+            if marker_distance > 0.7:
                 continue
 
             new_marker_storage[marker_id] = marker_distance
