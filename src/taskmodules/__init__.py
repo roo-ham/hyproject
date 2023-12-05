@@ -11,7 +11,7 @@ class Sign(TaskModule):
         super().__init__(base, "Sign")
 
     def update(self):
-        
+        pass
 
 
 class Arrow(TaskModule):
