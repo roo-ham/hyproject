@@ -6,6 +6,7 @@ from sensor_msgs.msg import CompressedImage
 from ar_track_alvar_msgs.msg import AlvarMarkers
 from cv_bridge import CvBridge
 
+from rooham.timer import *
 from taskmodules import *
 from basement import Basement
 from module import IOModule
@@ -109,9 +110,37 @@ class VisionMarker(IOModule):
     def __init__(self, base:Basement):
         super().__init__(base, "VisionMarker")
         self.sub_marker = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.callback)
+        self.marker_storage = set()
+        self.sign_storage:Sign = base.taskmodules["Sign"]
+        self.lane_storage:Lane = base.taskmodules["Lane"]
+        self.tpark_storage:TPark = base.taskmodules["TPark"]
 
     def callback(self, data):
         super().callback(data)
+        new_marker_storage = set()
+
+        for marker in data.markers:
+            if (marker.pose.pose.position.x > 0.5):
+                continue
+            new_marker_storage.add(marker.id)
+
+        for marker_id in self.marker_storage:
+            if marker_id in new_marker_storage:
+                continue
+            if marker_id == 0:
+                set_timer("marker/stop", 1)
+            elif marker_id == 1:
+                self.lane_storage.on_manual_curve = True
+                self.lane_storage.right_enabled = True
+            elif marker_id == 2:
+                self.lane_storage.on_manual_curve = True
+                self.lane_storage.left_enabled = True
+            elif marker_id == 3:
+                self.tpark_storage.enabled = True
+
+        self.marker_storage = new_marker_storage
         
     def update(self):
         super().update()
+        self.sign_storage.update()
+        self.tpark_storage.update()

@@ -36,6 +36,8 @@ try:
     rospy.init_node("hyproject_main")
     Lane(base)
     Wall(base)
+    Sign(base)
+    TPark(base)
     main_object = Main(base)
     os.system("clear")
     print("Hello, Hanyang!")

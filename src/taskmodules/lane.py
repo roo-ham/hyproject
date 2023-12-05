@@ -17,6 +17,9 @@ class Lane(TaskModule):
         self.mask_local = np.arange(-2, 3)
         self.timescale_dataset = np.zeros((60,3), np.float32)
         self.x_data = range(60)
+        self.left_enabled = False
+        self.right_enabled = False
+        self.on_manual_curve = False
 
         self.fig, self.axes = plt.subplots()
         styles = ['r-', 'g-', 'y-']
@@ -66,7 +69,30 @@ class Lane(TaskModule):
             return True
         return False
 
+    def clean_manual_curve(self):
+        if self.on_manual_curve:
+            return
+        
+        self.left_enabled = False
+        self.right_enabled = False
+
+    def do_manual_curve(self, offset) -> float:
+        if (self.left_enabled | self.right_enabled):
+            self.on_manual_curve = False
+
+        if (self.left_enabled):
+            return offset - 1
+        elif (self.right_enabled):
+            return offset + 1
+
+        return 0.0
+
     def update(self, identity_size, yellow:np.ndarray):
+        if is_timer_running("marker/stop"):
+            self.weight_x = 0
+            self.weight_z = 0
+            return
+        
         # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
         # 어떤 조건을 불만족 하는 경우 이전(previous) 데이터를 계속 사용한다.
         # 데이터베이스에 데이터들을 나열한다.
@@ -105,8 +131,9 @@ class Lane(TaskModule):
         if abs(gtan) < 0.2:
             delta_x = 2.0
             delta_z = gtan
+            self.clean_manual_curve()
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.2:
-            delta_z = 0
+            delta_z = self.do_manual_curve(gtan - ltan)
         else:
             delta_z = (gtan - (ltan*0.9)) / 1.5
 
