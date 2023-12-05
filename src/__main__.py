@@ -28,8 +28,8 @@ class Main:
         self.rate.sleep()
         if self.basement.tick % 10 == 0:
             os.system("clear")
-            for k, v in self.vision_marker.marker_set:
-                print("%10s : %10.3f"%(k,v))
+            for marker in self.vision_marker.marker_set:
+                print("%10s : %10.3f"%marker)
             print()
             debugTimers()
     def restart(self):
