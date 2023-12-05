@@ -137,8 +137,10 @@ class Lane(TaskModule):
         else:
             delta_z = (gtan - (ltan*0.9)) / 1.5
 
-        if is_timer_running("lane/ramp"):
+        if self.left_enabled | self.right_enabled:
+            pass
+        elif is_timer_running("lane/ramp"):
             delta_x = 1.5
-            delta_z = 0
+            self.weight_z = 0
 
         self.x, self.z = delta_x, delta_z
