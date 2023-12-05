@@ -89,26 +89,21 @@ class Lane(TaskModule):
         self.append_latest_data(gtan, ltan, ltan_abs)
         gtan, ltan, ltan_abs = self.timescale_dataset[0, :]
 
-        #if self.timer > 0:
-            # 타이머가 작동하는 경우 적분을 이용하여 현재 속력만큼 타이머 숫자를 줄인다.
-            # self.timer -= real_speed[0] / 30
-
         # 실시간으로 데이터베이스를 그래프로 보여준다.
         self.show_dataset_graph()
-
-        # 커브를 발견하면 2.0m 타이머 시작
-        #if self.found_junction(gtan) and self.timer <= 0:
-        #    self.pause_until(1.5)
         
         delta_x = 1.0
         delta_z = gtan - ltan
 
         self.weight_x = 1.0
         self.weight_z = delta_z**2
+
+        if not is_timer_running("wall/obstacle_ignore"):
+            self.weight_x = 0.0
         
         # 급커브 처리
         if abs(gtan) < 0.2:
-            delta_z = gtan
+            delta_z = 2 * gtan
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.2:
             delta_z = 0
         else:
