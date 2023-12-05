@@ -110,7 +110,7 @@ class VisionMarker(IOModule):
     def __init__(self, base:Basement):
         super().__init__(base, "VisionMarker")
         self.sub_marker = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.callback)
-        self.marker_storage = set()
+        self.marker_set = set()
         self.sign_storage:Sign = base.taskmodules["Sign"]
         self.lane_storage:Lane = base.taskmodules["Lane"]
         self.tpark_storage:TPark = base.taskmodules["TPark"]
@@ -120,12 +120,14 @@ class VisionMarker(IOModule):
         new_marker_storage = set()
 
         for marker in data.markers:
-            if (marker.pose.pose.position.x > 0.5):
+            marker_id, marker_distance = marker.id, marker.pose.pose.position.x
+            if (marker_distance > 0.5):
                 continue
-            new_marker_storage.add(marker.id)
+            new_marker_storage.add((marker_id, marker_distance))
 
-        for marker_id in self.marker_storage:
-            if marker_id in new_marker_storage:
+        for marker in self.marker_set:
+            marker_id, marker_distance = marker
+            if marker in new_marker_storage:
                 continue
             if marker_id == 0:
                 set_timer("marker/stop", 1)
@@ -138,7 +140,7 @@ class VisionMarker(IOModule):
             elif marker_id == 3:
                 self.tpark_storage.enabled = True
 
-        self.marker_storage = new_marker_storage
+        self.marker_set = new_marker_storage
         
     def update(self):
         super().update()

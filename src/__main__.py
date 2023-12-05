@@ -31,7 +31,7 @@ class Main:
             debugTimers()
     def restart(self):
         print("restarting...")
-        for l in self.basement.launch.values():
+        for l in self.vision_marker.marker_set:
             l.shutdown()
         rospy.signal_shutdown("restarting hyproject...")
 

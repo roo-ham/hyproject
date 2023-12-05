@@ -25,8 +25,9 @@ class Wall(TaskModule):
         if is_timer_running("wall/waiting_rotation"):
             self.weight_z = 0
         elif is_timer_running("wall/side_blocked"):
+            pass
+        else:
             delta_x = -0.5
-            delta_z *= 2
 
         self.x = delta_x
         self.z += delta_z
@@ -61,7 +62,7 @@ class Wall(TaskModule):
             self.z += 0.25 * direction
             side_blocked[1] = True
 
-        if side_blocked[0] == side_blocked[1]:
+        if not (side_blocked[0] | side_blocked[1]):
             set_timer("wall/side_blocked", 6, True)
 
         if not is_timer_running("wall/side_blocked"):
