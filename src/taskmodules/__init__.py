@@ -22,6 +22,7 @@ class TPark(TaskModule):
     def __init__(self, base:Basement) -> None:
         super().__init__(base, "TPark")
         self.enabled = False
+        self.finished = False
 
     def update(self):
         pass

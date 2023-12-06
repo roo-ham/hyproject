@@ -128,15 +128,20 @@ class VisionMarker(IOModule):
                 continue
 
             new_marker_storage[marker_id] = marker_distance
-            if self.lane_storage.on_waiting_curve:
+
+            if marker_distance > 0.5:
                 continue
 
-            if marker_id == 1:
-                self.lane_storage.on_waiting_curve = True
-                self.lane_storage.junction_curve_direction = "right"
-            elif marker_id == 2:
-                self.lane_storage.on_waiting_curve = True
-                self.lane_storage.junction_curve_direction = "left"
+            if not self.lane_storage.on_waiting_curve:
+                if marker_id == 1:
+                    self.lane_storage.on_waiting_curve = True
+                    self.lane_storage.junction_curve_direction = "right"
+                elif marker_id == 2:
+                    self.lane_storage.on_waiting_curve = True
+                    self.lane_storage.junction_curve_direction = "left"
+                    
+            if marker_id == 3:
+                self.tpark_storage.enabled = True
 
         for marker in self.marker_set.items():
             marker_id, marker_distance = marker
@@ -145,8 +150,6 @@ class VisionMarker(IOModule):
 
             if marker_id == 0:
                 set_timer("marker/stop/phase1", 2)
-            elif marker_id == 3:
-                self.tpark_storage.enabled = True
 
         self.marker_set = new_marker_storage
         
