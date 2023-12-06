@@ -130,7 +130,7 @@ class Lane(TaskModule):
         if self.junction_curve_direction != "" and (not self.on_waiting_curve):
             pass
         elif is_timer_running("lane/ramp"):
-            delta_x = 1.5
+            delta_x = 1.0
             self.weight_z = 0
 
         self.x, self.z = delta_x, delta_z
