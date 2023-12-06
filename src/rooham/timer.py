@@ -19,6 +19,9 @@ set_timer = partial(__set_timer, __timer)
 
 def debugTimers():
     global __timer
+    debug_text = ""
     now = rospy.get_time()
     for k, v in __timer.items():
-        print("%20s : %10.3f"%(k,v-now))
+        debug_text += "%s\n : %s\n"%(k,"%10.3f"%v-now if v>now else "---")
+        debug_text += "\n"
+    return debug_text

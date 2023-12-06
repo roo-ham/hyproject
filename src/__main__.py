@@ -28,11 +28,12 @@ class Main:
         self.rate.sleep()
         if self.basement.tick % 10 == 0:
             os.system("clear")
+            debug_text = ""
             for marker in self.vision_marker.marker_set.items():
-                print("%10s : %10.3f"%marker)
-            print()
-            debugTimers()
-            print()
+                debug_text += "%10s : %10.3f"%marker + "\n"
+            debug_text += debugTimers()
+            print(debug_text)
+
             lane:Lane = self.basement.taskmodules["Lane"]
             print("%s %s %s"%(lane.left_enabled, lane.right_enabled, lane.on_manual_curve))
     def restart(self):

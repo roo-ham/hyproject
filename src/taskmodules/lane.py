@@ -111,7 +111,10 @@ class Lane(TaskModule):
             set_timer("lane/lane_exception/right", -1, True)
             gtan = np.pi/2
         if gtan == None and ltan == None:
-            set_timer("lane/ramp", 0.4)
+            set_timer("lane/ramp", 0.4, True)
+        elif is_timer_running("lane/ramp"):
+            gtan = None
+            ltan = None
         self.append_latest_data(gtan, ltan, ltan_abs)
         gtan, ltan, ltan_abs = self.timescale_dataset[0, :]
 
@@ -137,7 +140,7 @@ class Lane(TaskModule):
         else:
             delta_z = (gtan - (ltan*0.9)) / 1.5
 
-        if self.left_enabled | self.right_enabled:
+        if (self.left_enabled | self.right_enabled) and (not self.on_manual_curve):
             pass
         elif is_timer_running("lane/ramp"):
             delta_x = 1.5
