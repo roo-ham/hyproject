@@ -98,7 +98,7 @@ class Lane(TaskModule):
             set_timer("lane/lane_exception/right", -1, True)
             gtan = np.pi/2
         if gtan == None and ltan == None:
-            set_timer("lane/ramp", 0.4, True)
+            set_timer("lane/ramp", 0.2, True)
         elif is_timer_running("lane/ramp"):
             gtan = None
             ltan = None
