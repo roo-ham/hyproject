@@ -118,19 +118,19 @@ class Lane(TaskModule):
             self.weight_x = 0.0
         
         # 급커브 처리
-        if abs(gtan) < 0.4:
+        if abs(gtan) < 0.3:
             delta_x = 2.0
             delta_z = gtan
             self.clean_junction_curve()
-        elif abs(delta_z) > 0.2 and abs(gtan) < 1.2:
+        elif abs(delta_z) > 0.2 and abs(gtan) < 1.0:
             delta_z = self.do_junction_curve(gtan - ltan)
         else:
-            delta_z = (gtan - (ltan*0.9))
+            delta_z = (gtan - (ltan*0.5))/1.5
 
         if self.junction_curve_direction != "" and (not self.on_waiting_curve):
             pass
         elif is_timer_running("lane/ramp"):
             delta_x = 1.0
-            self.weight_z = 0
+            delta_z /= 4
 
         self.x, self.z = delta_x, delta_z
