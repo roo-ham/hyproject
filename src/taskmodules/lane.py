@@ -118,7 +118,7 @@ class Lane(TaskModule):
             self.weight_x = 0.0
         
         # 급커브 처리
-        if abs(gtan) < 0.2:
+        if abs(gtan) < 0.4:
             delta_x = 2.0
             delta_z = gtan
             self.clean_junction_curve()
