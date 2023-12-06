@@ -17,8 +17,7 @@ class Lane(TaskModule):
         self.mask_local = np.arange(-2, 3)
         self.timescale_dataset = np.zeros((60,3), np.float32)
         self.x_data = range(60)
-        self.left_enabled = False
-        self.right_enabled = False
+        self.junction_curve_direction = ""
         self.on_waiting_curve = False
 
         self.fig, self.axes = plt.subplots()
@@ -52,40 +51,28 @@ class Lane(TaskModule):
     def on_curve_transition(self, gtan):
         if gtan == None:
             gtan = 0
-
         if self.timescale_dataset[0, 0] * gtan > 0:
             return False
         elif abs(self.timescale_dataset[0, 0]) < 1.0:
             return False
         return True
-    
-    def found_junction(self, gtan):
-        ltan = np.mean(self.timescale_dataset[0:20, 1])
-        prev_ltan = np.mean(self.timescale_dataset[20:40, 1])
-        not_center = abs(gtan) > 1.2
-        lane_as_one = abs(gtan-ltan) < 0.3
-        diff_ltan_high = abs(ltan-prev_ltan) > 0.3
-        if not_center & lane_as_one & diff_ltan_high:
-            return True
-        return False
 
-    def clean_manual_curve(self):
-        if self.on_waiting_curve:
-            return
-        
-        self.left_enabled = False
-        self.right_enabled = False
+    def clean_junction_curve(self):
+        if not self.on_waiting_curve:
+            self.junction_curve_direction = ""
 
-    def do_manual_curve(self, offset) -> float:
-        if (self.left_enabled | self.right_enabled):
-            self.on_waiting_curve = False
+    def do_junction_curve(self, offset) -> float:
+        angle = 0.0
+        if self.junction_curve_direction == "":
+            return 0
 
-        if (self.left_enabled):
-            return -1
-        elif (self.right_enabled):
-            return 1
+        self.on_waiting_curve = False
+        if self.junction_curve_direction == "left":
+            angle = -1.0
+        elif self.junction_curve_direction == "right":
+            angle = 1.0
 
-        return 0.0
+        return angle
 
     def update(self, identity_size, yellow:np.ndarray):
         if is_timer_running("marker/stop/phase1"):
@@ -134,13 +121,13 @@ class Lane(TaskModule):
         if abs(gtan) < 0.2:
             delta_x = 2.0
             delta_z = gtan
-            self.clean_manual_curve()
+            self.clean_junction_curve()
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.2:
-            delta_z = self.do_manual_curve(gtan - ltan)
+            delta_z = self.do_junction_curve(gtan - ltan)
         else:
             delta_z = (gtan - (ltan*0.9)) / 1.5
 
-        if (self.left_enabled | self.right_enabled) and (not self.on_waiting_curve):
+        if self.junction_curve_direction != "" and (not self.on_waiting_curve):
             pass
         elif is_timer_running("lane/ramp"):
             delta_x = 1.5

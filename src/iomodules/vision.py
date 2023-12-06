@@ -119,6 +119,9 @@ class VisionMarker(IOModule):
         super().callback(data)
         new_marker_storage = dict()
 
+        if is_timer_running("lane/ramp"):
+            return
+
         for marker in data.markers:
             marker_id, marker_distance = marker.id, marker.pose.pose.position.x
             if marker_distance > 0.7:
@@ -130,10 +133,10 @@ class VisionMarker(IOModule):
 
             if marker_id == 1:
                 self.lane_storage.on_waiting_curve = True
-                self.lane_storage.right_enabled = True
+                self.lane_storage.junction_curve_direction = "right"
             elif marker_id == 2:
                 self.lane_storage.on_waiting_curve = True
-                self.lane_storage.left_enabled = True
+                self.lane_storage.junction_curve_direction = "left"
 
         for marker in self.marker_set.items():
             marker_id, marker_distance = marker

@@ -35,7 +35,7 @@ class Main:
             print(debug_text)
 
             lane:Lane = self.basement.taskmodules["Lane"]
-            print("%s %s %s"%(lane.left_enabled, lane.right_enabled, lane.on_waiting_curve))
+            print("%s %s"%(lane.junction_curve_direction, lane.on_waiting_curve))
     def restart(self):
         print("restarting...")
         for l in self.basement.launch.values():
