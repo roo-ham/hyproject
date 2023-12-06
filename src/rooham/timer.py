@@ -22,6 +22,11 @@ def debugTimers():
     debug_text = ""
     now = rospy.get_time()
     for k, v in __timer.items():
-        debug_text += "%s\n : %s\n"%(k,"%10.3f"%v-now if v>now else "---")
+        time = v-now
+        if time > 0:
+            time = "%10.3f"%time
+        else:
+            time = "---"
+        debug_text += "%s\n : %s\n"%(k, time)
         debug_text += "\n"
     return debug_text
