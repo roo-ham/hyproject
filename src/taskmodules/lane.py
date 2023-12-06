@@ -19,7 +19,7 @@ class Lane(TaskModule):
         self.x_data = range(60)
         self.left_enabled = False
         self.right_enabled = False
-        self.on_manual_curve = False
+        self.on_waiting_curve = False
 
         self.fig, self.axes = plt.subplots()
         styles = ['r-', 'g-', 'y-']
@@ -70,7 +70,7 @@ class Lane(TaskModule):
         return False
 
     def clean_manual_curve(self):
-        if self.on_manual_curve:
+        if self.on_waiting_curve:
             return
         
         self.left_enabled = False
@@ -78,7 +78,7 @@ class Lane(TaskModule):
 
     def do_manual_curve(self, offset) -> float:
         if (self.left_enabled | self.right_enabled):
-            self.on_manual_curve = False
+            self.on_waiting_curve = False
 
         if (self.left_enabled):
             return -1
@@ -140,7 +140,7 @@ class Lane(TaskModule):
         else:
             delta_z = (gtan - (ltan*0.9)) / 1.5
 
-        if (self.left_enabled | self.right_enabled) and (not self.on_manual_curve):
+        if (self.left_enabled | self.right_enabled) and (not self.on_waiting_curve):
             pass
         elif is_timer_running("lane/ramp"):
             delta_x = 1.5

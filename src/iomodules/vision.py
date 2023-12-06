@@ -125,14 +125,14 @@ class VisionMarker(IOModule):
                 continue
 
             new_marker_storage[marker_id] = marker_distance
-            if self.lane_storage.on_manual_curve:
+            if self.lane_storage.on_waiting_curve:
                 continue
 
             if marker_id == 1:
-                self.lane_storage.on_manual_curve = True
+                self.lane_storage.on_waiting_curve = True
                 self.lane_storage.right_enabled = True
             elif marker_id == 2:
-                self.lane_storage.on_manual_curve = True
+                self.lane_storage.on_waiting_curve = True
                 self.lane_storage.left_enabled = True
 
         for marker in self.marker_set.items():
