@@ -103,6 +103,7 @@ class Lane(TaskModule):
             gtan = None
             ltan = None
         self.append_latest_data(gtan, ltan, ltan_abs)
+        is_none = (gtan == None, ltan == None, ltan_abs == None)
         gtan, ltan, ltan_abs = self.timescale_dataset[0, :]
 
         # 실시간으로 데이터베이스를 그래프로 보여준다.
@@ -125,8 +126,10 @@ class Lane(TaskModule):
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.1:
             delta_z = self.do_junction_curve(gtan - ltan)
         else:
-            delta_x = 1.5
-            delta_z = (gtan - (ltan*0.5))/1.5
+            delta_x = 1.25
+            delta_z = (gtan - (ltan*0.5))/1.25
+            if is_none[1]:
+                delta_z = gtan/1.1
 
         if self.junction_curve_direction != "" and (not self.on_waiting_curve):
             pass
