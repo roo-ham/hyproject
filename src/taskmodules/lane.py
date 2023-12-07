@@ -62,7 +62,7 @@ class Lane(TaskModule):
             self.junction_curve_direction = ""
 
     def do_junction_curve(self, offset) -> float:
-        angle = 0.0
+        angle = offset / 4
         if self.junction_curve_direction == "":
             return 0
 
@@ -92,12 +92,10 @@ class Lane(TaskModule):
         else:
             gtan = None
         if is_timer_running("lane/lane_exception/left"):
-            set_timer("lane/lane_exception/left", -1, True)
-            gtan = -np.pi/2
+            gtan = -np.pi/2 if gtan > 0 else gtan
         elif is_timer_running("lane/lane_exception/right"):
-            set_timer("lane/lane_exception/right", -1, True)
-            gtan = np.pi/2
-        if gtan == None and ltan == None:
+            gtan = np.pi/2 if gtan < 0 else gtan
+        elif gtan == None and ltan == None:
             set_timer("lane/ramp", 1.5, True)
         self.append_latest_data(gtan, ltan, ltan_abs)
         is_none = (gtan == None, ltan == None, ltan_abs == None)
@@ -108,12 +106,6 @@ class Lane(TaskModule):
         
         delta_x = 1.0
         delta_z = gtan - ltan
-
-        self.weight_x = 1.0
-        self.weight_z = delta_z**2
-
-        if not is_timer_running("wall/obstacle_ignore"):
-            self.weight_x = 0.0
         
         # 급커브 처리
         if abs(gtan) < 0.3:
@@ -133,5 +125,11 @@ class Lane(TaskModule):
         elif is_timer_running("lane/ramp"):
             delta_x = 0.8
             delta_z = 0
+
+        self.weight_x = 1.0
+        self.weight_z = delta_z**2
+
+        if not is_timer_running("wall/obstacle_ignore"):
+            self.weight_x = 0.0
 
         self.x, self.z = delta_x, delta_z
