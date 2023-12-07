@@ -64,13 +64,13 @@ class Wall(TaskModule):
         if len(left_points) > 10:
             left_distance /= len(left_points)
             self.weight_z = 0.5
-            self.z += left_distance - 0.3
+            self.z += left_distance - 0.2
             side_blocked[0] = True
 
         if len(right_points) > 10:
             right_distance /= len(right_points)
             self.weight_z = 0.5
-            self.z += 0.3 - right_distance
+            self.z += 0.2 - right_distance
             side_blocked[1] = True
 
         if not (side_blocked[0] | side_blocked[1]):
