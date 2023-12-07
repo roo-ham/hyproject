@@ -62,7 +62,7 @@ class Lane(TaskModule):
             self.junction_curve_direction = ""
 
     def do_junction_curve(self, offset) -> float:
-        angle = offset / (-4)
+        angle = -offset
         if self.junction_curve_direction == "":
             return angle
 
