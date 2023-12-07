@@ -129,9 +129,6 @@ class VisionMarker(IOModule):
 
             new_marker_storage[marker_id] = marker_distance
 
-            if marker_distance > 0.5:
-                continue
-
             if not self.lane_storage.on_waiting_curve:
                 if marker_id == 1:
                     self.lane_storage.on_waiting_curve = True
