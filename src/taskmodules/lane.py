@@ -92,8 +92,12 @@ class Lane(TaskModule):
         else:
             gtan = None
         if is_timer_running("lane/lane_exception/left"):
+            if gtan == None:
+                gtan = -np.pi/2
             gtan = -np.pi/2 if gtan > 0 else gtan
         elif is_timer_running("lane/lane_exception/right"):
+            if gtan == None:
+                gtan = np.pi/2
             gtan = np.pi/2 if gtan < 0 else gtan
         elif gtan == None and ltan == None:
             set_timer("lane/ramp", 1.5, True)
@@ -108,7 +112,7 @@ class Lane(TaskModule):
         delta_z = gtan - ltan
         
         # 급커브 처리
-        if abs(gtan) < 0.25:
+        if abs(gtan) < 0.1:
             delta_x = 2.0
             delta_z = gtan
             self.clean_junction_curve()
