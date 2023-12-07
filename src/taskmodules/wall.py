@@ -82,8 +82,8 @@ class Wall(TaskModule):
             elif side_blocked[1]:
                 set_timer("lane/lane_exception/right", 1)
 
-        if len(front_points) > 1:
+        if len(front_points) > 2:
             self.do_front(front_points)
         else:
-            set_timer("wall/obstacle_ignore", 0.1, True)
+            set_timer("wall/obstacle_ignore", 0.2, True)
             set_timer("wall/waiting_rotation", 5, True)
