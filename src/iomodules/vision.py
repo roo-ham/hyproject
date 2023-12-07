@@ -146,6 +146,12 @@ class VisionMarker(IOModule):
                 set_timer("marker/stop/phase1", 2)
 
         self.marker_set = new_marker_storage
+
+    def debug_markers(self):
+        debug_text = ""
+        for marker in self.marker_set.items():
+            debug_text += "%10s : %10.3f"%marker + "\n"
+        return debug_text
         
     def update(self):
         super().update()

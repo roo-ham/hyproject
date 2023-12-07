@@ -56,6 +56,9 @@ class Lane(TaskModule):
         elif abs(self.timescale_dataset[0, 0]) < 1.0:
             return False
         return True
+    
+    def debug_junction(self):
+        return "%s %s"%(self.junction_curve_direction, self.on_waiting_curve)
 
     def clean_junction_curve(self):
         if not self.on_waiting_curve:
@@ -116,7 +119,7 @@ class Lane(TaskModule):
             self.clean_junction_curve()
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.1:
             angle = self.do_junction_curve()
-            
+
             delta_x = 2.0 if angle == None else 1.5
             delta_z = (gtan * 0.8) - ltan if angle == None else angle
         else:

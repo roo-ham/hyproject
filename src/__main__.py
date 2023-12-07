@@ -3,7 +3,7 @@
 import rospy
 import os
 
-from rooham.timer import debugTimers
+from rooham.timer import debug_timers
 from basement import Basement
 from iomodules import *
 from taskmodules import *
@@ -27,15 +27,15 @@ class Main:
         self.basement.tick += 1
         self.rate.sleep()
         if self.basement.tick % 10 == 0:
+            lane:Lane = self.basement.taskmodules["Lane"]
+
             os.system("clear")
             debug_text = ""
-            for marker in self.vision_marker.marker_set.items():
-                debug_text += "%10s : %10.3f"%marker + "\n"
-            debug_text += debugTimers()
+            debug_text += self.vision_marker.debug_markers()
+            debug_text += debug_timers()
+            debug_text += lane.debug_junction()
             print(debug_text)
 
-            lane:Lane = self.basement.taskmodules["Lane"]
-            print("%s %s"%(lane.junction_curve_direction, lane.on_waiting_curve))
     def restart(self):
         print("restarting...")
         for l in self.basement.launch.values():

@@ -17,7 +17,7 @@ def __set_timer(timer, key, seconds, force=False):
 
 set_timer = partial(__set_timer, __timer)
 
-def debugTimers():
+def debug_timers():
     global __timer
     debug_text = ""
     now = rospy.get_time()
@@ -27,6 +27,5 @@ def debugTimers():
             time = "%10.3f"%time
         else:
             time = "---"
-        debug_text += "%s\n : %s\n"%(k, time)
-        debug_text += "\n"
+        debug_text += "%s : %s\n"%(k, time)
     return debug_text
