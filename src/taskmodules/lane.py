@@ -61,16 +61,15 @@ class Lane(TaskModule):
         if not self.on_waiting_curve:
             self.junction_curve_direction = ""
 
-    def do_junction_curve(self, offset) -> float:
-        angle = offset
+    def do_junction_curve(self) -> float:
         if self.junction_curve_direction == "":
-            return angle
+            return None
 
         self.on_waiting_curve = False
         if self.junction_curve_direction == "left":
-            angle = -1.0
-        elif self.junction_curve_direction == "right":
             angle = 1.0
+        elif self.junction_curve_direction == "right":
+            angle = -1.0
 
         return angle
 
@@ -116,7 +115,10 @@ class Lane(TaskModule):
             delta_x = 2.0
             self.clean_junction_curve()
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.1:
-            delta_z = self.do_junction_curve((gtan * 0.8) - ltan)
+            angle = self.do_junction_curve()
+            
+            delta_x = 2.0 if angle == None else 1.5
+            delta_z = (gtan * 0.8) - ltan if angle == None else angle
         else:
             delta_x = 1.5
             delta_z = (gtan - (ltan*0.5))/1.25
