@@ -99,9 +99,6 @@ class Lane(TaskModule):
             gtan = np.pi/2
         if gtan == None and ltan == None:
             set_timer("lane/ramp", 1.5, True)
-        elif is_timer_running("lane/ramp"):
-            gtan = None
-            ltan = None
         self.append_latest_data(gtan, ltan, ltan_abs)
         is_none = (gtan == None, ltan == None, ltan_abs == None)
         gtan, ltan, ltan_abs = self.timescale_dataset[0, :]
@@ -135,6 +132,6 @@ class Lane(TaskModule):
             pass
         elif is_timer_running("lane/ramp"):
             delta_x = 0.8
-            delta_z /= 4
+            delta_z = 0
 
         self.x, self.z = delta_x, delta_z
