@@ -62,7 +62,7 @@ class Lane(TaskModule):
             self.junction_curve_direction = ""
 
     def do_junction_curve(self, offset) -> float:
-        angle = 0
+        angle = offset / (-4)
         if self.junction_curve_direction == "":
             return angle
 
@@ -116,7 +116,7 @@ class Lane(TaskModule):
             delta_x = 2.0
             self.clean_junction_curve()
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.1:
-            delta_z = self.do_junction_curve(gtan - ltan)
+            delta_z = self.do_junction_curve(delta_z)
         else:
             delta_x = 1.5
             delta_z = (gtan - (ltan*0.5))/1.25
