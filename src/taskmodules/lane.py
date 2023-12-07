@@ -98,7 +98,7 @@ class Lane(TaskModule):
             set_timer("lane/lane_exception/right", -1, True)
             gtan = np.pi/2
         if gtan == None and ltan == None:
-            set_timer("lane/ramp", 0.5, True)
+            set_timer("lane/ramp", 1.5, True)
         elif is_timer_running("lane/ramp"):
             gtan = None
             ltan = None
@@ -134,7 +134,7 @@ class Lane(TaskModule):
         if self.junction_curve_direction != "" and (not self.on_waiting_curve):
             pass
         elif is_timer_running("lane/ramp"):
-            delta_x = 0.5
+            delta_x = 0.8
             delta_z /= 4
 
         self.x, self.z = delta_x, delta_z
