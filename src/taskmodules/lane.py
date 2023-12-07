@@ -126,7 +126,7 @@ class Lane(TaskModule):
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.1:
             delta_z = self.do_junction_curve(gtan - ltan)
         else:
-            delta_x = 1.25
+            delta_x = 1.5
             delta_z = (gtan - (ltan*0.5))/1.25
             if is_none[1]:
                 delta_z = gtan/1.1
