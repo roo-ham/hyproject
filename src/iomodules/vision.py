@@ -119,9 +119,6 @@ class VisionMarker(IOModule):
         super().callback(data)
         new_marker_storage = dict()
 
-        if is_timer_running("lane/ramp"):
-            return
-
         for marker in data.markers:
             marker_id, marker_distance = marker.id, marker.pose.pose.position.x
             if marker_distance > 0.7:
