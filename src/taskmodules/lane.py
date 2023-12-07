@@ -102,7 +102,7 @@ class Lane(TaskModule):
                 gtan = np.pi/2
             gtan = np.pi/2 if gtan < 0 else gtan
         elif gtan == None and ltan == None:
-            set_timer("lane/ramp", 1.5, True)
+            set_timer("lane/ramp", 2.5, True)
         self.append_latest_data(gtan, ltan, ltan_abs)
         is_none = (gtan == None, ltan == None, ltan_abs == None)
         gtan, ltan, ltan_abs = self.timescale_dataset[0, :]
@@ -121,7 +121,7 @@ class Lane(TaskModule):
             angle = self.do_junction_curve()
 
             delta_x = 2.0 if angle == None else 1.0
-            delta_z = gtan - ltan if angle == None else angle
+            delta_z = (gtan * 0.8) - ltan if angle == None else angle
         else:
             delta_x = 1.3
             delta_z = (gtan - (ltan*0.5))/1.25
