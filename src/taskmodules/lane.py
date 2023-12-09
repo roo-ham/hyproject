@@ -64,7 +64,7 @@ class Lane(TaskModule):
         if direction == "":
             return
         set_timer("lane/junction/wait", 1.2)
-        set_timer("lane/junction/do/%s"%direction, 2.5)
+        set_timer("lane/junction/do/%s"%direction, 1.2 + 1.8)
         self.junction_curve_direction = ""
 
     def update(self, identity_size, yellow:np.ndarray):
