@@ -81,10 +81,12 @@ class Lane(TaskModule):
         if (identity_size > 0):
             gtan = get_global_tangent(self.mask_global_x, self.mask_global_y, identity_size, yellow)
             ltan, ltan_abs = get_local_tangent(self.mask_local, identity_size, yellow)
+            
         if not self.on_curve_transition(gtan):
             pass
         else:
             gtan = None
+
         if is_timer_running("lane/lane_exception/left"):
             if gtan == None:
                 gtan = -np.pi/2
@@ -95,6 +97,7 @@ class Lane(TaskModule):
             gtan = np.pi/2 if gtan < 0 else gtan
         elif gtan == None and ltan == None:
             set_timer("lane/ramp", 2.5, True)
+
         self.append_latest_data(gtan, ltan, ltan_abs)
         is_none = (gtan == None, ltan == None, ltan_abs == None)
         gtan, ltan, ltan_abs = self.timescale_dataset[0, :]
