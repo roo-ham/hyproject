@@ -117,7 +117,7 @@ class Lane(TaskModule):
         
         # 급커브 처리
         if abs(gtan) < 0.1:
-            set_timer("lane/wait_for_junction", 1, True)
+            set_timer("lane/wait_for_junction", 0.5, True)
             self.clean_junction_curve()
             delta_x = 2.0
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.1:
