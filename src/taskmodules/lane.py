@@ -66,7 +66,7 @@ class Lane(TaskModule):
 
     def do_junction_curve(self):
         if self.junction_curve_direction == "":
-            set_timer("lane/wait_for_junction", 1, True)
+            set_timer("lane/wait_for_junction", 3, True)
             return None
         elif is_timer_running("lane/wait_for_junction"):
             return None
