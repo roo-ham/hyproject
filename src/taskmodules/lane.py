@@ -63,7 +63,7 @@ class Lane(TaskModule):
         direction = self.junction_curve_direction
         if direction == "":
             return
-        set_timer("lane/junction/wait", 0.5)
+        set_timer("lane/junction/wait", 1.2)
         set_timer("lane/junction/do/%s"%direction, 2.5)
         self.junction_curve_direction = ""
 
