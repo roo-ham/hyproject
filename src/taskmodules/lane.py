@@ -65,7 +65,7 @@ class Lane(TaskModule):
             return
         elif is_timer_running("lane/junction/wait"):
             return
-        set_timer("lane/junction/do/%s"%direction, 1.0)
+        set_timer("lane/junction/do/%s"%direction, 2.0)
         self.junction_curve_direction = ""
 
     def update(self, identity_size, yellow:np.ndarray):
@@ -81,7 +81,7 @@ class Lane(TaskModule):
         if (identity_size > 0):
             gtan = get_global_tangent(self.mask_global_x, self.mask_global_y, identity_size, yellow)
             ltan, ltan_abs = get_local_tangent(self.mask_local, identity_size, yellow)
-            
+
         if not self.on_curve_transition(gtan):
             pass
         else:
@@ -110,7 +110,7 @@ class Lane(TaskModule):
         
         # 급커브 처리
         if abs(gtan) < 0.1:
-            set_timer("lane/junction/wait", 1.0, True)
+            set_timer("lane/junction/wait", 0.75, True)
             delta_x = 2.0
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.1:
             self.do_junction_curve()
