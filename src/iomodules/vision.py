@@ -126,13 +126,10 @@ class VisionMarker(IOModule):
 
             new_marker_storage[marker_id] = marker_distance
 
-            if not self.lane_storage.on_waiting_curve:
-                if marker_id == 1:
-                    self.lane_storage.on_waiting_curve = True
-                    self.lane_storage.junction_curve_direction = "right"
-                elif marker_id == 2:
-                    self.lane_storage.on_waiting_curve = True
-                    self.lane_storage.junction_curve_direction = "left"
+            if marker_id == 1:
+                self.lane_storage.junction_curve_direction = "right"
+            elif marker_id == 2:
+                self.lane_storage.junction_curve_direction = "left"
                     
             if marker_id == 3:
                 self.tpark_storage.enabled = True

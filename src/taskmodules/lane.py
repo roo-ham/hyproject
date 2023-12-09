@@ -18,7 +18,6 @@ class Lane(TaskModule):
         self.timescale_dataset = np.zeros((60,3), np.float32)
         self.x_data = range(60)
         self.junction_curve_direction = ""
-        self.on_waiting_curve = False
 
         self.fig, self.axes = plt.subplots()
         styles = ['r-', 'g-', 'y-']
@@ -58,25 +57,16 @@ class Lane(TaskModule):
         return True
     
     def debug_junction(self):
-        return "%s %s"%(self.junction_curve_direction, self.on_waiting_curve)
-
-    def clean_junction_curve(self):
-        if not self.on_waiting_curve:
-            self.junction_curve_direction = ""
+        return "%s"%(self.junction_curve_direction)
 
     def do_junction_curve(self):
-        if self.junction_curve_direction == "":
-            return None
-        elif is_timer_running("lane/wait_for_junction"):
-            return None
-
-        self.on_waiting_curve = False
-        if self.junction_curve_direction == "left":
-            angle = 1.0
-        elif self.junction_curve_direction == "right":
-            angle = -1.0
-
-        return angle
+        direction = self.junction_curve_direction
+        if direction == "":
+            return
+        elif is_timer_running("lane/junction/wait"):
+            return
+        set_timer("lane/junction/do/%s"%direction, 1.0)
+        self.junction_curve_direction = ""
 
     def update(self, identity_size, yellow:np.ndarray):
         if is_timer_running("marker/stop/phase1"):
@@ -117,21 +107,24 @@ class Lane(TaskModule):
         
         # 급커브 처리
         if abs(gtan) < 0.1:
-            set_timer("lane/wait_for_junction", 0.8, True)
-            self.clean_junction_curve()
+            set_timer("lane/junction/wait", 1.0, True)
             delta_x = 2.0
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.1:
-            angle = self.do_junction_curve()
-            delta_x = 2.0 if angle == None else 0.0
-            delta_z = (gtan * 0.8) - ltan if angle == None else angle
+            self.do_junction_curve()
+            delta_x = 2.0
+            delta_z = (gtan * 0.8) - ltan
         else:
             delta_x = 1.3
             delta_z = (gtan - (ltan*0.5))/1.25
             if is_none[1]:
                 delta_z = gtan/1.1
 
-        if self.junction_curve_direction != "" and (not self.on_waiting_curve):
-            pass
+        if is_timer_running("lane/junction/do/left"):
+            delta_x = 0.0
+            delta_z = 1.0
+        elif is_timer_running("lane/junction/do/right"):
+            delta_x = 0.0
+            delta_z = -1.0
         elif is_timer_running("lane/ramp"):
             delta_x = 0.8
             delta_z = 0
