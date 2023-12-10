@@ -3,6 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from rooham.flag import *
 from rooham.timer import *
 from rooham.mathtools import get_global_tangent, get_local_tangent
 from basement import Basement
@@ -68,7 +69,7 @@ class Lane(TaskModule):
         self.junction_curve_direction = ""
 
     def update(self, identity_size, yellow:np.ndarray):
-        if is_timer_running("marker/stop/phase1"):
+        if is_timer_on("marker/stop/phase1"):
             self.weight_x = 0
             self.weight_z = 0
             return
@@ -86,11 +87,11 @@ class Lane(TaskModule):
         else:
             gtan = None
 
-        if is_timer_running("lane/lane_exception/left"):
+        if is_timer_on("lane/lane_exception/left"):
             if gtan == None:
                 gtan = -np.pi/2
             gtan = -np.pi/2 if gtan > 0 else gtan
-        elif is_timer_running("lane/lane_exception/right"):
+        elif is_timer_on("lane/lane_exception/right"):
             if gtan == None:
                 gtan = np.pi/2
             gtan = np.pi/2 if gtan < 0 else gtan
@@ -110,33 +111,38 @@ class Lane(TaskModule):
         # 급커브 처리
         if abs(gtan) < 0.1:
             delta_x = 2.0
+            set_flag("lane/junction", False)
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.1:
             self.do_junction_curve()
             delta_x = 2.0
             delta_z = (gtan * 0.8) - ltan
+            set_flag_with_callback("lane/junction", True, self.basement.timetable_add, "junction")
         else:
             delta_x = 1.3
             delta_z = (gtan - (ltan*0.5))/1.25
             if is_none[1]:
                 delta_z = gtan/1.1
 
-        if is_timer_running("lane/ramp"):
+        if is_timer_on("lane/ramp"):
             delta_x = 0.8
             delta_z = 0
 
-        if is_timer_running("lane/junction/wait"):
+        if is_timer_on("lane/junction/wait"):
             pass
-        elif is_timer_running("lane/junction/do/left"):
+        elif is_timer_on("lane/junction/do/left"):
             delta_x = 0.0
             delta_z = 1.0
-        elif is_timer_running("lane/junction/do/right"):
+        elif is_timer_on("lane/junction/do/right"):
             delta_x = 0.0
             delta_z = -1.0
 
         self.weight_x = 1.0
         self.weight_z = delta_z**2
 
-        if not is_timer_running("wall/obstacle_ignore"):
+        if is_timer_off("wall/obstacle_ignore"):
             self.weight_x = 0.0
+        elif is_flag("tpark"):
+            self.weight_x = 0.0
+            self.weight_z = 0.0
 
         self.x, self.z = delta_x, delta_z

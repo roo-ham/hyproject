@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import roslaunch, os
+import rospy, roslaunch, os
 import numpy as np
 from pathlib import Path
 
@@ -18,6 +18,7 @@ class Basement:
         self.real_speed_z = 0.0
         self.taskmodules = dict()
         self.launch = dict()
+        self.timetable = dict()
 
     def roslaunch(self, filename):
         if filename in self.launch:
@@ -42,3 +43,8 @@ class Basement:
     
     def get_bgr_bottom(self) -> np.ndarray:
         return self.__bgr_bottom.copy()
+    
+    def timetable_add(self, action):
+        if not action in self.timetable:
+            self.timetable[action] = list()
+        self.timetable[action].append(rospy.get_time())

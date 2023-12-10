@@ -3,6 +3,7 @@
 import rospy
 import os
 
+from rooham.flag import debug_flags
 from rooham.timer import debug_timers
 from basement import Basement
 from iomodules import *
@@ -33,6 +34,7 @@ class Main:
             debug_text = ""
             debug_text += self.vision_marker.debug_markers()
             debug_text += debug_timers()
+            debug_text += debug_flags()
             debug_text += lane.debug_junction()
             print(debug_text)
 
@@ -47,7 +49,6 @@ try:
     rospy.init_node("hyproject_main")
     Lane(base)
     Wall(base)
-    Sign(base)
     TPark(base)
     main_object = Main(base)
     os.system("clear")

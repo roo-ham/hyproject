@@ -31,6 +31,7 @@ class TaskModule(AbstractModule):
     def __init__(self, base:Basement, name:str):
         print("I'm %s the TaskModule!"%name)
         base.taskmodules[name] = self
+        self.basement = base
         self.x = 0.0
         self.z = 0.0
         self.weight_x = 0.0

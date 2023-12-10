@@ -6,6 +6,7 @@ from sensor_msgs.msg import CompressedImage
 from ar_track_alvar_msgs.msg import AlvarMarkers
 from cv_bridge import CvBridge
 
+from rooham.flag import *
 from rooham.timer import *
 from taskmodules import *
 from basement import Basement
@@ -111,9 +112,7 @@ class VisionMarker(IOModule):
         super().__init__(base, "VisionMarker")
         self.sub_marker = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.callback)
         self.marker_set = dict()
-        self.sign_storage:Sign = base.taskmodules["Sign"]
         self.lane_storage:Lane = base.taskmodules["Lane"]
-        self.tpark_storage:TPark = base.taskmodules["TPark"]
 
     def callback(self, data):
         super().callback(data)
@@ -121,7 +120,7 @@ class VisionMarker(IOModule):
 
         for marker in data.markers:
             marker_id, marker_distance = marker.id, marker.pose.pose.position.x
-            if marker_distance > 1.0:
+            if marker_distance > 0.8:
                 continue
 
             new_marker_storage[marker_id] = marker_distance
@@ -130,9 +129,8 @@ class VisionMarker(IOModule):
                 self.lane_storage.junction_curve_direction = "right"
             elif marker_id == 2:
                 self.lane_storage.junction_curve_direction = "left"
-                    
-            if marker_id == 3:
-                self.tpark_storage.enabled = True
+            elif marker_id == 3:
+                set_flag_with_callback("tpark", True, self.basement.timetable_add, "tpark")
 
         for marker in self.marker_set.items():
             marker_id, marker_distance = marker
@@ -152,5 +150,3 @@ class VisionMarker(IOModule):
         
     def update(self):
         super().update()
-        self.sign_storage.update()
-        self.tpark_storage.update()
