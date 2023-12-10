@@ -53,19 +53,23 @@ class Lane(TaskModule):
             gtan = 0
         if self.timescale_dataset[0, 0] * gtan > 0:
             return False
-        elif abs(self.timescale_dataset[0, 0]) < 1.0:
+        elif abs(self.timescale_dataset[0, 0]) < 1.6:
             return False
         return True
     
     def debug_junction(self):
         return "%s"%(self.junction_curve_direction)
 
-    def do_junction_curve(self):
+    def do_junction_curve(self, gtan):
         direction = self.junction_curve_direction
         if direction == "":
             return
-        set_timer("lane/junction/wait", 0.5)
-        set_timer("lane/junction/do/%s"%direction, 0.5 + 1.8)
+        elif direction == "left" and gtan > -0.5:
+            return
+        elif direction == "right" and gtan < 0.5:
+            return
+        set_timer("lane/junction/wait", 1.6)
+        set_timer("lane/junction/do/%s"%direction, 1.6 + 1.8)
         self.junction_curve_direction = ""
 
     def update(self, identity_size, yellow:np.ndarray):
@@ -113,7 +117,7 @@ class Lane(TaskModule):
             delta_x = 1.3
             set_flag("lane/junction", False)
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.1:
-            self.do_junction_curve()
+            self.do_junction_curve(gtan)
             delta_x = 1.3
             delta_z = (gtan * 0.8) - ltan
             set_flag_with_callback("lane/junction", True, self.basement.timetable_add, "junction")
