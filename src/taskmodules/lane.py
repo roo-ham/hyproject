@@ -53,7 +53,7 @@ class Lane(TaskModule):
             gtan = 0
         if self.timescale_dataset[0, 0] * gtan > 0:
             return False
-        elif abs(self.timescale_dataset[0, 0]) < 1.6:
+        elif abs(self.timescale_dataset[0, 0] - gtan) < 1.6:
             return False
         return True
     
