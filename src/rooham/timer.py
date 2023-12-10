@@ -7,7 +7,7 @@ def __is_timer_on(timer, key) -> bool:
         return rospy.get_time() < timer[key]
     return False
 
-def __set_timer(timer, key, seconds, force=False):
+def __set_timer(timer, key, seconds, force):
     if __is_timer_on(timer, key) and (not force):
         return
     timer[key] = rospy.get_time() + seconds
@@ -19,7 +19,7 @@ def is_timer_on(key):
 def is_timer_off(key):
     return not is_timer_on(key)
 
-def set_timer(key, seconds, force):
+def set_timer(key, seconds, force=False):
     global __timer
     return __set_timer(__timer, key, seconds, force)
 
