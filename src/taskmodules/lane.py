@@ -64,8 +64,8 @@ class Lane(TaskModule):
         direction = self.junction_curve_direction
         if direction == "":
             return
-        set_timer("lane/junction/wait", 1.2)
-        set_timer("lane/junction/do/%s"%direction, 1.2 + 1.8)
+        set_timer("lane/junction/wait", 1.85)
+        set_timer("lane/junction/do/%s"%direction, 1.85 + 1.8)
         self.junction_curve_direction = ""
 
     def update(self, identity_size, yellow:np.ndarray):
@@ -110,11 +110,11 @@ class Lane(TaskModule):
         
         # 급커브 처리
         if abs(gtan) < 0.2:
-            delta_x = 2.0
+            delta_x = 1.3
             set_flag("lane/junction", False)
         elif abs(delta_z) > 0.2 and abs(gtan) < 1.1:
             self.do_junction_curve()
-            delta_x = 2.0
+            delta_x = 1.3
             delta_z = (gtan * 0.8) - ltan
             set_flag_with_callback("lane/junction", True, self.basement.timetable_add, "junction")
         else:
