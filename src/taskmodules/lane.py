@@ -125,7 +125,7 @@ class Lane(TaskModule):
             delta_x = 1.5 - abs(gtan)
             delta_z = gtan/2.0
             if is_none[1]:
-                delta_z = gtan/1.1
+                delta_z = gtan/1.0
 
         if is_timer_on("lane/ramp"):
             delta_x = 0.8
