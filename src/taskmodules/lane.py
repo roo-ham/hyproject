@@ -122,6 +122,9 @@ class Lane(TaskModule):
             delta_x = 1.3
             delta_z = gtan - ltan
             set_flag_with_callback("lane/junction", True, self.basement.timetable_add, "junction")
+        elif abs(gtan) < 1.25:
+            delta_x = 1.3
+            delta_z = gtan - ltan
         elif 1.25 <= abs(gtan) and is_none[1]:
             delta_x = 1.3
             delta_z = gtan
