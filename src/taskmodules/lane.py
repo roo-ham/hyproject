@@ -128,6 +128,8 @@ class Lane(TaskModule):
         elif 1.25 <= abs(gtan):
             delta_x = 1.3
             delta_z = gtan - ltan
+            if is_none[1]:
+                delta_z = gtan
 
         if 1.25 > abs(gtan) and is_timer_on("lane/ramp"):
             delta_x = 0.8
