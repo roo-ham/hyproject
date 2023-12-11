@@ -53,7 +53,7 @@ class Lane(TaskModule):
             gtan = 0
         if self.timescale_dataset[0, 0] * gtan > 0:
             return False
-        elif abs(self.timescale_dataset[0, 0] - gtan) < 1.6:
+        elif abs(self.timescale_dataset[0, 0]) < 1.0:
             return False
         return True
     
@@ -122,11 +122,11 @@ class Lane(TaskModule):
             delta_x = 1.3
             delta_z = gtan - 0.75 if gtan > 0 else gtan + 0.75
             set_flag_with_callback("lane/junction", True, self.basement.timetable_add, "junction")
-        elif 1.3 < abs(gtan):
-            delta_x = 1.5 - abs(gtan)
-            delta_z = gtan/2.0
+        elif 1.3 < abs(gtan) and ltan_abs < 0.05:
+            delta_x = 0.5
+            delta_z = gtan
             if is_none[1]:
-                delta_z = gtan/1.0
+                delta_x = 0
 
         if is_timer_on("lane/ramp"):
             delta_x = 0.8
