@@ -16,6 +16,9 @@ def is_flag(key):
     global __flags
     return __is_flag(__flags, key)
 
+def is_not_flag(key):
+    return not is_flag(key)
+
 def set_flag(key, value:bool):
     global __flags
     return __set_flag(__flags, key, value)

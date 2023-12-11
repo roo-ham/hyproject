@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from rooham.flag import *
 from rooham.timer import *
 from rooham.mathtools import get_wall_angle
 from basement import Basement
@@ -12,6 +13,8 @@ class Wall(TaskModule):
 
     def do_front(self, front_points):
         if is_timer_on("wall/obstacle_ignore"):
+            return
+        elif is_flag("lane/curve"):
             return
 
         wall_angle = get_wall_angle(front_points)
