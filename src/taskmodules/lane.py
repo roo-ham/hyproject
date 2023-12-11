@@ -113,17 +113,17 @@ class Lane(TaskModule):
         delta_z = gtan
         
         # 급커브 처리
-        if abs(gtan) < 0.4:
+        if abs(gtan) < 0.2:
             delta_x = 1.3
             set_flag("lane/junction", False)
-        elif abs(gtan) < 1.5:
+        elif 0.5 < abs(gtan) and abs(gtan) < 1.0:
             self.do_junction_curve(gtan)
             delta_x = 1.3
-            delta_z = gtan - 1.5 if gtan > 0 else gtan + 1.5
+            delta_z = gtan - 0.75 if gtan > 0 else gtan + 0.75
             set_flag_with_callback("lane/junction", True, self.basement.timetable_add, "junction")
-        else:
-            delta_x = 1.55 - abs(gtan)
-            delta_z = gtan/1.5
+        elif 1.25 < abs(gtan):
+            delta_x = 1.5 - abs(gtan)
+            delta_z = gtan/2.0
             if is_none[1]:
                 delta_z = gtan/1.1
 
