@@ -134,25 +134,26 @@ class Lane(TaskModule):
         if is_timer_off("lane/ramp"):
             pass
         elif (not is_none[2]) and ltan_abs < 0.3 :
-            set_timer("lane/front_blocked/wait", 2.5)
-            set_timer("lane/front_blocked", 2.5 + 2.5)
+            set_timer("lane/front_blocked/wait", 2.7)
+            set_timer("lane/front_blocked", 2.7 + 2.0)
 
         if is_timer_on("lane/front_blocked/wait"):
             pass
         elif is_timer_on("lane/front_blocked"):
             delta_x = 0.0
             delta_z = -1.0
+            self.timescale_dataset[0, 0] = -0.1
 
         if is_timer_on("lane/junction/wait"):
             pass
         elif is_timer_on("lane/junction/do/left"):
             delta_x = 0.0
             delta_z = 1.0
-            self.timescale_dataset[0, 0] = 0
+            self.timescale_dataset[0, 0] = 0.1
         elif is_timer_on("lane/junction/do/right"):
             delta_x = 0.0
             delta_z = -1.0
-            self.timescale_dataset[0, 0] = 0
+            self.timescale_dataset[0, 0] = -0.1
 
         self.weight_x = 1.0
         self.weight_z = delta_z**2
