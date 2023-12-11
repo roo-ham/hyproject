@@ -116,7 +116,7 @@ class Lane(TaskModule):
         if abs(gtan) < 0.4:
             delta_x = 1.3
             set_flag("lane/junction", False)
-        elif abs(gtan) < 1.1:
+        elif abs(gtan) < 1.5:
             self.do_junction_curve(gtan)
             delta_x = 1.3
             delta_z = gtan - 1.5 if gtan > 0 else gtan + 1.5
