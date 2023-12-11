@@ -113,10 +113,10 @@ class Lane(TaskModule):
         delta_z = gtan
         
         # 급커브 처리
-        if abs(gtan) < 0.3:
+        if abs(gtan) < 0.4:
             delta_x = 1.3
             set_flag("lane/junction", False)
-        elif abs(delta_z) > 0.2 and abs(gtan) < 1.1:
+        elif abs(gtan) < 1.1:
             self.do_junction_curve(gtan)
             delta_x = 1.3
             delta_z = 0
