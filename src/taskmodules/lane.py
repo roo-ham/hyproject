@@ -127,15 +127,15 @@ class Lane(TaskModule):
             if is_none[1]:
                 delta_z = gtan/1.1
 
-        if is_timer_off("lane/ramp"):
-            pass
-        else:
+        if is_timer_on("lane/ramp"):
             delta_x = 0.8
             delta_z = 0
-            if (not is_none[2]) and ltan_abs < 0.3 :
+
+        if is_timer_off("lane/ramp"):
+            pass
+        elif (not is_none[2]) and ltan_abs < 0.3 :
                 set_timer("lane/front_blocked/wait", 1.5)
                 set_timer("lane/front_blocked", 1.5 + 1.5)
-
 
         if is_timer_on("lane/front_blocked/wait"):
             pass
