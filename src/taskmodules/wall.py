@@ -44,7 +44,7 @@ class Wall(TaskModule):
         if is_timer_on("lane/junction/do/left") \
             or is_timer_on("lane/junction/do/right") \
                 or is_flag("tpark"):
-            set_timer("wall/obstacle_ignore", 0.2, True)
+            set_timer("wall/obstacle_ignore", 1, True)
             set_timer("wall/waiting_rotation", 5, True)
             return
 
