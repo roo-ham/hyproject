@@ -50,10 +50,10 @@ class Wall(TaskModule):
 
         for p1, p2 in zip(polar_pos, orthogonal_pos):
             radius, angle = p1
-            if radius < 0.3 and angle > 0.4:
+            if radius < 0.4 and angle > 0.4:
                 left_points.append(p2)
                 left_distance += radius
-            elif radius < 0.3 and angle < -0.4:
+            elif radius < 0.4 and angle < -0.4:
                 right_points.append(p2)
                 right_distance += radius
             if radius < 0.4 and abs(angle) < 0.4:
@@ -67,13 +67,13 @@ class Wall(TaskModule):
         if len(left_points) > 10:
             left_distance /= len(left_points)
             self.weight_z = 0.5
-            self.z += left_distance - 0.2
+            self.z += left_distance - 0.4
             side_blocked[0] = True
 
         if len(right_points) > 10:
             right_distance /= len(right_points)
             self.weight_z = 0.5
-            self.z += 0.2 - right_distance
+            self.z += 0.4 - right_distance
             side_blocked[1] = True
 
         if is_timer_on("lane/junction/do/left") or is_timer_on("lane/junction/do/right"):
