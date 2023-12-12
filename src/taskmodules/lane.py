@@ -63,16 +63,18 @@ class Lane(TaskModule):
     def debug_junction(self):
         return "%s"%(self.junction_curve_direction)
 
-    def do_junction_curve(self, gtan):
+    def do_junction_curve(self, gtan, is_none):
         direction = self.junction_curve_direction
         if direction == "":
             return
+        elif is_none:
+            pass
         elif direction == "left" and gtan < 0.75:
             return
         elif direction == "right" and gtan > -0.75:
             return
         set_timer("lane/junction/wait", 3.6)
-        set_timer("lane/junction/do/%s"%direction, 3.6 + 3.55)
+        set_timer("lane/junction/do/%s"%direction, 3.6 + 3.5)
         self.junction_curve_direction = ""
 
     def update(self, identity_size, yellow:np.ndarray):
@@ -127,7 +129,6 @@ class Lane(TaskModule):
         elif abs(gtan) <= 0.5:
             pass
         elif abs(gtan) <= 1.0:
-            self.do_junction_curve(gtan)
             delta_x = 1.3
             delta_z = (gtan/4) - (ltan/2)
             set_flag_with_callback("lane/junction", True, self.basement.timetable_add, "junction")
@@ -142,7 +143,7 @@ class Lane(TaskModule):
 
         if abs(gtan) <= 0.95 and abs(gtan-ltan) < 0.05:
             set_flag("lane/curve", False)
-
+        
         if is_flag("lane/curve"):
             delta_x = 0.8
             delta_z = (gtan/2)
@@ -151,7 +152,7 @@ class Lane(TaskModule):
         else:
             delta_x = 0.8
             delta_z = 0
-            if (not is_none[0]) and (not is_none[2]) and ltan_abs < 0.1:
+            if (not is_none[0]) and (not is_none[2]) and ltan_abs < 0.2:
                 set_timer("lane/front_blocked/wait", 2.8)
                 set_timer("lane/front_blocked", 2.8 + 1.75)
 
@@ -162,6 +163,9 @@ class Lane(TaskModule):
             delta_x = 0.0
             delta_z = -1.0
             self.timescale_dataset[0, 0] = -0.1
+
+        if abs(gtan) <= 1.0:
+            self.do_junction_curve(gtan, is_none[0])
 
         if is_timer_on("lane/junction/wait"):
             delta_x = 0.65
