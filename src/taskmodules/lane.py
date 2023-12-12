@@ -56,6 +56,8 @@ class Lane(TaskModule):
             return False
         elif abs(self.timescale_dataset[0, 0]) < 1.0:
             return False
+        elif self.junction_curve_direction != "":
+            return False
         return True
     
     def debug_junction(self):
