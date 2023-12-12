@@ -161,14 +161,15 @@ class Lane(TaskModule):
             self.timescale_dataset[0, 0] = -0.1
 
         if is_timer_on("lane/junction/wait"):
-            pass
+            delta_x = 1.3
+            delta_z = 0.0
         elif is_timer_on("lane/junction/do/left"):
-            delta_x = 0.0
-            delta_z = 1.0
+            delta_x = 0.1
+            delta_z = 0.95
             self.timescale_dataset[0, 0] = 0.1
         elif is_timer_on("lane/junction/do/right"):
-            delta_x = 0.0
-            delta_z = -1.0
+            delta_x = 0.1
+            delta_z = -0.95
             self.timescale_dataset[0, 0] = -0.1
 
         self.weight_x = 1.0
