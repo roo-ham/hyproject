@@ -125,7 +125,11 @@ class VisionMarker(IOModule):
 
             new_marker_storage[marker_id] = marker_distance
 
-            if marker_id == 1:
+            if is_timer_on("lane/junction/do/left") \
+                or is_timer_on("lane/junction/do/right") \
+                    or is_flag("tpark"):
+                pass
+            elif marker_id == 1:
                 self.lane_storage.junction_curve_direction = "right"
             elif marker_id == 2:
                 self.lane_storage.junction_curve_direction = "left"
@@ -133,7 +137,7 @@ class VisionMarker(IOModule):
                 set_flag_with_callback("tpark", True, self.basement.timetable_add, "tpark")
 
             if marker_id in self.marker_set:
-                continue;
+                continue
 
             if marker_id == 0:
                 set_timer("marker/stop/denoise", 0.5)

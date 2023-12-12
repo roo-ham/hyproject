@@ -45,7 +45,6 @@ class Wall(TaskModule):
             or is_timer_on("lane/junction/do/right") \
                 or is_flag("tpark"):
             set_timer("wall/obstacle_ignore", 1, True)
-            set_timer("wall/waiting_rotation", 5, True)
             return
 
         left_points = []

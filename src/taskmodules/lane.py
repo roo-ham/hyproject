@@ -70,7 +70,7 @@ class Lane(TaskModule):
         elif direction == "right" and gtan > -0.75:
             return
         set_timer("lane/junction/wait", 3.6)
-        set_timer("lane/junction/do/%s"%direction, 3.6 + 9.5)
+        set_timer("lane/junction/do/%s"%direction, 3.6 + 3.8)
         self.junction_curve_direction = ""
 
     def update(self, identity_size, yellow:np.ndarray):
