@@ -132,12 +132,19 @@ class VisionMarker(IOModule):
             elif marker_id == 3:
                 set_flag_with_callback("tpark", True, self.basement.timetable_add, "tpark")
 
+            if marker_id in self.marker_set:
+                continue;
+
+            if marker_id == 0:
+                set_timer("marker/stop/denoise", 0.5)
+
+
         for marker in self.marker_set.items():
             marker_id, marker_distance = marker
             if marker_id in new_marker_storage:
                 continue
 
-            if marker_id == 0:
+            if marker_id == 0 and is_timer_off("marker/stop/denoise"):
                 set_timer("marker/stop/phase1", 2)
 
         self.marker_set = new_marker_storage
