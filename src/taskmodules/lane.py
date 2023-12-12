@@ -69,8 +69,8 @@ class Lane(TaskModule):
             return
         elif direction == "right" and gtan > -0.75:
             return
-        set_timer("lane/junction/wait", 1.6)
-        set_timer("lane/junction/do/%s"%direction, 1.6 + 1.8)
+        set_timer("lane/junction/wait", 1.65)
+        set_timer("lane/junction/do/%s"%direction, 1.65 + 1.8)
         self.junction_curve_direction = ""
 
     def update(self, identity_size, yellow:np.ndarray):
@@ -100,7 +100,7 @@ class Lane(TaskModule):
             if gtan == None:
                 gtan = np.pi/2
             gtan = np.pi/2 if gtan < 0 else gtan
-        elif gtan == None and ltan == None:
+        elif gtan == None and ltan == None and abs(self.timescale_dataset[0, 0]) < 1:
             set_timer("lane/ramp", 2.5, True)
 
         mean_ltan = np.mean(self.timescale_dataset[0:5, 1])
@@ -141,12 +141,17 @@ class Lane(TaskModule):
         if abs(gtan) <= 0.95 and abs(gtan-ltan) < 0.05:
             set_flag("lane/curve", False)
 
-        if is_not_flag("lane/curve") and is_timer_on("lane/ramp"):
-            delta_x = 0.8
-            delta_z = 0
-        elif is_flag("lane/curve"):
+        if is_flag("lane/curve"):
             delta_x = 0.8
             delta_z = (gtan/2)
+        elif is_timer_off("lane/ramp"):
+            pass
+        else:
+            delta_x = 0.8
+            delta_z = 0
+            if (not is_none[2]) and ltan_abs < 0.3:
+                set_timer("lane/front_blocked/wait", 2.8)
+                set_timer("lane/front_blocked", 2.8 + 1.75)
 
         if is_timer_on("lane/front_blocked/wait"):
             pass

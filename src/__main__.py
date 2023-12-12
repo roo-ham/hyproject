@@ -36,6 +36,7 @@ class Main:
             debug_text += debug_timers()
             debug_text += debug_flags()
             debug_text += lane.debug_junction()
+            debug_text += "%s\n"%self.basement.timetable
             print(debug_text)
 
     def restart(self):
