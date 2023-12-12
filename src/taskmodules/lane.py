@@ -40,11 +40,11 @@ class Lane(TaskModule):
                 self.timescale_dataset[1:60, key] = self.timescale_dataset[0:59, key]
                 self.timescale_dataset[0, key] = value
 
-    def show_dataset_graph(self, *items):
+    def show_dataset_graph(self, *dataset):
         items = enumerate(self.lines)
         self.fig.canvas.restore_region(self.backgrounds)
         for j, line in items:
-            line.set_ydata(items[j])
+            line.set_ydata(dataset[j])
             self.axes.draw_artist(line)
         self.fig.canvas.blit(self.axes.bbox)
     
