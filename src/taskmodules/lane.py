@@ -103,7 +103,9 @@ class Lane(TaskModule):
         elif gtan == None and ltan == None:
             set_timer("lane/ramp", 2.5, True)
 
-        self.append_latest_data(gtan, ltan, ltan_abs, self.timescale_dataset[0:10, 1], self.timescale_dataset[0:10, 2])
+        mean_ltan = np.mean(self.timescale_dataset[0:10, 1])
+        mean_ltan_abs = np.mean(self.timescale_dataset[0:10, 2])
+        self.append_latest_data(gtan, ltan, ltan_abs, mean_ltan, mean_ltan_abs)
         is_none = (gtan == None, ltan == None, ltan_abs == None)
         gtan = self.timescale_dataset[0, 0]
         ltan = self.timescale_dataset[0, 3]
