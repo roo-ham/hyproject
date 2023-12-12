@@ -39,7 +39,7 @@ def get_local_tangent(mask, identity_size, yellow:np.ndarray) -> tuple:
         y_set = (base.T * mask).T
         x_set, y_set = np.where(x_set, x_set, 1), np.where(x_set, y_set, 1000*y_set)
 
-        base2 = base #(x_set**2)+(y_set**2)
+        base2 = (x_set**2)+(y_set**2)
         identity_size_local = np.sum(base2)
 
         if identity_size_local == 0:
