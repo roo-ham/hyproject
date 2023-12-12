@@ -133,7 +133,7 @@ class Lane(TaskModule):
             pass
         else:
             delta_x = 1.3
-            delta_z = 0.0
+            delta_z = (gtan - ltan)/2
             if is_none[0]:
                 set_flag("lane/curve", True)
 
