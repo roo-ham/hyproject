@@ -41,6 +41,10 @@ class Wall(TaskModule):
         self.weight_z = 0.0
         self.z = 0.0
 
+        if is_timer_on("lane/junction/do/left") \
+            or is_timer_on("lane/junction/do/right"):
+            return
+
         left_points = []
         front_points = []
         right_points = []
@@ -63,7 +67,6 @@ class Wall(TaskModule):
             elif radius < 0.25 and abs(angle) < 0.5:
                 front_points.append(p2)
 
-
         side_blocked = [False, False]
 
         if len(left_points) > 10:
@@ -78,9 +81,7 @@ class Wall(TaskModule):
             self.z += SIDE_WALL_CONST - right_distance
             side_blocked[1] = True
 
-        if is_timer_on("lane/junction/do/left") \
-            or is_timer_on("lane/junction/do/right") \
-            or is_flag("tpark"):
+        if is_flag("tpark"):
             self.weight_z = 0
             self.z = 0
 
