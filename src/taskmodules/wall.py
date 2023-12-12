@@ -78,7 +78,9 @@ class Wall(TaskModule):
             self.z += SIDE_WALL_CONST - right_distance
             side_blocked[1] = True
 
-        if is_timer_on("lane/junction/do/left") or is_timer_on("lane/junction/do/right"):
+        if is_timer_on("lane/junction/do/left") \
+            or is_timer_on("lane/junction/do/right") \
+            or is_flag("tpark"):
             self.weight_z = 0
             self.z = 0
 

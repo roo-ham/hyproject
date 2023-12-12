@@ -47,15 +47,16 @@ class Main:
 base = Basement()
 try:
     rospy.init_node("hyproject_main")
-    Lane(base)
-    Wall(base)
-    TPark(base)
+    _lane = Lane(base)
+    _wall = Wall(base)
+    _tpark = TPark(base)
     main_object = Main(base)
     os.system("clear")
     print("Hello, Hanyang!")
     print("Ctrl+C to exit.")
     while not rospy.is_shutdown():
         main_object.update()
+        _tpark.update()
 except KeyboardInterrupt:
     pass
 

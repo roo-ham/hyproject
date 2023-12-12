@@ -112,7 +112,7 @@ class Lane(TaskModule):
         ltan_abs = self.timescale_dataset[0, 4]
 
         # 실시간으로 데이터베이스를 그래프로 보여준다.
-        self.show_dataset_graph(0, 1, 2)
+        self.show_dataset_graph(0, 3, 4)
         
         delta_x = 1.0
         delta_z = 0
