@@ -76,6 +76,10 @@ class Wall(TaskModule):
             self.z += 0.2 - right_distance
             side_blocked[1] = True
 
+        if is_timer_on("lane/junction/do/left") or is_timer_on("lane/junction/do/right"):
+            self.weight_z = 0
+            self.z = 0
+
         if not (side_blocked[0] | side_blocked[1]):
             set_timer("wall/side_blocked", 7, True)
 
