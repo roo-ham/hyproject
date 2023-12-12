@@ -34,12 +34,11 @@ def get_local_tangent(mask, identity_size, yellow:np.ndarray) -> tuple:
         if random.randint(1, identity_size) > 32:
             continue
         base = yellow[-2+x:3+x, -2+y:3+y].copy()
-        base[:, 2] = 0
         x_set = base * mask
         y_set = (base.T * mask).T
+        base2 = (x_set**2)+(y_set**2)
         x_set, y_set = np.where(x_set, x_set, 1), np.where(x_set, y_set, 1000*y_set)
 
-        base2 = (x_set**2)+(y_set**2)
         identity_size_local = np.sum(base2)
 
         if identity_size_local == 0:
