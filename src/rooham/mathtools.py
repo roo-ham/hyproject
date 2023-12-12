@@ -38,9 +38,7 @@ def get_local_tangent(mask, identity_size, yellow:np.ndarray) -> tuple:
         y_set = (base.T * mask).T
         base2 = (x_set**2)+(y_set**2)
         x_set, y_set = np.where(x_set, x_set, 1), np.where(x_set, y_set, 1000*y_set)
-
         identity_size_local = np.sum(base2)
-
         if identity_size_local == 0:
             continue
         atan = np.arctan(y_set/x_set) * base2
