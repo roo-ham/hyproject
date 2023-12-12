@@ -40,9 +40,9 @@ class Lane(TaskModule):
                 self.timescale_dataset[1:60, key] = self.timescale_dataset[0:59, key]
                 self.timescale_dataset[0, key] = value
 
-    def show_dataset_graph(self):
+    def show_dataset_graph(self, *indexs):
         items = enumerate(self.lines)
-        dataset = (self.timescale_dataset[:, 0], self.timescale_dataset[:, 3], self.timescale_dataset[:, 4])
+        dataset = [self.timescale_dataset[:, i] for i in indexs]
         self.fig.canvas.restore_region(self.backgrounds)
         for j, line in items:
             line.set_ydata(dataset[j])
@@ -108,19 +108,19 @@ class Lane(TaskModule):
         self.append_latest_data(gtan, ltan, ltan_abs, mean_ltan, mean_ltan_abs)
         is_none = (gtan == None, ltan == None, ltan_abs == None)
         gtan = self.timescale_dataset[0, 0]
-        ltan = self.timescale_dataset[0, 3]
-        ltan_abs = self.timescale_dataset[0, 4]
+        ltan = self.timescale_dataset[0, 1]
+        ltan_abs = self.timescale_dataset[0, 2]
 
         # 실시간으로 데이터베이스를 그래프로 보여준다.
-        self.show_dataset_graph()
+        self.show_dataset_graph(0, 1, 2)
         
         delta_x = 1.0
         delta_z = 0
         
         # 급커브 처리
-        if abs(gtan) <= 0.2:
+        if abs(gtan) <= 0.25:
             delta_x = 1.3
-            delta_z = gtan
+            delta_z = gtan - (ltan/2)
             set_flag("lane/junction", False)
         elif abs(gtan) <= 0.5:
             pass
@@ -137,7 +137,7 @@ class Lane(TaskModule):
             if is_none[0]:
                 set_flag("lane/curve", True)
 
-        if abs(gtan) <= 1.1 and abs(gtan-ltan) < 0.1:
+        if abs(gtan) <= 1.25 and abs(gtan-ltan) < 0.05:
             set_flag("lane/curve", False)
 
         if is_not_flag("lane/curve") and is_timer_on("lane/ramp"):
