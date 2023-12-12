@@ -149,7 +149,7 @@ class Lane(TaskModule):
         else:
             delta_x = 0.8
             delta_z = 0
-            if (not is_none[2]) and ltan_abs < 0.3:
+            if (not is_none[2]) and ltan_abs < 0.1:
                 set_timer("lane/front_blocked/wait", 2.8)
                 set_timer("lane/front_blocked", 2.8 + 1.75)
 
