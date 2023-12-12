@@ -127,7 +127,7 @@ class Lane(TaskModule):
         elif abs(gtan) <= 1.0:
             self.do_junction_curve(gtan)
             delta_x = 1.3
-            delta_z = (gtan - ltan)/2
+            delta_z = (gtan/4) - (ltan/2)
             set_flag_with_callback("lane/junction", True, self.basement.timetable_add, "junction")
         elif abs(gtan) <= 1.25:
             delta_x = 1.3
