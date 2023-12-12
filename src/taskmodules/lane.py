@@ -154,7 +154,8 @@ class Lane(TaskModule):
                 set_timer("lane/front_blocked", 2.8 + 1.75)
 
         if is_timer_on("lane/front_blocked/wait"):
-            pass
+            delta_x = 0.8
+            delta_z = 0
         elif is_timer_on("lane/front_blocked"):
             delta_x = 0.0
             delta_z = -1.0
