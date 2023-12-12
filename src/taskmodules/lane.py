@@ -16,7 +16,7 @@ class Lane(TaskModule):
         self.mask_global_x = np.arange(-128, 128)
         self.mask_global_y = np.arange(128-b_height, 128)
         self.mask_local = np.arange(-2, 3)
-        self.timescale_dataset = np.zeros((60,3), np.float32)
+        self.timescale_dataset = np.zeros((60,5), np.float32)
         self.x_data = range(60)
         self.junction_curve_direction = ""
 
@@ -40,8 +40,9 @@ class Lane(TaskModule):
                 self.timescale_dataset[1:60, key] = self.timescale_dataset[0:59, key]
                 self.timescale_dataset[0, key] = value
 
-    def show_dataset_graph(self, *dataset):
+    def show_dataset_graph(self):
         items = enumerate(self.lines)
+        dataset = (self.timescale_dataset[:, 0], self.timescale_dataset[:, 3], self.timescale_dataset[:, 4])
         self.fig.canvas.restore_region(self.backgrounds)
         for j, line in items:
             line.set_ydata(dataset[j])
@@ -102,14 +103,14 @@ class Lane(TaskModule):
         elif gtan == None and ltan == None:
             set_timer("lane/ramp", 2.5, True)
 
-        self.append_latest_data(gtan, ltan, ltan_abs)
+        self.append_latest_data(gtan, ltan, ltan_abs, self.timescale_dataset[0:10, 1], self.timescale_dataset[0:10, 2])
         is_none = (gtan == None, ltan == None, ltan_abs == None)
         gtan = self.timescale_dataset[0, 0]
-        ltan = np.mean(self.timescale_dataset[0:10, 1])
-        ltan_abs = np.mean(self.timescale_dataset[0:10, 2])
+        ltan = self.timescale_dataset[0, 3]
+        ltan_abs = self.timescale_dataset[0, 4]
 
         # 실시간으로 데이터베이스를 그래프로 보여준다.
-        self.show_dataset_graph(gtan, ltan, ltan_abs)
+        self.show_dataset_graph()
         
         delta_x = 1.0
         delta_z = 0
