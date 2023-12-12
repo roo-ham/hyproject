@@ -145,7 +145,7 @@ class Lane(TaskModule):
             delta_z = 0
         elif is_flag("lane/curve"):
             delta_x = 0.8
-            delta_z = gtan/2
+            delta_z = (gtan/2) - (ltan/4)
 
         if is_timer_on("lane/front_blocked/wait"):
             pass
