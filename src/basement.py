@@ -4,6 +4,8 @@ import rospy, roslaunch, os
 import numpy as np
 from pathlib import Path
 
+from rooham.timer import *
+
 class Basement:
     def __init__(self, name0:str = "release"):
         self.name = name0
@@ -48,3 +50,11 @@ class Basement:
         if not action in self.timetable:
             self.timetable[action] = list()
         self.timetable[action].append(rospy.get_time())
+
+    def delay_action_timers(self):
+        delay_timer("lane/junction/wait")
+        delay_timer("lane/junction/do/left")
+        delay_timer("lane/junction/do/right")
+        delay_timer("lane/front_blocked/forward")
+        delay_timer("lane/front_blocked")
+        delay_timer("tpark/action")

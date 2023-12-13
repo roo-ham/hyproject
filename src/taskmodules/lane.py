@@ -82,6 +82,7 @@ class Lane(TaskModule):
         if is_timer_on("marker/stop/phase1"):
             self.weight_x = 0
             self.weight_z = 0
+            self.basement.delay_action_timers()
             return
         
         # 차선의 형태를 계산한다, 그리고 하나의 데이터로 만든다.
@@ -191,24 +192,24 @@ class Lane(TaskModule):
         self.weight_x = 1.0
         self.weight_z = delta_z**2
         
-        if is_timer_off("wall/obstacle_ignore"):
-            self.weight_x = 0.0
-            if is_timer_on("wall/waiting_rotation"):
-                self.weight_z = 0.0
-            elif is_timer_on("lane/junction/do/left") \
-                    or is_timer_on("lane/junction/do/right") \
-                    or is_timer_on("lane/front_blocked") \
-                    or is_flag("tpark"):
-                delay_timer("lane/junction/wait")
-                delay_timer("lane/junction/do/left")
-                delay_timer("lane/junction/do/right")
-                delay_timer("lane/front_blocked/forward")
-                delay_timer("lane/front_blocked")
-                delay_timer("tpark/action")
-        elif is_flag("tpark"):
+        if is_flag("tpark"):
             self.weight_x = 0.0
             self.weight_z = 0.0
             if 0.5 < yellow_distribution and ltan_abs < 0.2:
                 set_flag("tpark/approach/end", True)
+
+        if is_timer_on("wall/obstacle_ignore"):
+            pass
+        elif is_timer_on("lane/junction/do/left") \
+                or is_timer_on("lane/junction/do/right") \
+                or is_timer_on("lane/front_blocked") \
+                or is_flag("tpark"):
+            self.basement.delay_action_timers()
+
+        if is_timer_off("wall/waiting_rotation"):
+            self.weight_x = 0.0
+        elif is_timer_off("wall/obstacle_ignore"):
+            self.weight_x = 0.0
+            self.weight_z = 0.0
 
         self.x, self.z = delta_x, delta_z
