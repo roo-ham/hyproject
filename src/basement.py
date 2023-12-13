@@ -53,8 +53,9 @@ class Basement:
 
     def delay_action_timers(self):
         delay_timer("lane/junction/wait")
-        delay_timer("lane/junction/do/left")
-        delay_timer("lane/junction/do/right")
+        delay_timer("lane/junction/rotation/left")
+        delay_timer("lane/junction/rotation/right")
+        delay_timer("lane/junction/do")
         delay_timer("lane/front_blocked/forward")
         delay_timer("lane/front_blocked")
         delay_timer("tpark/action")

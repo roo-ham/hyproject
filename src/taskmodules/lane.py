@@ -59,9 +59,7 @@ class Lane(TaskModule):
             return False
         elif self.junction_curve_direction != "":
             return False
-        elif is_timer_on("lane/junction/do/left"):
-            return False
-        elif is_timer_on("lane/junction/do/right"):
+        elif is_timer_on("lane/junction/do"):
             return False
         elif is_timer_on("lane/front_blocked"):
             return False
@@ -81,7 +79,8 @@ class Lane(TaskModule):
         elif direction == "right" and gtan > -0.75:
             return
         set_timer("lane/junction/wait", 3.6)
-        set_timer("lane/junction/do/%s"%direction, 3.6 + 2.0)
+        set_timer("lane/junction/rotation/%s"%direction, 3.6 + 2.0)
+        set_timer("lane/junction/do", 3.6 + 3.0)
         self.junction_curve_direction = ""
 
     def update(self, identity_size, yellow:np.ndarray, white):
@@ -176,7 +175,6 @@ class Lane(TaskModule):
         elif is_timer_on("lane/front_blocked"):
             delta_x = 0.0
             delta_z = -0.785
-            self.timescale_dataset[0, 0] = 0
 
         if abs(gtan) <= 1.0:
             self.do_junction_curve(gtan, is_none[0])
@@ -184,16 +182,19 @@ class Lane(TaskModule):
         if is_timer_on("lane/junction/wait"):
             delta_x = 0.65
             delta_z = 0.0
-        elif is_timer_on("lane/junction/do/left"):
+        elif is_timer_on("lane/junction/rotation/left"):
             delta_x = 0.0
             delta_z = 0.785
             set_flag("lane/curve", False)
-            self.timescale_dataset[0, 0] = 0
-        elif is_timer_on("lane/junction/do/right"):
+        elif is_timer_on("lane/junction/rotation/right"):
             delta_x = 0.0
             delta_z = -0.785
             set_flag("lane/curve", False)
-            self.timescale_dataset[0, 0] = 0
+        elif is_timer_on("lane/junction/do"):
+            delta_x = 0
+            delta_z = 0
+            set_flag("lane/curve", False)
+
 
         self.weight_x = 1.0
         self.weight_z = delta_z**2
@@ -210,8 +211,7 @@ class Lane(TaskModule):
 
         if is_timer_on("wall/obstacle_ignore"):
             pass
-        elif is_timer_on("lane/junction/do/left") \
-                or is_timer_on("lane/junction/do/right") \
+        elif is_timer_on("lane/junction/do") \
                 or is_timer_on("lane/front_blocked") \
                 or is_flag("tpark"):
             self.basement.delay_action_timers()

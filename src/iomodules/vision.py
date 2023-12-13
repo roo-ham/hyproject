@@ -133,8 +133,7 @@ class VisionMarker(IOModule):
 
             new_marker_storage[marker_id] = marker_pos_x
             
-            if is_timer_on("lane/junction/do/left") \
-                or is_timer_on("lane/junction/do/right"):
+            if is_timer_on("lane/junction/do"):
                 pass
 
             elif marker_id == 1:
