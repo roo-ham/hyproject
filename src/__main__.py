@@ -38,8 +38,8 @@ class Main:
             debug_text += debug_flags()
             debug_text += _lane.debug_junction()
             debug_text += _tpark.debug_tpark()
-            if "junction" in self.basement.timetable:
-                debug_text += "junction : %d\n" % len(self.basement.timetable)
+            for key, value in self.basement.timetable.items():
+                debug_text += "%s : %d\n" % (key, len(value))
             print(debug_text)
 
     def restart(self):

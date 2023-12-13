@@ -26,7 +26,7 @@ class TPark(TaskModule):
             set_timer("tpark/%s"%tpl[0], tpl[2])
         self.phase = (phase_id, tpl[0])
     def debug_tpark(self):
-        return "%s\n"%self.phase
+        return "tpark_phase : %d, %s\n"%self.phase
     def update(self):
         tpl = self.phase_list[self.phase[0]]
         if tpl[1]:

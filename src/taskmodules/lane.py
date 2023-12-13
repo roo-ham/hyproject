@@ -62,7 +62,7 @@ class Lane(TaskModule):
         return True
     
     def debug_junction(self):
-        return "%s\n"%(self.junction_curve_direction)
+        return "junction_direction : %s\n"%(self.junction_curve_direction)
 
     def do_junction_curve(self, gtan, is_none):
         direction = self.junction_curve_direction
