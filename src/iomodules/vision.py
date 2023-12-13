@@ -128,7 +128,7 @@ class VisionMarker(IOModule):
             if marker_id == 3 and self.tpark_storage.phase[1] == "ready":
                 self.tpark_storage.set_phase_from_id(1)
 
-            if marker_pos_x > 1.0:
+            if marker_pos_x > 0.9:
                 continue
 
             new_marker_storage[marker_id] = marker_pos_x
