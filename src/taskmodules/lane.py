@@ -213,7 +213,7 @@ class Lane(TaskModule):
             self.weight_z = 0.0
             if 0.5 < yellow_distribution and ltan_abs < 0.2:
                 set_flag("tpark/approach/end", True)
-            if is_not_flag("tpark/approach/end") and abs(gtan) > 1.0:
+            if is_not_flag("tpark/approach/end") and abs(gtan) > 0.5:
                 self.weight_z = 1.0
                 delta_z = gtan/4
 
