@@ -167,18 +167,18 @@ class Lane(TaskModule):
         if is_timer_on("lane/front_blocked/wait1"):
             pass
         elif (not is_none[0]) or (not is_none[1]):
-            set_timer("lane/front_blocked/wait2", -1)
+            pass
         elif is_timer_on("lane/front_blocked/wait2"):
             set_timer("lane/front_blocked/wait2", -1)
             set_timer("lane/front_blocked/wait", 1.8)
-            set_timer("lane/front_blocked", 1.8 + 1.75)
+            set_timer("lane/front_blocked", 1.8 + 3.5)
         
         if is_timer_on("lane/front_blocked/forward"):
             delta_x = 0.8
             delta_z = 0
         elif is_timer_on("lane/front_blocked"):
             delta_x = 0.0
-            delta_z = -1.0
+            delta_z = -0.425
             self.timescale_dataset[0, 0] = -0.1
 
         if abs(gtan) <= 1.0:
