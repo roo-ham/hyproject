@@ -133,9 +133,8 @@ class VisionMarker(IOModule):
 
             new_marker_storage[marker_id] = marker_pos_x
             
-            if is_timer_on("lane/junction/do"):
+            if is_timer_on("lane/junction/do") or is_timer_on("tpark"):
                 pass
-
             elif marker_id == 1:
                 self.lane_storage.junction_curve_direction = "right"
             elif marker_id == 2:
