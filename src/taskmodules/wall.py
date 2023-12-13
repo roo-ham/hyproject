@@ -43,7 +43,7 @@ class Wall(TaskModule):
         left_distance = 0.0
         right_distance = 0.0
 
-        SIDE_WALL_CONST = 0.35
+        SIDE_WALL_CONST = 0.3
 
         for p1, p2 in zip(polar_pos, orthogonal_pos):
             radius, angle = p1
