@@ -41,6 +41,9 @@ class Wall(TaskModule):
                 or is_flag("tpark"):
             set_timer("wall/obstacle_ignore", 1, True)
             return
+        elif is_timer_on("lane/front_blocked"):
+            set_timer("wall/obstacle_ignore", 1, True)
+            return
 
         left_points = []
         front_points = []
@@ -88,9 +91,6 @@ class Wall(TaskModule):
                 set_timer("lane/lane_exception/right", 1)
 
         if is_timer_on("wall/obstacle_ignore"):
-            pass
-        elif is_timer_on("lane/front_blocked"):
-            self.weight_z = 0.0
             pass
         elif is_flag("lane/curve"):
             pass
