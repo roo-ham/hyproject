@@ -194,6 +194,8 @@ class Lane(TaskModule):
             delta_x = 0
             delta_z = 0
             set_flag("lane/curve", False)
+            if is_flag("tpark/begin"):
+                set_flag_with_callback("tpark", True, self.basement.timetable_add, "tpark")
 
 
         self.weight_x = 1.0

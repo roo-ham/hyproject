@@ -49,8 +49,6 @@ class TPark(TaskModule):
         elif phase_name == "approach":
             self.x = 0.8
             self.z = 0
-            if is_timer_off("lane/junction/do"):
-                set_flag_with_callback("tpark", True, self.basement.timetable_add, "tpark")
             if is_flag("tpark/approach/end"):
                 self.set_phase_from_id(2)
         elif phase_name == "done":

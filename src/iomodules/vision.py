@@ -126,6 +126,7 @@ class VisionMarker(IOModule):
                 continue
 
             if marker_id == 3 and self.tpark_storage.phase[1] == "ready":
+                set_flag("tpark/begin")
                 self.tpark_storage.set_phase_from_id(1)
 
             if marker_pos_x > 0.9:
