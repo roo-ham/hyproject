@@ -199,7 +199,7 @@ class Lane(TaskModule):
                 set_flag("tpark/approach/end", True)
             if is_not_flag("tpark/approach/end"):
                 self.weight_z = 1.0
-                delta_z = ltan
+                delta_z = gtan-ltan
 
         if is_timer_on("wall/obstacle_ignore"):
             pass
