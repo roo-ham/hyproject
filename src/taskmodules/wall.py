@@ -14,6 +14,8 @@ class Wall(TaskModule):
     def do_front(self, front_points):
         if is_timer_on("wall/obstacle_ignore"):
             return
+        if is_timer_on("lane/front_blocked/wait2"):
+            return
         elif is_flag("lane/curve"):
             return
         elif is_flag("lane/ramp"):

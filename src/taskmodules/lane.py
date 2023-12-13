@@ -160,12 +160,20 @@ class Lane(TaskModule):
         else:
             delta_x = 0.8
             delta_z = 0
-            if not is_none[2] and ltan_abs < 0.3:
-                pass
-                #set_timer("lane/front_blocked/wait", 2.8)
-                #set_timer("lane/front_blocked", 2.8 + 1.75)
+            if not is_none[2] and ltan_abs < 0.1:
+                set_timer("lane/front_blocked/wait1", 1.0)
+                set_timer("lane/front_blocked/wait2", 2.0)
+
+        if is_timer_on("lane/front_blocked/wait1"):
+            pass
+        elif (not is_none[0]) or (not is_none[1]):
+            set_timer("lane/front_blocked/wait2", -1)
+        elif is_timer_on("lane/front_blocked/wait2"):
+            set_timer("lane/front_blocked/wait2", -1)
+            set_timer("lane/front_blocked/wait", 1.8)
+            set_timer("lane/front_blocked", 1.8 + 1.75)
         
-        if is_timer_on("lane/front_blocked/wait"):
+        if is_timer_on("lane/front_blocked/forward"):
             delta_x = 0.8
             delta_z = 0
         elif is_timer_on("lane/front_blocked"):
@@ -181,11 +189,11 @@ class Lane(TaskModule):
             delta_z = 0.0
         elif is_timer_on("lane/junction/do/left"):
             delta_x = 0.0
-            delta_z = 0.45
+            delta_z = 0.425
             self.timescale_dataset[0, 0] = 0.1
         elif is_timer_on("lane/junction/do/right"):
             delta_x = 0.0
-            delta_z = -0.45
+            delta_z = -0.425
             self.timescale_dataset[0, 0] = -0.1
 
         self.weight_x = 1.0
