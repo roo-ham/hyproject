@@ -142,14 +142,14 @@ class Lane(TaskModule):
             set_flag_with_callback("lane/junction", True, self.basement.timetable_add, "junction")
         elif abs(gtan) <= 1.25:
             delta_x = 1.3
-            delta_z = ltan
+            delta_z = ltan/2
         else:
             delta_x = 1.3
             delta_z = ltan
             if is_none[0]:
                 set_flag("lane/curve", True)
 
-        if abs(gtan) <= 1.0 and abs(gtan-ltan) < 0.4:
+        if abs(gtan) <= 1.0 and abs(gtan-ltan) < 0.3:
             set_flag("lane/curve", False)
         
         if is_flag("lane/curve"):
