@@ -122,14 +122,16 @@ class VisionMarker(IOModule):
 
         for marker in data.markers:
             marker_id, marker_pos_x, marker_pos_y = marker.id, marker.pose.pose.position.x, marker.pose.pose.position.y
-            if marker_pos_x > 1.0:
+            if marker_pos_x > 1.2:
                 continue
-            self.debug_text = "%f"%marker_pos_y
-
-            new_marker_storage[marker_id] = marker_pos_x
 
             if marker_id == 3 and self.tpark_storage.phase[1] == "ready":
                 self.tpark_storage.set_phase_from_id(1)
+
+            if marker_pos_x > 1.0:
+                continue
+
+            new_marker_storage[marker_id] = marker_pos_x
             
             if is_timer_on("lane/junction/do/left") \
                 or is_timer_on("lane/junction/do/right"):
