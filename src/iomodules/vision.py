@@ -123,7 +123,7 @@ class VisionMarker(IOModule):
             marker_id, marker_pos_x, marker_pos_y = marker.id, marker.pose.pose.position.x, marker.pose.pose.position.y
             if marker_pos_x > 1.0:
                 continue
-            elif abs(marker_pos_y) > 0.3:
+            elif abs(marker_pos_y) > 0.5:
                 continue
 
             new_marker_storage[marker_id] = marker_pos_x
