@@ -81,10 +81,10 @@ class Wall(TaskModule):
             elif side_blocked[1]:
                 set_timer("lane/lane_exception/right", 1)
 
-        if is_timer_on("wall/obstacle_ignore"):
-            return
-        elif is_flag("lane/curve"):
+        if is_flag("lane/curve"):
             pass
+        elif is_timer_on("wall/obstacle_ignore"):
+            return
         elif len(front_points) > 2:
             self.do_front(front_points)
             return
