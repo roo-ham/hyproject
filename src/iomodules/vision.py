@@ -114,6 +114,7 @@ class VisionMarker(IOModule):
         self.marker_set = dict()
         self.lane_storage:Lane = base.taskmodules["Lane"]
         self.tpark_storage:TPark = base.taskmodules["TPark"]
+        self.debug_text = ""
 
     def callback(self, data):
         super().callback(data)
@@ -123,8 +124,7 @@ class VisionMarker(IOModule):
             marker_id, marker_pos_x, marker_pos_y = marker.id, marker.pose.pose.position.x, marker.pose.pose.position.y
             if marker_pos_x > 1.0:
                 continue
-            elif abs(marker_pos_y) > 0.5:
-                continue
+            self.debug_text = "%f"%marker_pos_y
 
             new_marker_storage[marker_id] = marker_pos_x
 
@@ -163,7 +163,7 @@ class VisionMarker(IOModule):
             self.tpark_storage.set_phase_from_id(2)
 
     def debug_markers(self):
-        debug_text = ""
+        debug_text = self.debug_text + "\n"
         for marker in self.marker_set.items():
             debug_text += "%10s : %10.3f"%marker + "\n"
         return debug_text
