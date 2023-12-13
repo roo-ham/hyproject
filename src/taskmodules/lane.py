@@ -80,7 +80,7 @@ class Lane(TaskModule):
             return
         set_timer("lane/junction/wait", 3.6)
         set_timer("lane/junction/rotation/%s"%direction, 3.6 + 2.0)
-        set_timer("lane/junction/do", 3.6 + 3.0)
+        set_timer("lane/junction/do", 3.6 + 5.0)
         self.junction_curve_direction = ""
 
     def update(self, identity_size, yellow:np.ndarray, white):
