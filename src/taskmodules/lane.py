@@ -19,6 +19,7 @@ class Lane(TaskModule):
         self.timescale_dataset = np.zeros((60,5), np.float32)
         self.x_data = range(60)
         self.junction_curve_direction = ""
+        self.enabled = False
 
         self.fig, self.axes = plt.subplots()
         styles = ['r-', 'g-', 'y-']
@@ -61,7 +62,7 @@ class Lane(TaskModule):
         return True
     
     def debug_junction(self):
-        return "%s"%(self.junction_curve_direction)
+        return "%s\n"%(self.junction_curve_direction)
 
     def do_junction_curve(self, gtan, is_none):
         direction = self.junction_curve_direction
@@ -90,6 +91,11 @@ class Lane(TaskModule):
         if (identity_size > 0):
             gtan = get_global_tangent(self.mask_global_x, self.mask_global_y, identity_size, yellow)
             ltan, ltan_abs = get_local_tangent(self.mask_local, identity_size, yellow)
+            self.enabled = True
+        elif not self.enabled:
+            self.weight_x = 0
+            self.weight_z = 0
+            return
 
         if not self.on_curve_transition(gtan):
             pass
@@ -152,10 +158,10 @@ class Lane(TaskModule):
         else:
             delta_x = 0.8
             delta_z = 0
-            if (not is_none[0]) and (not is_none[2]) and ltan_abs < 0.2:
+            if not is_none[2] and ltan_abs < 0.3:
                 set_timer("lane/front_blocked/wait", 2.8)
                 set_timer("lane/front_blocked", 2.8 + 1.75)
-
+        
         if is_timer_on("lane/front_blocked/wait"):
             delta_x = 0.8
             delta_z = 0

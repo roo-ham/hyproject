@@ -113,6 +113,7 @@ class VisionMarker(IOModule):
         self.sub_marker = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.callback)
         self.marker_set = dict()
         self.lane_storage:Lane = base.taskmodules["Lane"]
+        self.tpark_storage:TPark = base.taskmodules["TPark"]
 
     def callback(self, data):
         super().callback(data)
@@ -133,7 +134,8 @@ class VisionMarker(IOModule):
                 self.lane_storage.junction_curve_direction = "right"
             elif marker_id == 2:
                 self.lane_storage.junction_curve_direction = "left"
-            elif marker_id == 3:
+            elif marker_id == 3 and self.tpark_storage.phase == "ready":
+                self.tpark_storage.phase = "approach"
                 set_flag_with_callback("tpark", True, self.basement.timetable_add, "tpark")
 
             if marker_id in self.marker_set:

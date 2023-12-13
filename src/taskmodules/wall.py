@@ -16,6 +16,10 @@ class Wall(TaskModule):
             return
         elif is_flag("lane/curve"):
             return
+        elif is_flag("lane/ramp"):
+            return
+        elif is_flag("lane/front_blocked"):
+            return
 
         wall_angle = get_wall_angle(front_points)
 
