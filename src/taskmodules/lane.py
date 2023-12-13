@@ -162,12 +162,12 @@ class Lane(TaskModule):
             delta_z = 0
             if not is_none[2] and ltan_abs < 0.1:
                 set_timer("lane/front_blocked/wait1", 0.5)
-                set_timer("lane/front_blocked/wait2", 2.0)
+                set_timer("lane/front_blocked/wait2", 1.0)
 
         if is_timer_on("lane/front_blocked/wait1"):
             pass
         elif (not is_none[0]) or (not is_none[1]):
-            pass
+            set_timer("lane/front_blocked/wait2", -1)
         elif is_timer_on("lane/front_blocked/wait2"):
             set_timer("lane/front_blocked/wait2", -1)
             set_timer("lane/front_blocked/forward", 2.3)
