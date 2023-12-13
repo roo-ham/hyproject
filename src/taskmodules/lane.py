@@ -75,7 +75,7 @@ class Lane(TaskModule):
         elif direction == "right" and gtan > -0.75:
             return
         set_timer("lane/junction/wait", 3.6)
-        set_timer("lane/junction/do/%s"%direction, 3.6 + 3.5)
+        set_timer("lane/junction/do/%s"%direction, 3.6 + 2.0)
         self.junction_curve_direction = ""
 
     def update(self, identity_size, yellow:np.ndarray):
@@ -177,11 +177,11 @@ class Lane(TaskModule):
             delta_z = 0.0
         elif is_timer_on("lane/junction/do/left"):
             delta_x = 0.0
-            delta_z = 0.425
+            delta_z = 0.785
             self.timescale_dataset[0, 0] = 0.1
         elif is_timer_on("lane/junction/do/right"):
             delta_x = 0.0
-            delta_z = -0.425
+            delta_z = -0.785
             self.timescale_dataset[0, 0] = -0.1
 
         self.weight_x = 1.0
