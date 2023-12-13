@@ -197,6 +197,9 @@ class Lane(TaskModule):
             self.weight_z = 0.0
             if 0.5 < yellow_distribution and ltan_abs < 0.2:
                 set_flag("tpark/approach/end", True)
+            if is_not_flag("tpark/approach/end"):
+                self.weight_z = 1.0
+                delta_z = ltan
 
         if is_timer_on("wall/obstacle_ignore"):
             pass
