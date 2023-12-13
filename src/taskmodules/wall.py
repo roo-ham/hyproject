@@ -83,10 +83,10 @@ class Wall(TaskModule):
 
         if is_flag("lane/curve"):
             pass
-        elif is_timer_on("wall/obstacle_ignore"):
-            return
         elif len(front_points) > 2:
+            if is_timer_on("wall/obstacle_ignore"):
+                return
             self.do_front(front_points)
-            return
+            
         set_timer("wall/obstacle_ignore", 0.2, True)
         set_timer("wall/waiting_rotation", 5, True)
