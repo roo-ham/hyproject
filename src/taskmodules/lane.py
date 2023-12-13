@@ -179,11 +179,13 @@ class Lane(TaskModule):
         if abs(gtan) <= 1.0:
             self.do_junction_curve(gtan, is_none[0])
 
+        set_flag_tpark = lambda : set_flag_with_callback("tpark", True, self.basement.timetable_add, "tpark")
+
         if is_timer_on("lane/junction/wait"):
             delta_x = 0.65
             delta_z = 0.0
             if is_flag("tpark/begin"):
-                set_flag_with_callback("tpark", True, self.basement.timetable_add, "tpark")
+                set_flag_tpark()
         elif is_timer_on("lane/junction/rotation/left"):
             delta_x = 0.0
             delta_z = 0.785
@@ -197,9 +199,9 @@ class Lane(TaskModule):
             delta_z = 0
             set_flag("lane/curve", False)
             if is_flag("tpark/begin"):
-                set_flag_with_callback("tpark", True, self.basement.timetable_add, "tpark")
+                set_flag_tpark()
         elif is_flag("tpark/begin"):
-            set_flag_with_callback("tpark", True, self.basement.timetable_add, "tpark")
+            set_flag_tpark()
 
 
         self.weight_x = 1.0
