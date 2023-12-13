@@ -111,7 +111,7 @@ class Lane(TaskModule):
                 gtan = np.pi/2
             gtan = np.pi/2 if gtan < 0 else gtan
         elif gtan == None and ltan == None and abs(self.timescale_dataset[0, 0]) < 1 and white > 0.5:
-            set_timer("lane/ramp", 2.5, True)
+            set_timer("lane/ramp", 3.0, True)
 
         mean_ltan = np.mean(self.timescale_dataset[0:5, 1])
         mean_ltan_abs = np.mean(self.timescale_dataset[0:5, 2])
@@ -154,7 +154,7 @@ class Lane(TaskModule):
         if is_timer_on("lane/ramp"):
             delta_x = 0.8
             delta_z = 0
-            
+
         if 0.5 < yellow_distribution and ltan_abs < 0.2:
             set_timer("lane/front_blocked/forward", 1.3)
             set_timer("lane/front_blocked", 1.3 + 2.0)
