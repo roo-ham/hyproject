@@ -80,19 +80,6 @@ class Wall(TaskModule):
                 set_timer("lane/lane_exception/left", 1)
             elif side_blocked[1]:
                 set_timer("lane/lane_exception/right", 1)
-        
-        if is_timer_on("lane/junction/do/left") \
-                or is_timer_on("lane/junction/do/right") \
-                or is_timer_on("lane/front_blocked") \
-                or is_flag("tpark"):
-            delay_timer("lane/junction/wait")
-            delay_timer("lane/junction/do/left")
-            delay_timer("lane/junction/do/right")
-            delay_timer("lane/front_blocked/forward")
-            delay_timer("lane/front_blocked")
-            delay_timer("tpark/action")
-            self.weight_z = 0
-            self.z = 0
 
         if is_timer_on("wall/obstacle_ignore"):
             pass

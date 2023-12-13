@@ -195,6 +195,16 @@ class Lane(TaskModule):
             self.weight_x = 0.0
             if is_timer_on("wall/waiting_rotation"):
                 self.weight_z = 0.0
+            elif is_timer_on("lane/junction/do/left") \
+                    or is_timer_on("lane/junction/do/right") \
+                    or is_timer_on("lane/front_blocked") \
+                    or is_flag("tpark"):
+                delay_timer("lane/junction/wait")
+                delay_timer("lane/junction/do/left")
+                delay_timer("lane/junction/do/right")
+                delay_timer("lane/front_blocked/forward")
+                delay_timer("lane/front_blocked")
+                delay_timer("tpark/action")
         elif is_flag("tpark"):
             self.weight_x = 0.0
             self.weight_z = 0.0
