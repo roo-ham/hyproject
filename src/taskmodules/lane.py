@@ -163,7 +163,7 @@ class Lane(TaskModule):
             delta_z = 0
             if 0.5 < yellow_distribution and ltan_abs < 0.2:
                 set_timer("lane/front_blocked/forward", 1.0)
-                set_timer("lane/front_blocked", 1.0 + 3.0)
+                set_timer("lane/front_blocked", 1.0 + 2.0)
         
         if is_timer_on("lane/front_blocked/forward"):
             delta_x = 0.8
