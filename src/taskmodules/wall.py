@@ -53,7 +53,7 @@ class Wall(TaskModule):
             elif radius < SIDE_WALL_CONST and angle < -0.4:
                 right_points.append(p2)
                 right_distance += radius
-            if radius < 0.3 and abs(angle) < 0.3:
+            if radius < 0.4 and abs(angle) < 0.3:
                 front_points.append(p2)
             elif radius < 0.25 and abs(angle) < 0.5:
                 front_points.append(p2)
