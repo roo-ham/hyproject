@@ -28,6 +28,11 @@ class TPark(TaskModule):
     def debug_tpark(self):
         return "tpark_phase : %d, %s\n"%self.phase
     def update(self):
+        if is_timer_on("marker/stop/phase1"):
+            self.weight_x = 0
+            self.weight_z = 0
+            return
+        
         tpl = self.phase_list[self.phase[0]]
         if tpl[1]:
             pass
