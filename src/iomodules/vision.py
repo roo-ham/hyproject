@@ -157,11 +157,6 @@ class VisionMarker(IOModule):
 
         self.marker_set = new_marker_storage
 
-        if (not (3 in self.marker_set)) \
-            and is_flag("tpark") \
-                and self.tpark_storage.phase[1] == "approach":
-            self.tpark_storage.set_phase_from_id(2)
-
     def debug_markers(self):
         debug_text = self.debug_text + "\n"
         for marker in self.marker_set.items():
