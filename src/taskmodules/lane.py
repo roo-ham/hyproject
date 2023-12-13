@@ -170,7 +170,7 @@ class Lane(TaskModule):
             pass
         elif is_timer_on("lane/front_blocked/wait2"):
             set_timer("lane/front_blocked/wait2", -1)
-            set_timer("lane/front_blocked/wait", 2.3)
+            set_timer("lane/front_blocked/forward", 2.3)
             set_timer("lane/front_blocked", 2.3 + 3.5)
         
         if is_timer_on("lane/front_blocked/forward"):
