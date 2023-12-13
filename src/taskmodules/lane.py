@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from rooham.flag import *
 from rooham.timer import *
-from rooham.mathtools import get_global_tangent, get_local_tangent
+from rooham.mathtools import *
 from basement import Basement
 from module import TaskModule
 
@@ -122,6 +122,7 @@ class Lane(TaskModule):
         gtan = self.timescale_dataset[0, 0]
         ltan = self.timescale_dataset[0, 3]
         ltan_abs = self.timescale_dataset[0, 4]
+        yellow_distribution = get_yellow_distribution(yellow, self.basement.bottom_height)
 
         # 실시간으로 데이터베이스를 그래프로 보여준다.
         self.show_dataset_graph(0, 3, 4)
@@ -160,18 +161,9 @@ class Lane(TaskModule):
         else:
             delta_x = 0.8
             delta_z = 0
-            if not is_none[2] and ltan_abs < 0.1:
-                set_timer("lane/front_blocked/wait1", 0.5)
-                set_timer("lane/front_blocked/wait2", 1.0)
-
-        if is_timer_on("lane/front_blocked/wait1"):
-            pass
-        elif (not is_none[0]) or (not is_none[1]):
-            set_timer("lane/front_blocked/wait2", -1)
-        elif is_timer_on("lane/front_blocked/wait2"):
-            set_timer("lane/front_blocked/wait2", -1)
-            set_timer("lane/front_blocked/forward", 2.3)
-            set_timer("lane/front_blocked", 2.3 + 3.5)
+            if 0.75 < yellow_distribution and ltan_abs < 0.2:
+                set_timer("lane/front_blocked/forward", 2.8)
+                set_timer("lane/front_blocked", 2.8 + 3.5)
         
         if is_timer_on("lane/front_blocked/forward"):
             delta_x = 0.8

@@ -48,3 +48,8 @@ def get_local_tangent(mask, identity_size, yellow:np.ndarray) -> tuple:
     l_tan /= identity_size
     l_tan_abs /= identity_size
     return l_tan, l_tan_abs
+
+def get_yellow_distribution(yellow, b_height):
+    y2 = yellow.T @ np.ones(b_height)
+    y2 = np.where(y2 != 0, 1, 0)
+    return np.mean(y2)
