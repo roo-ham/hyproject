@@ -161,16 +161,16 @@ class Lane(TaskModule):
         else:
             delta_x = 0.8
             delta_z = 0
-            if 0.75 < yellow_distribution and ltan_abs < 0.2:
+            if 0.5 < yellow_distribution and ltan_abs < 0.2:
                 set_timer("lane/front_blocked/forward", 1.0)
-                set_timer("lane/front_blocked", 1.0 + 3.5)
+                set_timer("lane/front_blocked", 1.0 + 2.0)
         
         if is_timer_on("lane/front_blocked/forward"):
             delta_x = 0.8
             delta_z = 0
         elif is_timer_on("lane/front_blocked"):
             delta_x = 0.0
-            delta_z = -0.425
+            delta_z = -0.785
             self.timescale_dataset[0, 0] = -0.1
 
         if abs(gtan) <= 1.0:
