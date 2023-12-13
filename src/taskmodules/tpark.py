@@ -55,5 +55,5 @@ class TPark(TaskModule):
             self.weight_x = 0.0
             self.weight_z = 0.0
         else:
-            self.weight_x = 10.0
-            self.weight_z = 10.0
+            self.weight_x = 1.0
+            self.weight_z = 1.0
