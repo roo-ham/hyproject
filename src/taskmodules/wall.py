@@ -90,6 +90,7 @@ class Wall(TaskModule):
         if is_timer_on("wall/obstacle_ignore"):
             pass
         elif is_timer_on("lane/front_blocked"):
+            self.weight_z = 0.0
             pass
         elif is_flag("lane/curve"):
             pass
