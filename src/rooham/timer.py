@@ -23,6 +23,12 @@ def set_timer(key, seconds, force=False):
     global __timer
     return __set_timer(__timer, key, seconds, force)
 
+def delay_timer(key):
+    global __timer
+    if is_timer_off(key):
+        return
+    __timer[key] += 1/30
+
 def debug_timers():
     global __timer
     debug_text = ""

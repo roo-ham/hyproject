@@ -23,7 +23,7 @@ class TPark(TaskModule):
     def set_phase_from_id(self, phase_id):
         tpl = self.phase_list[phase_id]
         if not tpl[1]:
-            set_timer("tpark/%s"%tpl[0], tpl[2])
+            set_timer("tpark/action", tpl[2])
         self.phase = (phase_id, tpl[0])
     def debug_tpark(self):
         return "tpark_phase : %d, %s\n"%self.phase
@@ -31,7 +31,7 @@ class TPark(TaskModule):
         tpl = self.phase_list[self.phase[0]]
         if tpl[1]:
             pass
-        elif is_timer_off("tpark/%s"%self.phase[1]):
+        elif is_timer_off("tpark/action"):
             self.set_phase_from_id(self.phase[0]+1)
         else:
             self.x = tpl[3]

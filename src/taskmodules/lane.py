@@ -162,8 +162,8 @@ class Lane(TaskModule):
             delta_x = 0.8
             delta_z = 0
             if 0.5 < yellow_distribution and ltan_abs < 0.2:
-                set_timer("lane/front_blocked/forward", 1.0)
-                set_timer("lane/front_blocked", 1.0 + 2.0)
+                set_timer("lane/front_blocked/forward", 1.5)
+                set_timer("lane/front_blocked", 1.5 + 2.0)
         
         if is_timer_on("lane/front_blocked/forward"):
             delta_x = 0.8
@@ -190,9 +190,11 @@ class Lane(TaskModule):
 
         self.weight_x = 1.0
         self.weight_z = delta_z**2
-
+        
         if is_timer_off("wall/obstacle_ignore"):
             self.weight_x = 0.0
+            if is_timer_on("wall/waiting_rotation"):
+                self.weight_z = 0.0
         elif is_flag("tpark"):
             self.weight_x = 0.0
             self.weight_z = 0.0
