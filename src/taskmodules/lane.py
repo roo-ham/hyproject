@@ -151,17 +151,15 @@ class Lane(TaskModule):
         if abs(gtan) <= 0.95 and abs(gtan-ltan) < 0.2:
             set_flag("lane/curve", False)
         
-        if is_flag("lane/curve"):
-            delta_x = 0.8
-            delta_z = (gtan/2)
-        elif is_timer_off("lane/ramp"):
-            pass
-        else:
+        if is_timer_on("lane/ramp"):
             delta_x = 0.8
             delta_z = 0
             if 0.5 < yellow_distribution and ltan_abs < 0.2:
                 set_timer("lane/front_blocked/forward", 1.3)
                 set_timer("lane/front_blocked", 1.3 + 2.0)
+        elif is_flag("lane/curve"):
+            delta_x = 0.8
+            delta_z = (gtan/2)
         
         if is_timer_on("lane/front_blocked/forward"):
             delta_x = 0.8
