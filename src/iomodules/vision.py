@@ -120,23 +120,25 @@ class VisionMarker(IOModule):
         new_marker_storage = dict()
 
         for marker in data.markers:
-            marker_id, marker_distance = marker.id, marker.pose.pose.position.x
-            if marker_distance > 1.0:
+            marker_id, marker_pos_x, marker_pos_y = marker.id, marker.pose.pose.position.x, marker.pose.pose.position.y
+            if marker_pos_x > 1.0:
+                continue
+            elif abs(marker_pos_y) > 0.3:
                 continue
 
-            new_marker_storage[marker_id] = marker_distance
+            new_marker_storage[marker_id] = marker_pos_x
 
+            if marker_id == 3 and self.tpark_storage.phase[1] == "ready":
+                self.tpark_storage.set_phase_from_id(1)
+            
             if is_timer_on("lane/junction/do/left") \
-                or is_timer_on("lane/junction/do/right") \
-                    or is_flag("tpark"):
+                or is_timer_on("lane/junction/do/right"):
                 pass
+
             elif marker_id == 1:
                 self.lane_storage.junction_curve_direction = "right"
             elif marker_id == 2:
                 self.lane_storage.junction_curve_direction = "left"
-            elif marker_id == 3 and self.tpark_storage.phase == "ready":
-                self.tpark_storage.phase = "approach"
-                set_flag_with_callback("tpark", True, self.basement.timetable_add, "tpark")
 
             if marker_id in self.marker_set:
                 continue
@@ -146,7 +148,7 @@ class VisionMarker(IOModule):
 
 
         for marker in self.marker_set.items():
-            marker_id, marker_distance = marker
+            marker_id, marker_pos_x = marker
             if marker_id in new_marker_storage:
                 continue
 
@@ -154,6 +156,11 @@ class VisionMarker(IOModule):
                 set_timer("marker/stop/phase1", 2)
 
         self.marker_set = new_marker_storage
+
+        if (not (3 in self.marker_set)) \
+            and is_flag("tpark") \
+                and self.tpark_storage.phase[1] == "approach":
+            self.tpark_storage.set_phase_from_id(2)
 
     def debug_markers(self):
         debug_text = ""

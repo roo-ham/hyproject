@@ -28,14 +28,16 @@ class Main:
         self.basement.tick += 1
         self.rate.sleep()
         if self.basement.tick % 10 == 0:
-            lane:Lane = self.basement.taskmodules["Lane"]
+            _lane:Lane = self.basement.taskmodules["Lane"]
+            _tpark:TPark = self.basement.taskmodules["TPark"]
 
             os.system("clear")
             debug_text = ""
             debug_text += self.vision_marker.debug_markers()
             debug_text += debug_timers()
             debug_text += debug_flags()
-            debug_text += lane.debug_junction()
+            debug_text += _lane.debug_junction()
+            debug_text += _tpark.debug_tpark()
             if "junction" in self.basement.timetable:
                 debug_text += "junction : %d\n" % len(self.basement.timetable)
             print(debug_text)
