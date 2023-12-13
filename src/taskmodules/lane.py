@@ -80,7 +80,7 @@ class Lane(TaskModule):
             return
         set_timer("lane/junction/wait", 3.6)
         set_timer("lane/junction/rotation/%s"%direction, 3.6 + 2.0)
-        set_timer("lane/junction/do", 3.6 + 5.0)
+        set_timer("lane/junction/do", 3.6 + 3.0)
         self.junction_curve_direction = ""
 
     def update(self, identity_size, yellow:np.ndarray, white):
@@ -159,7 +159,7 @@ class Lane(TaskModule):
         
         if is_flag("lane/curve"):
             delta_x = 0.8
-            delta_z = (gtan/1.5)
+            delta_z = (gtan/2)
         elif is_timer_off("lane/ramp"):
             pass
         else:
