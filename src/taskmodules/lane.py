@@ -182,6 +182,8 @@ class Lane(TaskModule):
         if is_timer_on("lane/junction/wait"):
             delta_x = 0.65
             delta_z = 0.0
+            if is_flag("tpark/begin"):
+                set_flag_with_callback("tpark", True, self.basement.timetable_add, "tpark")
         elif is_timer_on("lane/junction/rotation/left"):
             delta_x = 0.0
             delta_z = 0.785
@@ -196,6 +198,8 @@ class Lane(TaskModule):
             set_flag("lane/curve", False)
             if is_flag("tpark/begin"):
                 set_flag_with_callback("tpark", True, self.basement.timetable_add, "tpark")
+        elif is_flag("tpark/begin"):
+            set_flag_with_callback("tpark", True, self.basement.timetable_add, "tpark")
 
 
         self.weight_x = 1.0
