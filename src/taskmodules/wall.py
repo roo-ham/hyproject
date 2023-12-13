@@ -72,6 +72,13 @@ class Wall(TaskModule):
             self.z += SIDE_WALL_CONST - right_distance
             side_blocked[1] = True
 
+        if is_timer_on("lane/junction/do/left") \
+                or is_timer_on("lane/junction/do/right") \
+                or is_timer_on("lane/front_blocked") \
+                or is_flag("tpark"):
+            self.weight_z = 0
+            self.z = 0
+
         if not (side_blocked[0] | side_blocked[1]):
             set_timer("wall/side_blocked", 7, True)
 
@@ -87,6 +94,6 @@ class Wall(TaskModule):
             if is_timer_on("wall/obstacle_ignore"):
                 return
             self.do_front(front_points)
-            
+
         set_timer("wall/obstacle_ignore", 0.2, True)
         set_timer("wall/waiting_rotation", 5, True)
