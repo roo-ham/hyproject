@@ -59,6 +59,12 @@ class Lane(TaskModule):
             return False
         elif self.junction_curve_direction != "":
             return False
+        elif is_timer_on("lane/junction/do/left"):
+            return False
+        elif is_timer_on("lane/junction/do/right"):
+            return False
+        elif is_timer_on("lane/front_blocked"):
+            return False
         return True
     
     def debug_junction(self):
@@ -170,7 +176,6 @@ class Lane(TaskModule):
         elif is_timer_on("lane/front_blocked"):
             delta_x = 0.0
             delta_z = -0.785
-            self.timescale_dataset[:, 0] = 0
 
         if abs(gtan) <= 1.0:
             self.do_junction_curve(gtan, is_none[0])
@@ -181,12 +186,10 @@ class Lane(TaskModule):
         elif is_timer_on("lane/junction/do/left"):
             delta_x = 0.0
             delta_z = 0.785
-            self.timescale_dataset[:, 0] = 0
             set_flag("lane/curve", False)
         elif is_timer_on("lane/junction/do/right"):
             delta_x = 0.0
             delta_z = -0.785
-            self.timescale_dataset[:, 0] = 0
             set_flag("lane/curve", False)
 
         self.weight_x = 1.0
