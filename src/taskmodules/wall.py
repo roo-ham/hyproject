@@ -82,7 +82,7 @@ class Wall(TaskModule):
                 set_timer("lane/lane_exception/right", 1)
 
         if is_timer_on("wall/obstacle_ignore"):
-            pass
+            return
         elif is_flag("lane/curve"):
             pass
         elif len(front_points) > 2:
