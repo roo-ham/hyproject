@@ -75,7 +75,7 @@ class Lane(TaskModule):
         elif direction == "right" and gtan > -0.75:
             return
         set_timer("lane/junction/wait", 3.6)
-        set_timer("lane/junction/do/%s"%direction, 3.6 + 2.0)
+        set_timer("lane/junction/do/%s"%direction, 3.6 + 3.5)
         self.junction_curve_direction = ""
 
     def update(self, identity_size, yellow:np.ndarray, white):
@@ -110,8 +110,8 @@ class Lane(TaskModule):
             if gtan == None:
                 gtan = np.pi/2
             gtan = np.pi/2 if gtan < 0 else gtan
-        elif gtan == None and ltan == None and abs(self.timescale_dataset[0, 0]) < 1 and white > 0.5:
-            set_timer("lane/ramp", 3.0, True)
+        elif gtan == None and ltan == None and abs(self.timescale_dataset[0, 0]) < 1:
+            set_timer("lane/ramp", 2.5, True)
 
         mean_ltan = np.mean(self.timescale_dataset[0:5, 1])
         mean_ltan_abs = np.mean(self.timescale_dataset[0:5, 2])
@@ -150,17 +150,18 @@ class Lane(TaskModule):
 
         if abs(gtan) <= 0.95 and abs(gtan-ltan) < 0.2:
             set_flag("lane/curve", False)
-
-        if is_timer_on("lane/ramp"):
-            delta_x = 0.8
-            delta_z = 0
-
-        if 0.5 < yellow_distribution and ltan_abs < 0.2:
-            set_timer("lane/front_blocked/forward", 1.3)
-            set_timer("lane/front_blocked", 1.3 + 2.0)
-        elif is_flag("lane/curve"):
+        
+        if is_flag("lane/curve"):
             delta_x = 0.8
             delta_z = (gtan/2)
+        elif is_timer_off("lane/ramp"):
+            pass
+        else:
+            delta_x = 0.8
+            delta_z = 0
+            if 0.5 < yellow_distribution and ltan_abs < 0.2:
+                set_timer("lane/front_blocked/forward", 1.3)
+                set_timer("lane/front_blocked", 1.3 + 2.0)
         
         if is_timer_on("lane/front_blocked/forward"):
             delta_x = 0.8
@@ -178,11 +179,11 @@ class Lane(TaskModule):
             delta_z = 0.0
         elif is_timer_on("lane/junction/do/left"):
             delta_x = 0.0
-            delta_z = 0.785
+            delta_z = 0.425
             self.timescale_dataset[0, 0] = 0.1
         elif is_timer_on("lane/junction/do/right"):
             delta_x = 0.0
-            delta_z = -0.785
+            delta_z = -0.425
             self.timescale_dataset[0, 0] = -0.1
 
         self.weight_x = 1.0
