@@ -12,17 +12,6 @@ class Wall(TaskModule):
         set_timer("wall/waiting_rotation", 5)
 
     def do_front(self, front_points):
-        if is_timer_on("wall/obstacle_ignore"):
-            return
-        elif is_timer_on("lane/front_blocked/wait2"):
-            return
-        elif is_timer_on("lane/front_blocked"):
-            return
-        elif is_flag("lane/curve"):
-            return
-        elif is_flag("lane/ramp"):
-            return
-
         wall_angle = get_wall_angle(front_points)
 
         delta_x = 0.0
@@ -98,8 +87,18 @@ class Wall(TaskModule):
             elif side_blocked[1]:
                 set_timer("lane/lane_exception/right", 1)
 
-        if len(front_points) > 2:
+        if is_timer_on("wall/obstacle_ignore"):
+            pass
+        elif is_timer_on("lane/front_blocked/wait2"):
+            pass
+        elif is_timer_on("lane/front_blocked"):
+            pass
+        elif is_flag("lane/curve"):
+            pass
+        elif is_flag("lane/ramp"):
+            pass
+        elif len(front_points) > 2:
             self.do_front(front_points)
-        else:
-            set_timer("wall/obstacle_ignore", 0.2, True)
-            set_timer("wall/waiting_rotation", 5, True)
+            return
+        set_timer("wall/obstacle_ignore", 0.2, True)
+        set_timer("wall/waiting_rotation", 5, True)
