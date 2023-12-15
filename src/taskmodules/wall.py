@@ -88,6 +88,9 @@ class Wall(TaskModule):
 
         if is_flag("lane/curve"):
             pass
+        elif is_timer_off("lane/junction/wait") \
+                and (is_timer_on("lane/junction/rotation/left") or is_timer_on("lane/junction/rotation/right")):
+            pass
         elif len(front_points) > 2:
             if is_timer_on("wall/obstacle_ignore"):
                 return

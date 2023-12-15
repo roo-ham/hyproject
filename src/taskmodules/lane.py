@@ -219,6 +219,9 @@ class Lane(TaskModule):
 
         if is_timer_on("wall/obstacle_ignore"):
             pass
+        elif is_timer_off("lane/junction/wait") \
+                and (is_timer_on("lane/junction/rotation/left") or is_timer_on("lane/junction/rotation/right")):
+            pass
         elif is_timer_on("lane/junction/do") \
                 or is_timer_on("lane/front_blocked") \
                 or is_flag("tpark"):
