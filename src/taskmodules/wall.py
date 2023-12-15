@@ -54,7 +54,7 @@ class Wall(TaskModule):
                 right_points.append(p2)
                 right_distance += radius
             if radius < 0.4 and abs(angle) < 0.4:
-                special_situation = is_timer_on("lane/front_blocked/forward")
+                special_situation = is_timer_on("lane/front_blocked") or is_timer_on("lane/ramp")
                 if special_situation:
                     special_situation = not (radius < 0.3)
 
