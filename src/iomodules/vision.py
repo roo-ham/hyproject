@@ -43,9 +43,17 @@ class VisionImage(IOModule):
         yellow = self.get_yellow()
         black = self.get_black()
         white = self.get_white()
-        self.basement.true_white = self.get_true_white()
         yellow = self.get_yellow_border(white, black, yellow)
-        self.basement.true_white[:, 0:255] ^= self.basement.true_white[:, 1:256]
+        
+        true_white = self.get_true_white()
+        margin = 2
+        b_height = self.basement.bottom_height
+        true_white[:, 0:margin] = False
+        true_white[:, 256-margin:256] = False
+        true_white[0:margin, :] = False
+        true_white[b_height-margin:b_height, :] = False
+        true_white[:, 0:255] ^= true_white[:, 1:256]
+        self.basement.true_white = true_white
 
         #self.display_s(self.get_high_saturation())
         self.display_lane(white, black, yellow)
@@ -63,10 +71,11 @@ class VisionImage(IOModule):
         horizonal = yellow[0:b_height-1, 0:256] ^ yellow[1:b_height, 0:256]
         horizonal[0:b_height, 0:255] &= horizonal[0:b_height, 1:256]
         y2[0:b_height-1, 0:256] |= horizonal
-        y2[:, 0:8] = False
-        y2[:, 256-8:256] = False
-        y2[0:8, :] = False
-        y2[b_height-8:b_height, :] = False
+        margin = 2
+        y2[:, 0:margin] = False
+        y2[:, 256-margin:256] = False
+        y2[0:margin, :] = False
+        y2[b_height-margin:b_height, :] = False
         return y2
 
     def display_s(self, s):
