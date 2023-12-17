@@ -73,16 +73,16 @@ class VisionImage(IOModule):
         return y2
     
     def get_true_white_border(self, true_white):
-        margin = 3
         b_height = self.basement.bottom_height
-        true_white[:, 0:margin] = False
-        true_white[:, 256-margin:256] = False
-        true_white[0:margin, :] = False
-        true_white[b_height-margin:b_height, :] = False
         A = true_white[:, 0:255] ^ true_white[:, 1:256]
         B = true_white[0:b_height-1, :] ^ true_white[1:b_height, :]
         true_white[:, 0:255] = A
         true_white[0:b_height-1, :] |= B
+        margin = 3
+        true_white[:, 0:margin] = False
+        true_white[:, 256-margin:256] = False
+        true_white[0:margin, :] = False
+        true_white[b_height-margin:b_height, :] = False
         return true_white
 
     def display_s(self, s):
