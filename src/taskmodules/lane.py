@@ -183,7 +183,7 @@ class Lane(TaskModule):
 
         if abs(gtan) <= 1.0:
             self.do_junction_curve(gtan, is_none[0])
-
+        
         white_identity_size = np.sum(self.basement.true_white)
         white_cot = get_local_cotangent(self.mask_local, white_identity_size, self.basement.true_white)
 

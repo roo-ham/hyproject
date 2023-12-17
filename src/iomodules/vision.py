@@ -45,6 +45,7 @@ class VisionImage(IOModule):
         white = self.get_white()
         self.basement.true_white = self.get_true_white()
         yellow = self.get_yellow_border(white, black, yellow)
+        self.basement.true_white = self.get_yellow_border(black, black, self.basement.true_white)
 
         #self.display_s(self.get_high_saturation())
         self.display_lane(white, black, yellow)
