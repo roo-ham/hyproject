@@ -139,10 +139,13 @@ class Lane(TaskModule):
         delta_x = 1.0
         delta_z = 0
         
+        white_identity_size = np.sum(self.basement.true_white)
+        white_cot = get_local_cotangent(self.mask_local, white_identity_size, self.basement.true_white)
+        
         # 급커브 처리
         if abs(gtan) <= 0.25:
             delta_x = 1.3
-            delta_z = gtan - (ltan/2)
+            delta_z = white_cot
             set_flag("lane/junction", False)
         elif abs(gtan) <= 0.5:
             pass
@@ -180,12 +183,8 @@ class Lane(TaskModule):
         elif is_timer_on("lane/front_blocked"):
             delta_x = 0.0
             delta_z = -0.785
-        
-        white_identity_size = np.sum(self.basement.true_white)
-        white_cot = get_local_cotangent(self.mask_local, white_identity_size, self.basement.true_white)
 
         if abs(gtan) <= 1.0:
-            delta_z += white_cot
             self.do_junction_curve(gtan, is_none[0])
 
         if is_timer_on("lane/junction/wait"):
