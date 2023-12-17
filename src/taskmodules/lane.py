@@ -144,8 +144,8 @@ class Lane(TaskModule):
         
         # 급커브 처리
         if abs(gtan) <= 0.25:
-            delta_x = 0
-            delta_z = white_cot
+            delta_x = 1.3
+            delta_z = gtan - (ltan/2)
             set_flag("lane/junction", False)
         elif abs(gtan) <= 0.5:
             pass
@@ -235,4 +235,6 @@ class Lane(TaskModule):
             self.weight_x = 0.0
             self.weight_z = 0.0
 
+        delta_x = 0
+        delta_z = white_cot
         self.x, self.z = delta_x, delta_z
