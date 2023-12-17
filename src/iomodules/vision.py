@@ -46,13 +46,7 @@ class VisionImage(IOModule):
         yellow = self.get_yellow_border(white, black, yellow)
 
         true_white = self.get_true_white()
-        margin = 3
-        b_height = self.basement.bottom_height
-        true_white[:, 0:margin] = False
-        true_white[:, 256-margin:256] = False
-        true_white[0:margin, :] = False
-        true_white[b_height-margin:b_height, :] = False
-        true_white[:, 0:255] ^= true_white[:, 1:256]
+        true_white = self.get_true_white_border(true_white)
         self.basement.true_white = true_white
 
         #self.display_s(self.get_high_saturation())
@@ -77,6 +71,19 @@ class VisionImage(IOModule):
         y2[0:margin, :] = False
         y2[b_height-margin:b_height, :] = False
         return y2
+    
+    def get_true_white_border(self, true_white):
+        margin = 3
+        b_height = self.basement.bottom_height
+        true_white[:, 0:margin] = False
+        true_white[:, 256-margin:256] = False
+        true_white[0:margin, :] = False
+        true_white[b_height-margin:b_height, :] = False
+        A = true_white[:, 0:255] ^ true_white[:, 1:256]
+        B = true_white[0:b_height-1, :] ^ true_white[1:b_height, :]
+        true_white[:, 0:255] = A
+        true_white[0:b_height-1, :] |= B
+        return true_white
 
     def display_s(self, s):
         img = np.zeros_like(self.basement.get_bgr_bottom())

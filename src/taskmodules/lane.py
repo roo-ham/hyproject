@@ -180,16 +180,17 @@ class Lane(TaskModule):
         elif is_timer_on("lane/front_blocked"):
             delta_x = 0.0
             delta_z = -0.785
-
-        if abs(gtan) <= 1.0:
-            self.do_junction_curve(gtan, is_none[0])
         
         white_identity_size = np.sum(self.basement.true_white)
         white_cot = get_local_cotangent(self.mask_local, white_identity_size, self.basement.true_white)
 
+        if abs(gtan) <= 1.0:
+            delta_z += white_cot
+            self.do_junction_curve(gtan, is_none[0])
+
         if is_timer_on("lane/junction/wait"):
             delta_x = 0.65
-            delta_z = white_cot
+            delta_z = 0
             self.set_flag_tpark()
         elif is_timer_on("lane/junction/rotation/left"):
             delta_x = 0.0
@@ -201,12 +202,11 @@ class Lane(TaskModule):
             set_flag("lane/curve", False)
         elif is_timer_on("lane/junction/do"):
             delta_x = 0
-            delta_z = white_cot
+            delta_z = 0
             set_flag("lane/curve", False)
             self.set_flag_tpark()
         else:
             self.set_flag_tpark()
-
 
         self.weight_x = 1.0
         self.weight_z = delta_z**2
