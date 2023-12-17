@@ -236,7 +236,7 @@ class Lane(TaskModule):
             self.weight_z = 0.0
 
         delta_x = 0
-        delta_z = white_cot
+        delta_z = white_cot * 10
         self.weight_x = 10
         self.weight_z = 10
         print(white_cot)
