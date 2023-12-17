@@ -27,8 +27,8 @@ class VisionImage(IOModule):
         over_bri = self.basement.img_v >= 150
         return (over_sat & over_bri)
     def get_true_white(self):
-        over_sat = self.basement.img_s < 16
-        over_bri = self.basement.img_v >= 150
+        over_sat = self.basement.img_s < 32
+        over_bri = self.basement.img_v >= 200
         return (over_sat & over_bri)
     def get_black(self):
         over_sat = self.basement.img_s < 128
