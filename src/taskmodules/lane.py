@@ -237,4 +237,7 @@ class Lane(TaskModule):
 
         delta_x = 0
         delta_z = white_cot
+        self.weight_x = 10
+        self.weight_z = 10
+
         self.x, self.z = delta_x, delta_z
