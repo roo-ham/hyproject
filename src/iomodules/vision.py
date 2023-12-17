@@ -27,7 +27,7 @@ class VisionImage(IOModule):
         over_bri = self.basement.img_v >= 150
         return (over_sat & over_bri)
     def get_true_white(self):
-        over_sat = self.basement.img_s < 32
+        over_sat = self.basement.img_s < 16
         over_bri = self.basement.img_v >= 200
         return (over_sat & over_bri)
     def get_black(self):
@@ -45,7 +45,7 @@ class VisionImage(IOModule):
         white = self.get_white()
         self.basement.true_white = self.get_true_white()
         yellow = self.get_yellow_border(white, black, yellow)
-        self.basement.true_white = self.get_yellow_border(black, black, self.basement.true_white)
+        self.basement.true_white[:, 0:255] ^= self.basement.true_white[:, 1:256]
 
         #self.display_s(self.get_high_saturation())
         self.display_lane(white, black, yellow)
