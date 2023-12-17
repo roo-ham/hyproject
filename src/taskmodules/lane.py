@@ -139,8 +139,8 @@ class Lane(TaskModule):
         delta_x = 1.0
         delta_z = 0
         
-        white_identity_size = np.sum(self.basement.true_white)
-        white_cot = get_local_cotangent(self.mask_local, white_identity_size, self.basement.true_white)
+        #white_identity_size = np.sum(self.basement.true_white)
+        #white_cot = get_local_cotangent(self.mask_local, white_identity_size, self.basement.true_white)
         
         # 급커브 처리
         if abs(gtan) <= 0.25:
@@ -234,11 +234,5 @@ class Lane(TaskModule):
         elif is_timer_off("wall/obstacle_ignore"):
             self.weight_x = 0.0
             self.weight_z = 0.0
-
-        delta_x = 0
-        delta_z = white_cot * 10
-        self.weight_x = 10
-        self.weight_z = 10
-        print(white_cot)
 
         self.x, self.z = delta_x, delta_z
