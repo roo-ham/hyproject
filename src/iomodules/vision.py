@@ -44,9 +44,9 @@ class VisionImage(IOModule):
         black = self.get_black()
         white = self.get_white()
         yellow = self.get_yellow_border(white, black, yellow)
-        
+
         true_white = self.get_true_white()
-        margin = 2
+        margin = 3
         b_height = self.basement.bottom_height
         true_white[:, 0:margin] = False
         true_white[:, 256-margin:256] = False
@@ -71,7 +71,7 @@ class VisionImage(IOModule):
         horizonal = yellow[0:b_height-1, 0:256] ^ yellow[1:b_height, 0:256]
         horizonal[0:b_height, 0:255] &= horizonal[0:b_height, 1:256]
         y2[0:b_height-1, 0:256] |= horizonal
-        margin = 2
+        margin = 3
         y2[:, 0:margin] = False
         y2[:, 256-margin:256] = False
         y2[0:margin, :] = False
