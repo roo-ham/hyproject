@@ -26,6 +26,10 @@ class VisionImage(IOModule):
         over_sat = self.basement.img_s < 32
         over_bri = self.basement.img_v >= 150
         return (over_sat & over_bri)
+    def get_true_white(self):
+        over_sat = self.basement.img_s < 16
+        over_bri = self.basement.img_v >= 200
+        return (over_sat & over_bri)
     def get_black(self):
         over_sat = self.basement.img_s < 128
         over_bri = self.basement.img_v < 150
@@ -39,6 +43,7 @@ class VisionImage(IOModule):
         yellow = self.get_yellow()
         black = self.get_black()
         white = self.get_white()
+        self.basement.true_white = self.get_true_white()
         yellow = self.get_yellow_border(white, black, yellow)
 
         #self.display_s(self.get_high_saturation())
@@ -84,6 +89,10 @@ class VisionImage(IOModule):
         img[:, :, 0] = np.where(black, 255, img[:, :, 0])
         img[:, :, 1] = np.where(black, 0, img[:, :, 1])
         img[:, :, 2] = np.where(black, 0, img[:, :, 2])
+
+        img[:, :, 0] = np.where(self.basement.true_white, 255, img[:, :, 0])
+        img[:, :, 1] = np.where(self.basement.true_white, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(self.basement.true_white, 255, img[:, :, 2])
 
         img[:, :, 0] = np.where(yellow, 0, img[:, :, 0])
         img[:, :, 1] = np.where(yellow, 255, img[:, :, 1])
