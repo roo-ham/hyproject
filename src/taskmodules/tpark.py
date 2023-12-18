@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import numpy as np
-
 from rooham.flag import *
 from rooham.timer import *
 from basement import Basement
@@ -25,7 +23,6 @@ class TPark(TaskModule):
                            ("exit_3", False, 4, -0.8, 0),
                            ("done", True),
                            ]
-        self.mask_local = np.arange(-2, 3)
     def set_phase_from_id(self, phase_id):
         tpl = self.phase_list[phase_id]
         if not tpl[1]:

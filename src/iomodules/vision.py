@@ -17,6 +17,7 @@ class VisionImage(IOModule):
         super().__init__(base, "VisionImage")
         self.sub_image_raw = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
         self.lane_storage:Lane = base.taskmodules["Lane"]
+        self.mask_local = np.arange(-2, 3)
 
     def get_yellow(self):
         under_yellow = self.basement.img_h < 13
