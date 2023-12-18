@@ -123,7 +123,7 @@ class Lane(TaskModule):
             gtan = np.pi/2 if gtan < 0 else gtan
         elif gtan == None and ltan == None and abs(self.timescale_dataset[0, 0]) < 1.25:
             set_timer("lane/ramp", 3.5, True)
-            self.timescale_dataset[0, 0] = 0
+            self.timescale_dataset[0, :] = 0
 
         mean_ltan = np.mean(self.timescale_dataset[0:5, 1])
         mean_ltan_abs = np.mean(self.timescale_dataset[0:5, 2])
@@ -184,7 +184,7 @@ class Lane(TaskModule):
         elif is_timer_on("lane/front_blocked"):
             delta_x = 0.0
             delta_z = -0.785
-            self.timescale_dataset[0, 0] = 0
+            self.timescale_dataset[0, :] = 0
 
         if abs(gtan) <= 1.0:
             self.do_junction_curve(gtan, is_none[0])
