@@ -200,7 +200,7 @@ class Lane(TaskModule):
         else:
             self.set_flag_tpark()
 
-        if is_timer_off("wall/waiting_rotation") and self.timescale_dataset[0, 0] > 0:
+        if is_timer_off("wall/waiting_rotation") and self.timescale_dataset[0, 0] > 0.5:
             self.timescale_dataset[0, 0] *= -1
 
         self.weight_x = 1.0
