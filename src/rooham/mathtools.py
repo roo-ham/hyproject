@@ -30,6 +30,7 @@ def get_global_tangent(mask_x, mask_y, identity_size, yellow:np.ndarray) -> floa
 def get_local_tangent(mask, identity_size, yellow:np.ndarray) -> tuple:
     l_tan = 0.0
     l_tan_abs = 0.0
+    n = 0
     for x, y in np.argwhere(yellow):
         if random.randint(1, identity_size) > 16:
             continue
@@ -45,12 +46,14 @@ def get_local_tangent(mask, identity_size, yellow:np.ndarray) -> tuple:
         atan_abs = np.abs(atan)
         l_tan += np.sum(atan) / identity_size_local
         l_tan_abs += np.sum(atan_abs) / identity_size_local
-    l_tan /= identity_size
-    l_tan_abs /= identity_size
+        n += 1
+    l_tan /= n
+    l_tan_abs /= n
     return l_tan, l_tan_abs
 
 def get_local_cotangent(mask, identity_size, yellow:np.ndarray) -> tuple:
     l_tan = 0.0
+    n = 0
     for x, y in np.argwhere(yellow):
         if random.randint(1, identity_size) > 16:
             continue
@@ -64,7 +67,8 @@ def get_local_cotangent(mask, identity_size, yellow:np.ndarray) -> tuple:
             continue
         atan = np.arctan(y_set/x_set) * base2
         l_tan += np.sum(atan) / identity_size_local
-    l_tan /= identity_size
+        n += 1
+    l_tan /= n
     return l_tan
 
 def get_yellow_distribution(yellow, b_height):
