@@ -47,6 +47,8 @@ def get_local_tangent(mask, identity_size, yellow:np.ndarray) -> tuple:
         l_tan += np.sum(atan) / identity_size_local
         l_tan_abs += np.sum(atan_abs) / identity_size_local
         n += 1
+    if (n == 0):
+        return None, None
     l_tan /= n
     l_tan_abs /= n
     return l_tan, l_tan_abs
@@ -68,6 +70,8 @@ def get_local_cotangent(mask, identity_size, yellow:np.ndarray) -> tuple:
         atan = np.arctan(y_set/x_set) * base2
         l_tan += np.sum(atan) / identity_size_local
         n += 1
+    if (n == 0):
+        return None
     l_tan /= n
     return l_tan
 
