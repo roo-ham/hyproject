@@ -55,13 +55,11 @@ class Lane(TaskModule):
             gtan = 0
         if self.timescale_dataset[0, 0] * gtan > 0:
             return False
-        elif abs(self.timescale_dataset[0, 0]) < 1.0:
+        elif abs(self.timescale_dataset[0, 0]) < 0.5:
             return False
         elif self.junction_curve_direction != "":
             return False
         elif is_timer_on("lane/junction/do"):
-            return False
-        elif is_timer_on("lane/front_blocked"):
             return False
         return True
     
@@ -184,7 +182,7 @@ class Lane(TaskModule):
         elif is_timer_on("lane/front_blocked"):
             delta_x = 0.0
             delta_z = -0.785
-            self.timescale_dataset[0, :] = 0
+            self.timescale_dataset[0, 0] = -0.75
 
         if abs(gtan) <= 1.0:
             self.do_junction_curve(gtan, is_none[0])
