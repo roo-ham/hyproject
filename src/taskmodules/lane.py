@@ -122,7 +122,7 @@ class Lane(TaskModule):
                 gtan = np.pi/2
             gtan = np.pi/2 if gtan < 0 else gtan
         elif gtan == None and ltan == None and abs(self.timescale_dataset[0, 0]) < 1.25:
-            set_timer("lane/ramp", 2.5, True)
+            set_timer("lane/ramp", 3, True)
             self.timescale_dataset[0, :] = 0
 
         mean_ltan = np.mean(self.timescale_dataset[0:5, 1])
