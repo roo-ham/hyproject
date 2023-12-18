@@ -63,6 +63,8 @@ class Lane(TaskModule):
             return False
         elif is_timer_on("lane/front_blocked"):
             return False
+        elif is_timer_on("lane/ramp"):
+            return False
         return True
     
     def debug_junction(self):
@@ -162,7 +164,7 @@ class Lane(TaskModule):
             if is_none[0]:
                 set_flag("lane/curve", True)
 
-        if abs(gtan) <= 1.0 and abs(gtan-ltan) < 0.3:
+        if abs(gtan) <= 1.1 and abs(gtan-ltan) < 0.3:
             set_flag("lane/curve", False)
         
         if is_flag("lane/curve"):
