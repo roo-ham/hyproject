@@ -84,10 +84,7 @@ class Wall(TaskModule):
             self.weight_z = 0
             self.z = 0
         elif is_timer_off("wall/side_blocked") and is_timer_off("wall/waiting_rotation"):
-            if side_blocked[0]:
-                set_timer("lane/lane_exception/left", 0.66)
-            elif side_blocked[1]:
-                set_timer("lane/lane_exception/right", 0.66)
+            set_timer("lane/front_blocked", 2.0)
 
         if is_flag("lane/curve"):
             pass

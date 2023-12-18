@@ -63,8 +63,6 @@ class Lane(TaskModule):
             return False
         elif is_timer_on("lane/front_blocked"):
             return False
-        elif is_timer_on("lane/ramp"):
-            return False
         return True
     
     def debug_junction(self):
@@ -175,6 +173,7 @@ class Lane(TaskModule):
         else:
             delta_x = 0.8
             delta_z = 0
+            self.timescale_dataset[0, 0] = 0
             if 0.75 < yellow_distribution and ltan_abs < 0.2:
                 set_timer("lane/front_blocked/forward", 1.3)
                 set_timer("lane/front_blocked", 1.3 + 2.0)
