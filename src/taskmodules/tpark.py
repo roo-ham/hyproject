@@ -42,8 +42,8 @@ class TPark(TaskModule):
         else:
             self.x = tpl[3]
             self.z = tpl[4]
-            self.x = 0
-            self.z = self.basement.white_tan
+            if tpl[0] == "enter_1_pause":
+                self.z = self.basement.white_tan/2
             return
         
         phase_name = self.phase[1]
