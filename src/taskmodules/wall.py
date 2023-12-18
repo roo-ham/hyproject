@@ -59,8 +59,8 @@ class Wall(TaskModule):
             elif radius < SIDE_WALL_CONST and angle < -0.4:
                 right_points.append(p2)
                 right_distance += radius
-            if (radius < 0.4 and abs(angle) < 0.4) \
-                    or (radius < 0.25 and abs(angle) < 0.5):
+            if (radius < 0.4 and abs(angle) < 0.5) \
+                    or (radius < 0.25 and abs(angle) < 0.6):
                 if special_situation:
                     pass
                 else:
