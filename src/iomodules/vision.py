@@ -175,7 +175,7 @@ class VisionMarker(IOModule):
 
         self.marker_set = new_marker_storage
         if denoise:
-            set_timer("marker/stop/denoise", 1)
+            set_timer("marker/stop/denoise", 1, True)
 
     def debug_markers(self):
         debug_text = self.debug_text + "\n"
