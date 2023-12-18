@@ -12,11 +12,8 @@ class TPark(TaskModule):
         self.phase_list = [("ready", True),
                            ("approach", True),
                            ("align", False, 2.4, -0.8, 0),
-                           ("enter_1", False, 1, 0, -0.78),
-                           ("enter_1_pause", False, 0.5, 0, 0),
-                           ("enter_2", False, 1, 0, -0.78),
-                           ("enter_2_pause", False, 0.5, 0, 0),
-                           ("enter_3", False, 2.6, 0.8, 0),
+                           ("enter_1", False, 2, 0, -0.78),
+                           ("enter_2", False, 2.6, 0.8, 0),
                            ("sleep", False, 2, 0, 0),
                            ("exit_1", False, 2.5, -0.8, 0),
                            ("exit_2", False, 2, 0, 0.78),
@@ -44,8 +41,6 @@ class TPark(TaskModule):
         else:
             self.x = tpl[3]
             self.z = tpl[4]
-            if tpl[0] == "enter_1_pause" or tpl[0] == "enter_2_pause":
-                self.z = self.basement.white_tan
             return
         
         phase_name = self.phase[1]
