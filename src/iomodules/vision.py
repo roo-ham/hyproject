@@ -164,9 +164,6 @@ class VisionMarker(IOModule):
             elif marker_id == 2:
                 self.lane_storage.junction_curve_direction = "left"
 
-            if marker_pos_x > 0.7:
-                continue
-
             if marker_id == 0:
                 denoise = False
                 if is_timer_off("marker/stop/denoise") and is_timer_off("marker/stop/phase2"):
