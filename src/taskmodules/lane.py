@@ -162,7 +162,7 @@ class Lane(TaskModule):
             delta_z = ltan
             if is_none[0]:
                 set_flag("lane/curve", True)
-                set_timer("lane/ramp", -1, True)
+                #set_timer("lane/ramp", -1, True)
 
         if abs(gtan) <= 1.1 and abs(gtan-ltan) < 0.3:
             set_flag("lane/curve", False)
