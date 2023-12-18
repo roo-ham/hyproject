@@ -19,6 +19,8 @@ class Basement:
         self.tick = 0
         self.real_speed_x = 0.0
         self.real_speed_z = 0.0
+        self.white_tan = 0.0
+        self.white_cot = 0.0
         self.taskmodules = dict()
         self.launch = dict()
         self.timetable = dict()
