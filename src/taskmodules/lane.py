@@ -61,6 +61,8 @@ class Lane(TaskModule):
             return False
         elif is_timer_on("lane/junction/do"):
             return False
+        elif is_timer_off("wall/waiting_rotation"):
+            return False
         return True
     
     def debug_junction(self):
