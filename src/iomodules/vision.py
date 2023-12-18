@@ -145,7 +145,7 @@ class VisionMarker(IOModule):
     def callback(self, data):
         super().callback(data)
         new_marker_storage = dict()
-
+        denoise = True
         for marker in data.markers:
             marker_id, marker_pos_x, marker_pos_y = marker.id, marker.pose.pose.position.x, marker.pose.pose.position.y
             if (marker_id == 3 or marker_id == 4) and self.tpark_storage.phase[1] == "ready":
@@ -164,22 +164,18 @@ class VisionMarker(IOModule):
             elif marker_id == 2:
                 self.lane_storage.junction_curve_direction = "left"
 
-            if marker_id in self.marker_set:
+            if marker_pos_x > 0.7:
                 continue
 
             if marker_id == 0:
-                set_timer("marker/stop/denoise", 0.5)
-
-
-        for marker in self.marker_set.items():
-            marker_id, marker_pos_x = marker
-            if marker_id in new_marker_storage:
-                continue
-
-            if marker_id == 0 and is_timer_off("marker/stop/denoise"):
-                set_timer("marker/stop/phase1", 2)
+                denoise = False
+                if is_timer_off("marker/stop/denoise") and is_timer_off("marker/stop/phase2"):
+                    set_timer("marker/stop/phase1", 2)
+                    set_timer("marker/stop/phase2", 3)
 
         self.marker_set = new_marker_storage
+        if denoise:
+            set_timer("marker/stop/denoise", 1)
 
     def debug_markers(self):
         debug_text = self.debug_text + "\n"
