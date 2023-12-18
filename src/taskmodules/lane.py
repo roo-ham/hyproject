@@ -61,8 +61,6 @@ class Lane(TaskModule):
             return False
         elif is_timer_on("lane/junction/do"):
             return False
-        elif is_timer_off("wall/waiting_rotation"):
-            return False
         return True
     
     def debug_junction(self):
@@ -113,15 +111,7 @@ class Lane(TaskModule):
         else:
             gtan = None
 
-        if is_timer_on("lane/lane_exception/left"):
-            if gtan == None:
-                gtan = -np.pi/2
-            gtan = -np.pi/2 if gtan > 0 else gtan
-        elif is_timer_on("lane/lane_exception/right"):
-            if gtan == None:
-                gtan = np.pi/2
-            gtan = np.pi/2 if gtan < 0 else gtan
-        elif gtan == None and ltan == None and abs(self.timescale_dataset[0, 0]) < 1.25:
+        if gtan == None and ltan == None and abs(self.timescale_dataset[0, 0]) < 1.25:
             set_timer("lane/ramp", 3, True)
             self.timescale_dataset[0, :] = 0
 
@@ -209,6 +199,9 @@ class Lane(TaskModule):
             self.set_flag_tpark()
         else:
             self.set_flag_tpark()
+
+        if is_timer_off("wall/waiting_rotation") and self.timescale_dataset[0, 0] > 0:
+            self.timescale_dataset[0, 0] *= -1
 
         self.weight_x = 1.0
         self.weight_z = delta_z**2
