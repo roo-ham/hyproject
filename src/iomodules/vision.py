@@ -107,7 +107,8 @@ class VisionImage(IOModule):
         img[:, :, 2] = np.where(s, 255, img[:, :, 2])
 
         cv2.namedWindow("hyproject", cv2.WINDOW_GUI_EXPANDED)
-        cv2.imshow("hyproject", img)
+        #cv2.imshow("hyproject", img)
+        cv2.imshow("hyproject", self.basement.img_s)
         cv2.waitKey(1)
 
     def display_lane(self, white, black, yellow):
