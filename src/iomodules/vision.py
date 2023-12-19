@@ -67,9 +67,9 @@ class VisionImage(IOModule):
         b_height = self.basement.bottom_height
         y2 = np.zeros_like(yellow) | yellow
 
-        bw = black | white
-        bw[:, 0:254] |= bw[:, 2:256]
-        y2 = y2 & ~bw & self.get_high_saturation()
+        y2 &= self.get_high_saturation()
+
+        y2[:, 0:256-5] ^= y2[:, 5:256]
         
         A = y2[:, 0:255] ^ y2[:, 1:256]
         B = y2[0:b_height-1, :] ^ y2[1:b_height, :]
