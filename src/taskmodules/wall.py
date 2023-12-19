@@ -27,7 +27,7 @@ class Wall(TaskModule):
         else:
             self.weight_z = 1.0
             delta_x = -1.0
-            delta_z = -0.35
+            delta_z = -0.5
 
         self.x = delta_x
         self.z += delta_z
