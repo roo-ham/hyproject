@@ -25,8 +25,9 @@ class Wall(TaskModule):
         elif is_timer_on("wall/side_blocked"):
             pass
         else:
-            self.weight_z = 0
+            self.weight_z = 1.0
             delta_x = -1.0
+            delta_z = -0.35
 
         self.x = delta_x
         self.z += delta_z
