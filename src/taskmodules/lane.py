@@ -224,15 +224,12 @@ class Lane(TaskModule):
         elif is_timer_off("lane/junction/wait") \
                 and (is_timer_on("lane/junction/rotation/left") or is_timer_on("lane/junction/rotation/right")):
             pass
-        elif is_timer_on("lane/junction/do") \
-                or is_timer_on("lane/front_blocked") \
-                or is_flag("tpark"):
-            self.basement.delay_action_timers()
-
-        if is_timer_off("wall/waiting_rotation"):
+        else:
             self.weight_x = 0.0
-        elif is_timer_off("wall/obstacle_ignore"):
-            self.weight_x = 0.0
-            self.weight_z = 0.0
+            if is_timer_on("wall/waiting_rotation"):
+                self.weight_z = 0.0
+            if is_timer_on("lane/front_blocked") \
+                    or is_flag("tpark"):
+                self.basement.delay_action_timers()
 
         self.x, self.z = delta_x, delta_z
