@@ -20,19 +20,19 @@ class VisionImage(IOModule):
         self.mask_local = np.arange(-2, 3)
 
     def get_yellow(self):
-        under_yellow = self.basement.img_h < 13
-        over_yellow = self.basement.img_h > 37
+        under_yellow = self.basement.img_h < 10
+        over_yellow = self.basement.img_h > 40
         return ~(under_yellow | over_yellow)
     def get_white(self):
-        over_sat = self.basement.img_s < 1
+        over_sat = self.basement.img_s < 32
         over_bri = self.basement.img_v >= 150
         return (over_sat & over_bri)
     def get_true_white(self):
-        over_sat = self.basement.img_s < 1
+        over_sat = self.basement.img_s < 16
         over_bri = self.basement.img_v >= 200
         return (over_sat & over_bri)
     def get_black(self):
-        over_sat = self.basement.img_s < 1
+        over_sat = self.basement.img_s < 128
         over_bri = self.basement.img_v < 150
         return (over_sat & over_bri)
     def get_high_saturation(self):
