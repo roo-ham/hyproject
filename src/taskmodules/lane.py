@@ -224,10 +224,8 @@ class Lane(TaskModule):
             pass
         else:
             self.weight_x = 0.0
+            self.basement.delay_action_timers()
             if is_timer_on("wall/waiting_rotation"):
                 self.weight_z = 0.0
-            if is_timer_on("lane/front_blocked") \
-                    or is_flag("tpark"):
-                self.basement.delay_action_timers()
 
         self.x, self.z = delta_x, delta_z
