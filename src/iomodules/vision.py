@@ -24,13 +24,20 @@ class VisionImage(IOModule):
         over_yellow = self.basement.img_h > 40
         return ~(under_yellow | over_yellow)
     def get_white(self):
-        over_bri = self.basement.img_v >= 200
-        return over_bri
+        over_sat = self.basement.img_s < 32
+        over_bri = self.basement.img_v >= 150
+        return (over_sat & over_bri)
     def get_true_white(self):
-        over_bri = self.basement.img_v >= 210
-        return over_bri
+        over_sat = self.basement.img_s < 16
+        over_bri = self.basement.img_v >= 200
+        return (over_sat & over_bri)
     def get_black(self):
-        return not self.get_white()
+        over_sat = self.basement.img_s < 128
+        over_bri = self.basement.img_v < 150
+        return (over_sat & over_bri)
+    def get_high_saturation(self):
+        over_sat = self.basement.img_s > np.mean(self.basement.img_s)
+        return over_sat
     def update(self):
         super().update()
 
@@ -50,7 +57,7 @@ class VisionImage(IOModule):
         if white_cot != None:
             self.basement.white_cot = white_cot
 
-        #self.display_s()
+        #self.display_s(self.get_high_saturation())
         self.display_lane(white, black, yellow)
 
         identity_size = np.sum(yellow)
@@ -58,31 +65,27 @@ class VisionImage(IOModule):
 
     def get_yellow_border(self, white, black, yellow):
         b_height = self.basement.bottom_height
-        y2 = np.zeros_like(yellow) | yellow
-
-        y2[:, 0:256-5] &= y2[:, 5:256]
-        
-        A = y2[:, 0:255] ^ y2[:, 1:256]
-        B = y2[0:b_height-1, :] ^ y2[1:b_height, :]
-        y2[:, 0:255] = A
-        y2[0:b_height-1, :] |= B
-        
+        bw = black | white
+        bw[:, 0:254] &= bw[:, 2:256]
+        yellow = yellow & ~bw & self.get_high_saturation()
+        y2 = np.zeros_like(yellow)
+        y2[0:b_height, 0:255] |= yellow[0:b_height, 0:255] ^ yellow[0:b_height, 1:256]
+        horizonal = yellow[0:b_height-1, 0:256] ^ yellow[1:b_height, 0:256]
+        horizonal[0:b_height, 0:255] &= horizonal[0:b_height, 1:256]
+        y2[0:b_height-1, 0:256] |= horizonal
         margin = 3
         y2[:, 0:margin] = False
         y2[:, 256-margin:256] = False
         y2[0:margin, :] = False
         y2[b_height-margin:b_height, :] = False
-
         return y2
     
     def get_true_white_border(self, true_white):
         b_height = self.basement.bottom_height
-
         A = true_white[:, 0:255] ^ true_white[:, 1:256]
         B = true_white[0:b_height-1, :] ^ true_white[1:b_height, :]
         true_white[:, 0:255] = A
         true_white[0:b_height-1, :] |= B
-
         margin = 3
         true_white[:, 0:margin] = False
         true_white[:, 256-margin:256] = False
@@ -90,12 +93,15 @@ class VisionImage(IOModule):
         true_white[b_height-margin:b_height, :] = False
         return true_white
 
-    def display_s(self):
-        #img = np.zeros_like(self.basement.get_bgr_bottom())
+    def display_s(self, s):
+        img = np.zeros_like(self.basement.get_bgr_bottom())
+
+        img[:, :, 0] = np.where(s, 255, img[:, :, 0])
+        img[:, :, 1] = np.where(s, 255, img[:, :, 1])
+        img[:, :, 2] = np.where(s, 255, img[:, :, 2])
 
         cv2.namedWindow("hyproject", cv2.WINDOW_GUI_EXPANDED)
-        #cv2.imshow("hyproject", img)
-        cv2.imshow("hyproject", self.basement.img_s)
+        cv2.imshow("hyproject", img)
         cv2.waitKey(1)
 
     def display_lane(self, white, black, yellow):
@@ -169,8 +175,8 @@ class VisionMarker(IOModule):
             if marker_id == 0:
                 denoise = False
                 if is_timer_off("marker/stop/denoise") and is_timer_off("marker/stop/phase2"):
-                    set_timer("marker/stop/phase1", 1)
-                    set_timer("marker/stop/phase2", 3)
+                    set_timer("marker/stop/phase1", 5)
+                    set_timer("marker/stop/phase2", 7)
 
         self.marker_set = new_marker_storage
         if denoise:
