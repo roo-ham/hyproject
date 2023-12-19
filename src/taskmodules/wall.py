@@ -36,7 +36,7 @@ class Wall(TaskModule):
         self.weight_z = 0.0
         self.z = 0.0
 
-        if is_flag("tpark"):
+        if is_flag("tpark") or is_timer_on("marker/stop/phase2"):
             set_timer("wall/obstacle_ignore", 0.2, True)
             set_timer("wall/waiting_rotation", 8, True)
             return
@@ -59,8 +59,8 @@ class Wall(TaskModule):
             elif radius < SIDE_WALL_CONST and angle < -0.4:
                 right_points.append(p2)
                 right_distance += radius
-            if (radius < 0.4 and abs(angle) < 0.5) \
-                    or (radius < 0.3 and abs(angle) < 0.8):
+            if (radius < 0.35 and abs(angle) < 0.5) \
+                    or (radius < 0.28 and abs(angle) < 0.7):
                 if special_situation:
                     pass
                 else:

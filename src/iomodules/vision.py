@@ -178,11 +178,11 @@ class VisionMarker(IOModule):
                 denoise = False
                 if is_timer_off("marker/stop/denoise") and is_timer_off("marker/stop/phase2"):
                     set_timer("marker/stop/phase1", 5)
-                    set_timer("marker/stop/phase2", 7)
+                    set_timer("marker/stop/phase2", 6)
 
         self.marker_set = new_marker_storage
         if denoise:
-            set_timer("marker/stop/denoise", 0.1, True)
+            set_timer("marker/stop/denoise", 1, True)
 
     def debug_markers(self):
         debug_text = self.debug_text + "\n"
