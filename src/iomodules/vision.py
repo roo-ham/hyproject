@@ -44,7 +44,7 @@ class VisionImage(IOModule):
         yellow = self.get_yellow()
         black = self.get_black()
         white = self.get_white()
-        yellow = self.get_yellow_border(white, black, yellow)
+        #yellow = self.get_yellow_border(white, black, yellow)
 
         true_white = self.get_true_white()
         true_white = self.get_true_white_border(true_white)
