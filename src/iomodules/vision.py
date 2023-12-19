@@ -47,9 +47,9 @@ class VisionImage(IOModule):
         yellow = self.get_yellow_border(white, black, yellow)
 
         true_white = self.get_true_white()
-        true_white = self.get_true_white_border(true_white)
+        #true_white = self.get_true_white_border(true_white)
         self.basement.true_white = true_white
-        white_identity_size = np.sum(true_white)
+        #white_identity_size = np.sum(true_white)
         '''
         white_tan, _ = get_local_tangent(self.mask_local, white_identity_size, true_white)
         white_cot = get_local_cotangent(self.mask_local, white_identity_size, true_white)
@@ -158,7 +158,7 @@ class VisionMarker(IOModule):
         for marker in data.markers:
             marker_id, marker_pos_x, marker_pos_y = marker.id, marker.pose.pose.position.x, marker.pose.pose.position.y
 
-            if marker_pos_x > 0.9:
+            if marker_pos_x > 1.0:
                 continue
 
             new_marker_storage[marker_id] = marker_pos_x
