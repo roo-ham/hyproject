@@ -57,8 +57,8 @@ class VisionImage(IOModule):
         if white_cot != None:
             self.basement.white_cot = white_cot
 
-        #self.display_s(self.get_high_saturation())
-        self.display_lane(white, black, yellow)
+        self.display_s(self.get_high_saturation())
+        #self.display_lane(white, black, yellow)
 
         identity_size = np.sum(yellow)
         self.lane_storage.update(identity_size, yellow, np.mean(white))
