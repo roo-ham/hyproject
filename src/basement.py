@@ -43,7 +43,7 @@ class Basement:
         self.img_s = origin[:, :, 1]
         self.img_v = origin[:, :, 2]
 
-        self.img_s = cv2.normalize(self.img_s, None, 0, 255, cv2.NORM_MINMAX)
+        #self.img_s = cv2.normalize(self.img_s, None, 0, 255, cv2.NORM_MINMAX)
 
     def get_bgr_full(self) -> np.ndarray:
         return self.__bgr_full.copy()

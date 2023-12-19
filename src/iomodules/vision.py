@@ -24,20 +24,14 @@ class VisionImage(IOModule):
         over_yellow = self.basement.img_h > 40
         return ~(under_yellow | over_yellow)
     def get_white(self):
-        over_sat = self.basement.img_s < 32
         over_bri = self.basement.img_v >= 150
-        return (over_sat & over_bri)
+        return over_bri
     def get_true_white(self):
-        over_sat = self.basement.img_s < 16
         over_bri = self.basement.img_v >= 200
-        return (over_sat & over_bri)
+        return over_bri
     def get_black(self):
-        over_sat = self.basement.img_s < 128
         over_bri = self.basement.img_v < 150
-        return (over_sat & over_bri)
-    def get_high_saturation(self):
-        over_sat = self.basement.img_s > np.mean(self.basement.img_s)
-        return over_sat
+        return over_bri
     def update(self):
         super().update()
 
@@ -57,7 +51,7 @@ class VisionImage(IOModule):
         if white_cot != None:
             self.basement.white_cot = white_cot
 
-        self.display_s(self.get_high_saturation())
+        self.display_s()
         #self.display_lane(white, black, yellow)
 
         identity_size = np.sum(yellow)
@@ -66,8 +60,6 @@ class VisionImage(IOModule):
     def get_yellow_border(self, white, black, yellow):
         b_height = self.basement.bottom_height
         y2 = np.zeros_like(yellow) | yellow
-
-        y2 &= self.get_high_saturation()
 
         y2[:, 0:256-5] &= y2[:, 5:256]
         
@@ -107,7 +99,7 @@ class VisionImage(IOModule):
         img[:, :, 2] = np.where(s, 255, img[:, :, 2])
 
         cv2.namedWindow("hyproject", cv2.WINDOW_GUI_EXPANDED)
-        #cv2.imshow("hyproject", img)
+        cv2.imshow("hyproject", img)
         cv2.imshow("hyproject", self.basement.img_s)
         cv2.waitKey(1)
 
