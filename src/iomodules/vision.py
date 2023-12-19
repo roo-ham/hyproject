@@ -51,8 +51,8 @@ class VisionImage(IOModule):
         if white_cot != None:
             self.basement.white_cot = white_cot
 
-        self.display_s()
-        #self.display_lane(white, black, yellow)
+        #self.display_s()
+        self.display_lane(white, black, yellow)
 
         identity_size = np.sum(yellow)
         self.lane_storage.update(identity_size, yellow, np.mean(white))
@@ -91,15 +91,11 @@ class VisionImage(IOModule):
         true_white[b_height-margin:b_height, :] = False
         return true_white
 
-    def display_s(self, s):
-        img = np.zeros_like(self.basement.get_bgr_bottom())
-
-        img[:, :, 0] = np.where(s, 255, img[:, :, 0])
-        img[:, :, 1] = np.where(s, 255, img[:, :, 1])
-        img[:, :, 2] = np.where(s, 255, img[:, :, 2])
+    def display_s(self):
+        #img = np.zeros_like(self.basement.get_bgr_bottom())
 
         cv2.namedWindow("hyproject", cv2.WINDOW_GUI_EXPANDED)
-        cv2.imshow("hyproject", img)
+        #cv2.imshow("hyproject", img)
         cv2.imshow("hyproject", self.basement.img_s)
         cv2.waitKey(1)
 
