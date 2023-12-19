@@ -156,7 +156,7 @@ class Lane(TaskModule):
         if is_flag("lane/curve"):
             if abs(gtan) <= 1.1 and abs(gtan-ltan) < 0.3:
                 set_flag("lane/curve", False)
-            if set_flag("lane/curve", True):
+            if is_timer_off("lane/curve"):
                 set_flag("lane/curve", False)
                 set_timer("lane/ramp", 1, True)
         
