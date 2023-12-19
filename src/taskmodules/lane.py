@@ -77,7 +77,7 @@ class Lane(TaskModule):
         elif direction == "right" and gtan > -0.75:
             return
         set_timer("lane/junction/wait", 3.6)
-        set_timer("lane/junction/rotation/%s"%direction, 3.6 + 2.05)
+        set_timer("lane/junction/rotation/%s"%direction, 3.6 + 2.15)
         set_timer("lane/junction/do", 3.6 + 3.0)
         self.junction_curve_direction = ""
 
