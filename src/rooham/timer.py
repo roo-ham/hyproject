@@ -27,7 +27,7 @@ def delay_timer(key):
     global __timer
     if is_timer_off(key):
         return
-    __timer[key] += 1/30
+    __timer[key] += 1.5/30
 
 def debug_timers():
     global __timer
