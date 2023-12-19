@@ -24,14 +24,13 @@ class VisionImage(IOModule):
         over_yellow = self.basement.img_h > 40
         return ~(under_yellow | over_yellow)
     def get_white(self):
-        over_bri = self.basement.img_v >= 150
-        return over_bri
-    def get_true_white(self):
         over_bri = self.basement.img_v >= 200
         return over_bri
-    def get_black(self):
-        over_bri = self.basement.img_v < 150
+    def get_true_white(self):
+        over_bri = self.basement.img_v >= 210
         return over_bri
+    def get_black(self):
+        return not self.get_white()
     def update(self):
         super().update()
 
