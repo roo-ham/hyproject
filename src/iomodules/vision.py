@@ -108,7 +108,7 @@ class VisionImage(IOModule):
     def display_lane(self, white, black, yellow):
         img = np.zeros_like(self.basement.get_bgr_bottom())
 
-        img[:, :, 0] = np.where(white, 255, img[:, :, 0])
+        '''img[:, :, 0] = np.where(white, 255, img[:, :, 0])
         img[:, :, 1] = np.where(white, 255, img[:, :, 1])
         img[:, :, 2] = np.where(white, 0, img[:, :, 2])
 
@@ -119,7 +119,7 @@ class VisionImage(IOModule):
         img[:, :, 0] = np.where(self.basement.true_white, 255, img[:, :, 0])
         img[:, :, 1] = np.where(self.basement.true_white, 255, img[:, :, 1])
         img[:, :, 2] = np.where(self.basement.true_white, 255, img[:, :, 2])
-
+        '''
         img[:, :, 0] = np.where(yellow, 0, img[:, :, 0])
         img[:, :, 1] = np.where(yellow, 255, img[:, :, 1])
         img[:, :, 2] = np.where(yellow, 255, img[:, :, 2])
