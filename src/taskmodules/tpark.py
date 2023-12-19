@@ -13,7 +13,7 @@ class TPark(TaskModule):
                            ("approach", True),
                            ("align", False, 2.3, -0.8, 0),
                            ("enter_1", False, 2, 0, -0.78),
-                           ("enter_2", False, 2.4, 0.8, 0),
+                           ("enter_2", False, 2.5, 0.8, 0),
                            ("done", False, 100, 0, 0),
                            ]
     def set_phase_from_id(self, phase_id):
