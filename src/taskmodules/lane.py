@@ -164,9 +164,7 @@ class Lane(TaskModule):
         if is_flag("lane/curve"):
             delta_x = 0.8
             delta_z = gtan/1.5
-        elif is_timer_off("lane/ramp"):
-            pass
-        else:
+        elif is_timer_on("lane/ramp"):
             delta_x = 0.8
             delta_z = 0
             if 0.75 < yellow_distribution and ltan_abs < 0.5:
