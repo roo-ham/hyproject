@@ -76,10 +76,10 @@ class VisionImage(IOModule):
         bw = black | white
         bw[:, 0:254] |= bw[:, 2:256]
         y2 = y2 & ~bw & self.get_high_saturation()
-        #y2[0:b_height, 0:255] |= yellow[0:b_height, 0:255] ^ yellow[0:b_height, 1:256]
-        #horizonal = yellow[0:b_height-1, 0:256] ^ yellow[1:b_height, 0:256]
-        #horizonal[0:b_height, 0:255] &= horizonal[0:b_height, 1:256]
-        #y2[0:b_height-1, 0:256] |= horizonal
+        y2[0:b_height, 0:255] |= yellow[0:b_height, 0:255] ^ yellow[0:b_height, 1:256]
+        horizonal = yellow[0:b_height-1, 0:256] ^ yellow[1:b_height, 0:256]
+        horizonal[0:b_height, 0:255] &= horizonal[0:b_height, 1:256]
+        y2[0:b_height-1, 0:256] |= horizonal
         return y2
     
     def get_true_white_border(self, true_white):
