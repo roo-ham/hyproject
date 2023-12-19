@@ -36,7 +36,7 @@ class VisionImage(IOModule):
         over_bri = self.basement.img_v < 150
         return (over_sat & over_bri)
     def get_high_saturation(self):
-        over_sat = self.basement.img_s > np.mean(self.basement.img_s)
+        over_sat = self.basement.img_s > np.mean(self.basement.img_s) * 0.5
         return over_sat
     def update(self):
         super().update()
