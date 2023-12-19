@@ -14,11 +14,7 @@ class TPark(TaskModule):
                            ("align", False, 2.4, -0.8, 0),
                            ("enter_1", False, 2, 0, -0.78),
                            ("enter_2", False, 2.6, 0.8, 0),
-                           ("sleep", False, 2, 0, 0),
-                           ("exit_1", False, 2.5, -0.8, 0),
-                           ("exit_2", False, 2, 0, 0.78),
-                           ("exit_3", False, 4, -0.8, 0),
-                           ("done", True),
+                           ("done", False, 100, 0, 0),
                            ]
     def set_phase_from_id(self, phase_id):
         tpl = self.phase_list[phase_id]
@@ -51,8 +47,6 @@ class TPark(TaskModule):
             self.z = 0
             if is_flag("tpark/approach/end"):
                 self.set_phase_from_id(2)
-        elif phase_name == "done":
-            set_flag("tpark", False)
 
         if is_not_flag("tpark"):
             self.weight_x = 0.0
