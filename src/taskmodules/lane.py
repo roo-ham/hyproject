@@ -189,11 +189,11 @@ class Lane(TaskModule):
             delta_z = 0
             self.set_flag_tpark()
         elif is_timer_on("lane/junction/rotation/left"):
-            delta_x = 0.0
+            delta_x = 0.1
             delta_z = 0.785
             set_flag("lane/curve", False)
         elif is_timer_on("lane/junction/rotation/right"):
-            delta_x = 0.0
+            delta_x = 0.1
             delta_z = -0.785
             set_flag("lane/curve", False)
         elif is_timer_on("lane/junction/do"):
