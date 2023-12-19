@@ -71,10 +71,10 @@ class VisionImage(IOModule):
         bw[:, 0:254] |= bw[:, 2:256]
         y2 = y2 & ~bw & self.get_high_saturation()
         
-        y2[0:b_height, 0:255] |= yellow[0:b_height, 0:255] ^ yellow[0:b_height, 1:256]
-        horizonal = yellow[0:b_height-1, 0:256] ^ yellow[1:b_height, 0:256]
-        horizonal[0:b_height, 0:255] &= horizonal[0:b_height, 1:256]
-        y2[0:b_height-1, 0:256] |= horizonal
+        A = y2[:, 0:255] ^ y2[:, 1:256]
+        B = y2[0:b_height-1, :] ^ y2[1:b_height, :]
+        y2[:, 0:255] = A
+        y2[0:b_height-1, :] |= B
         
         margin = 3
         y2[:, 0:margin] = False
@@ -86,10 +86,12 @@ class VisionImage(IOModule):
     
     def get_true_white_border(self, true_white):
         b_height = self.basement.bottom_height
+
         A = true_white[:, 0:255] ^ true_white[:, 1:256]
         B = true_white[0:b_height-1, :] ^ true_white[1:b_height, :]
         true_white[:, 0:255] = A
         true_white[0:b_height-1, :] |= B
+
         margin = 3
         true_white[:, 0:margin] = False
         true_white[:, 256-margin:256] = False
