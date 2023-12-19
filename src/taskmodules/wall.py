@@ -9,7 +9,7 @@ from module import TaskModule
 class Wall(TaskModule):
     def __init__(self, base:Basement) -> None:
         super().__init__(base, "Wall")
-        set_timer("wall/waiting_rotation", 5)
+        set_timer("wall/waiting_rotation", 8)
 
     def do_front(self, front_points):
         wall_angle = get_wall_angle(front_points)
@@ -38,7 +38,7 @@ class Wall(TaskModule):
 
         if is_flag("tpark"):
             set_timer("wall/obstacle_ignore", 0.2, True)
-            set_timer("wall/waiting_rotation", 5, True)
+            set_timer("wall/waiting_rotation", 8, True)
             return
 
         left_points = []
@@ -100,4 +100,4 @@ class Wall(TaskModule):
             return
 
         set_timer("wall/obstacle_ignore", 0.2, True)
-        set_timer("wall/waiting_rotation", 5, True)
+        set_timer("wall/waiting_rotation", 8, True)
