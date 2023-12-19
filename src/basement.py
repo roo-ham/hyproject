@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import rospy, roslaunch, os
+import rospy, roslaunch, os, cv2
 import numpy as np
 from pathlib import Path
 
@@ -42,6 +42,8 @@ class Basement:
         self.img_h = origin[:, :, 0]
         self.img_s = origin[:, :, 1]
         self.img_v = origin[:, :, 2]
+
+        self.img_s = cv2.normalize(self.img_s, None, 0, 255, cv2.NORM_MINMAX)
 
     def get_bgr_full(self) -> np.ndarray:
         return self.__bgr_full.copy()
