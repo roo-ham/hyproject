@@ -50,13 +50,14 @@ class VisionImage(IOModule):
         true_white = self.get_true_white_border(true_white)
         self.basement.true_white = true_white
         white_identity_size = np.sum(true_white)
+        '''
         white_tan, _ = get_local_tangent(self.mask_local, white_identity_size, true_white)
         white_cot = get_local_cotangent(self.mask_local, white_identity_size, true_white)
         if white_tan != None:
             self.basement.white_tan = white_tan
         if white_cot != None:
             self.basement.white_cot = white_cot
-
+        '''
         #self.display_s(self.get_high_saturation())
         self.display_lane(white, black, yellow)
 

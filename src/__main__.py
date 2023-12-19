@@ -27,7 +27,7 @@ class Main:
         self.motor.update()
         self.basement.tick += 1
         self.rate.sleep()
-        if self.basement.tick % 10 == 0:
+        if self.basement.tick % 30 == 0:
             _lane:Lane = self.basement.taskmodules["Lane"]
             _tpark:TPark = self.basement.taskmodules["TPark"]
 
