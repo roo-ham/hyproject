@@ -49,7 +49,7 @@ class Wall(TaskModule):
         left_distance = 0.0
         right_distance = 0.0
 
-        SIDE_WALL_CONST = 0.3
+        SIDE_WALL_CONST = 0.4
         special_situation = is_timer_on("lane/front_blocked")
 
         for p1, p2 in zip(polar_pos, orthogonal_pos):
@@ -61,7 +61,7 @@ class Wall(TaskModule):
                 right_points.append(p2)
                 right_distance += radius
             if (radius < 0.30 and abs(angle) < 0.5) \
-                or (radius < 0.38 and 0.5 < abs(angle) and abs(angle) < 0.6):
+                or (radius < 0.35 and 0.5 < abs(angle) and abs(angle) < 0.6):
                 if special_situation:
                     pass
                 else:
