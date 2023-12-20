@@ -60,13 +60,13 @@ class Wall(TaskModule):
             elif radius < SIDE_WALL_CONST and angle < -0.4:
                 right_points.append(p2)
                 right_distance += radius
-            if (radius < 0.35 and abs(angle) < 0.5) \
-                or (radius < 0.45 and 0.5 < abs(angle) and abs(angle) < 0.7):
+            if (radius < 0.30 and abs(angle) < 0.5) \
+                or (radius < 0.38 and 0.5 < abs(angle) and abs(angle) < 0.6):
                 if special_situation:
                     pass
                 else:
                     front_points.append(p2)
-            if radius < 0.35 and abs(angle) < 0.5:
+            if radius < 0.30 and abs(angle) < 0.5:
                 front_2_points.append(p2)
 
         side_blocked = [False, False]
