@@ -24,8 +24,8 @@ class Wall(TaskModule):
             self.weight_z = 0
         else:
             self.weight_z = 1.0
-            delta_x = -1.0
-            delta_z = -0.5
+            delta_x = -0.5
+            delta_z = -1.0
             set_timer("lane/ramp", 2)
 
         self.x = delta_x
